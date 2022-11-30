@@ -1,6 +1,6 @@
 # 介绍
 
-此项目是由 Vue + Element-plus 构建的后台管理系统，具有登陆、全局状态管理、权限管理等功能。
+此项目是由 Vue + Element-plus 构建的后台管理系统，具有登陆、全局状态管理、权限管理等功能。配备基于express提供的本地接口模拟服务。
 
 ## 技术栈
 
@@ -12,6 +12,8 @@ Vue3 + Pinia + Vue-router + Axios + Element-plus
 npm install
 
 npm run serve（开发）
+
+npm run mock（本地接口服务，需安装express、nodemon）
 
 npm run build（生产）
 

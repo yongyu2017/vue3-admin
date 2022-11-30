@@ -7,8 +7,8 @@ module.exports = defineConfig({
     lintOnSave: true,
     transpileDependencies: true,
     devServer: {
-        open: true,
-        host: require('ip').address() || '0.0.0.0', // 允许外部ip访问
+        open: false,
+        host: '0.0.0.0' || require('ip').address(), // 允许外部ip访问
         port: 8002,
         proxy: {
             '/dev-api': {
