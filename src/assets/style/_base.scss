@@ -1,0 +1,188 @@
+/* reset */
+body, h1, h2, h3, h4, h5, h6, hr, p, blockquote, dl, dt, dd, ul, ol, li, pre, form, fieldset, legend, button, input, textarea, th, td {
+    margin: 0;
+    padding: 0;
+}
+
+table {
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+
+fieldset, img {
+    border: none;
+}
+
+ol, ul {
+    list-style: none;
+}
+/* reset */
+
+.fix:after {
+    content: '';
+    display: block;
+    visibility: hidden;
+    clear: both;
+    height: 0;
+    line-height: 0;
+    font-size: 0;
+}
+
+/** 侧栏 **/
+.site-sidebar {
+    position: fixed;
+    top: 50px;
+    left: 0;
+    bottom: 0;
+    z-index: 1020;
+    width: 230px;
+    background-color: #263238;
+    overflow: hidden;
+    .site-sidebar__inner {
+        position: relative;
+        z-index: 1;
+        width: 250px;
+        height: 100%;
+        padding-bottom: 15px;
+        overflow-y: scroll;
+    }
+    .site-sidebar__menu {
+        background-color: #263238;
+    }
+    &.site-sidebar--dark {
+        .site-sidebar__menu.el-menu .el-menu-item:focus,
+        .site-sidebar__menu.el-menu .el-menu-item:hover,
+        .site-sidebar__menu.el-menu .el-sub-menu > .el-sub-menu__title:focus,
+        .site-sidebar__menu.el-menu .el-sub-menu > .el-sub-menu__title:hover {
+            color: #c5cbcf;
+            background-color: #2b373d;
+        }
+        .site-sidebar__menu.el-menu .el-menu-item,
+        .site-sidebar__menu.el-menu .el-sub-menu > .el-sub-menu__title {
+            color: #8a979e;
+        }
+        .site-sidebar__menu.el-menu .el-menu-item.is-active,
+        .site-sidebar__menu.el-menu .el-sub-menu.is-active > .el-sub-menu__title {
+            color: #e8eaec;
+        }
+        .site-sidebar__menu.el-menu .el-menu,
+        .site-sidebar__menu.el-menu .el-sub-menu.is-opened {
+            background-color: #202b30;
+        }
+    }
+}
+/** 侧栏 **/
+
+/** 顶部内容 **/
+.site-navbar{
+    position: fixed;
+    z-index: 1030;
+    top: 0;
+    right: 0;
+    left: 0;
+    height: 50px;
+    -webkit-box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+    background: #fff;
+    .site-navbar__header{
+        position: absolute;
+        z-index: 0;
+        width: 230px;
+        height: 50px;
+        background-color: #35444c;
+        .site-navbar__brand{
+            margin: 0 8px;
+            line-height: 50px;
+            text-align: center;
+            color: #fff;
+            font-size: 18px;
+            font-weight: bold;
+            @include textoverflow()
+        }
+    }
+    .site-navbar__body{
+        margin-left: 230px;
+        height: 50px;
+        .site-navbar__menu{
+            float: right;
+            &>.el-menu-item{
+                float: left;
+                height: 50px;
+                line-height: 50px;
+                border-bottom: 0;
+            }
+            .site-navbar__avatar{
+                .el-dropdown-link{
+                    display: inline-block;
+                    height: 36px;
+                    line-height: 36px;
+                    img{
+                        margin-right: 6px;
+                        height: 100%;
+                        border-radius: 50%;
+                    }
+                }
+            }
+        }
+    }
+}
+/** 顶部内容 **/
+
+/** 主体内容 **/
+.site-content__wrapper{
+    position: relative;
+    padding-top: 50px;
+    margin-left: 230px;
+    min-height: 100%;
+    background: #f1f4f5;
+    .site-content{
+        padding: 15px;
+        &.site-content--tabs{
+            padding: 55px 15px 15px;
+        }
+        .el-card{
+            border: 0;
+        }
+        &> .el-tabs > .el-tabs__header{
+            position: fixed;
+            top: 50px;
+            left: 230px;
+            right: 0;
+            z-index: 930;
+            margin: 0;
+            padding: 0 55px 0 15px;
+            -webkit-box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.12), 0 0 6px 0 rgba(0, 0, 0, 0.04);
+            box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.12), 0 0 6px 0 rgba(0, 0, 0, 0.04);
+            background-color: #fff;
+            .el-tabs__nav-wrap:after{
+                content: '';
+                height: 0;
+                border-bottom: 0;
+            }
+        }
+    }
+    .site-tabs__tools{
+        position: fixed;
+        z-index: 931;
+        top: 50px;
+        right: 0;
+        background-color: #f1f4f5;
+        cursor: pointer;
+        .icon-box{
+            display: inline-block;
+            height: 39px;
+            line-height: 39px;
+            padding: 0 12px;
+            font-size: 16px;
+        }
+    }
+}
+/** 主体内容 **/
+
+.el-pagination{
+    margin-top: 15px;
+    justify-content: flex-end;
+    .el-pagination__editor{
+        margin-right: 8px;
+    }
+}
