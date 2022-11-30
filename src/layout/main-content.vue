@@ -42,7 +42,7 @@
 </template>
 
 <script setup>
-import { inject, ref, watch, onMounted, computed } from 'vue'
+import { inject, watch, onMounted, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { storeToRefs } from "pinia"
 import { useStorePinia } from "@/store"
@@ -52,8 +52,7 @@ const refresh = inject('refresh');
 const route = useRoute();
 const router = useRouter();
 const store = useStorePinia();
-const { menuActiveName, mainTabsActiveName, documentClientHeight } = storeToRefs(store);
-let mainTabs = ref([]);
+const { menuActiveName, mainTabsActiveName, documentClientHeight, mainTabs } = storeToRefs(store);
 
 watch(route, (newVal) => {
     routeHandle(newVal)
@@ -72,7 +71,7 @@ onMounted(() => {
 // 路由操作
 const routeHandle = function (route) {
     if (route.meta.isTab) {
-        var tab= mainTabs.value.filter((value)=> {
+        let tab = mainTabs.value.filter((value)=> {
                 return value.name== route.name
             })[0],
             Index= (()=> {
@@ -86,7 +85,7 @@ const routeHandle = function (route) {
             })();
 
         if(!tab){
-            tab= {
+            tab = {
                 menuId: route.meta.menuId || route.name,
                 name: route.name,
                 title: route.meta.title,
@@ -132,7 +131,6 @@ const removeTabHandle = (tabName) => {
     mainTabs.value = mainTabs.value.filter((value) => {
         return value.name != tabName
     })
-    console.log(mainTabs, tabName)
 
     if (mainTabs.value.length > 0) {
         var tab = mainTabs.value[mainTabs.value.length - 1];
@@ -161,7 +159,7 @@ const tabsCloseOtherHandle = () => {
 }
 // tabs, 关闭全部
 const tabsCloseAllHandle= () => {
-    mainTabs = [];
+    mainTabs.value = [];
     router.push({ name: 'home' })
 }
 </script>
