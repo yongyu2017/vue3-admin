@@ -1,16 +1,24 @@
 <template>
-    <el-form ref="dataFormRef" :inline="true" :model="dataForm" :rules="dataRule" label-width="80px" hide-required-asterisk
-        @keyup.enter="loginFun()" @submit.prevent>
-        <el-form-item label="帐号" prop="name">
-            <el-input v-model="dataForm.name"></el-input>
-        </el-form-item>
-        <el-form-item label="密码" prop="pwd">
-            <el-input type="pwd" v-model="dataForm.pwd"></el-input>
-        </el-form-item>
-        <el-form-item>
-            <el-button type="primary" @click="loginFun">登录</el-button>
-        </el-form-item>
-    </el-form>
+    <div class="login-page">
+        <h1 class="title">系统登录</h1>
+
+        <el-form ref="dataFormRef" :model="dataForm" :rules="dataRule" hide-required-asterisk
+            @keyup.enter="loginFun()" @submit.prevent class="login-form">
+            <el-form-item label="帐号：" prop="name">
+                <el-input size="large" v-model="dataForm.name"></el-input>
+            </el-form-item>
+            <el-form-item label="密码：" prop="pwd">
+                <el-input type="password" size="large" v-model="dataForm.pwd"></el-input>
+            </el-form-item>
+            <el-form-item>
+                <el-checkbox v-model="dataForm.remember" label="记住密码" size="large" />
+            </el-form-item>
+            <el-form-item>
+                <el-button type="primary" size="large" @click="loginFun" class="login-btn">登录</el-button>
+            </el-form-item>
+        </el-form>
+    </div>
+    
 </template>
 
 <script setup>
@@ -25,8 +33,9 @@ const router = useRouter()
 const store = useStorePinia()
 const { setToken, setUserInfo } = store
 const dataForm = reactive({
-    name: 'admin',
-    pwd: '123456',
+    name: '',
+    pwd: '',
+    remember: true,
 })
 const dataRule = reactive({
     name: [
@@ -39,7 +48,10 @@ const dataRule = reactive({
 const dataFormRef = ref(null);
 
 onMounted(() => {
-    // console.log(dataFormRef.value)
+    if(localStorage.getItem('name')){
+        dataForm.name = localStorage.getItem('name');
+        dataForm.pwd = localStorage.getItem('pwd');
+    }
 })
 
 //登录
@@ -56,6 +68,13 @@ const loginFun = () => {
                 pwd: dataForm.pwd,
             }).then(({ data }) => {
                 loading.close()
+                if(dataForm.remember){
+                    localStorage.setItem('name', dataForm.name)
+                    localStorage.setItem('pwd', dataForm.pwd)
+                }else{
+                    localStorage.removeItem('name')
+                    localStorage.removeItem('pwd')
+                }
                 setToken(data.token)
                 setUserInfo(data)
                 router.replace({
@@ -70,5 +89,36 @@ const loginFun = () => {
 }
 </script>
 
-<style>
+<style lang="scss" scoped>
+.login-page{
+    position: fixed;
+    z-index: 10;
+    top: 50%;
+    left: 50%;
+    width: 420px;
+    padding-bottom: 30px;
+    background-color: #fff;
+    border-radius: 4px;
+    transform: translate(-50%, -50%);
+    box-shadow: 0 21px 41px 0 rgba(0,0,0,.2);
+    .title{
+        text-align: center;
+        padding: 40px 0 20px;
+        font-size: 26px;
+        font-weight: normal;
+    }
+    /deep/.login-form{
+        margin: 0 30px;
+        .el-form-item{
+            display: block;
+            .el-form-item__label, .el-form-item__content{
+                display: block;
+            }
+        }
+        .login-btn{
+            margin-top: 20px;
+            width: 100%;
+        }
+    }
+}
 </style>
