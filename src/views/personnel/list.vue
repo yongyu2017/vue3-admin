@@ -1,6 +1,6 @@
 <template>
     <el-form :inline="true" :model="formData" @submit.prevent>
-        <el-form-item label="姓名">
+        <el-form-item>
             <el-input v-model="formData.name" placeholder="请输入姓名" clearable />
         </el-form-item>
         <el-form-item>
