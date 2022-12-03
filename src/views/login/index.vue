@@ -31,7 +31,7 @@ import { useStorePinia } from '@/store'
 const route = useRoute()
 const router = useRouter()
 const store = useStorePinia()
-const { setToken, setUserInfo } = store
+const { setUserInfo } = store
 const dataForm = reactive({
     name: '',
     pwd: '',
@@ -75,7 +75,7 @@ const loginFun = () => {
                     localStorage.removeItem('name')
                     localStorage.removeItem('pwd')
                 }
-                setToken(data.token)
+                localStorage.setItem('token', data.token)
                 setUserInfo(data)
                 router.replace({
                     path: route.query.url ? decodeURIComponent(route.query.url) : '/home'

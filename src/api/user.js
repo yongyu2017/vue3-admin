@@ -9,10 +9,19 @@ export function userLogin(data) {
     })
 }
 
-//当前用户信息
+//获取用户信息
 export function userGetUserInfo(data) {
     return request({
         url: '/user/getUserInfo',
+        method: 'post',
+        data: data
+    })
+}
+
+//设置用户信息
+export function userSetUserInfo(data) {
+    return request({
+        url: 'user/setUserInfo',
         method: 'post',
         data: data
     })

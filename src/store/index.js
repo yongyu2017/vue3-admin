@@ -1,9 +1,9 @@
-import { createPinia, defineStore } from 'pinia';
+import { createPinia, defineStore } from 'pinia'
+import { userGetUserInfo } from '@/api/user'
 
 export const useStorePinia = defineStore('main', {
     state () {
         return {
-            token: localStorage.getItem('token') || '',
             userInfo: {},
             menuList: [],
             dynamicMenuRoutes: [],
@@ -14,13 +14,6 @@ export const useStorePinia = defineStore('main', {
         };
     },
     actions: {
-        setToken (val) {
-            this.token = val;
-            localStorage.setItem('token', val)
-        },
-        setUserInfo (val) {
-            this.userInfo = val;
-        },
         updateMenuList (val) {
             this.menuList = val.slice();
         },
@@ -28,9 +21,16 @@ export const useStorePinia = defineStore('main', {
             this[name] = val;
         },
         loginOut () {
-            this.setToken('')
-            this.setUserInfo({})
             this.updateMenuList([])
+        },
+        getUserInfo () {
+            return new Promise((resolve) => {
+                userGetUserInfo().then(({ data }) => {
+                    this.userInfo = { ...data }
+
+                    resolve(data)
+                })
+            })            
         },
     },
 });

@@ -2,6 +2,8 @@ let express = require('express');
 let app = express();
 let bodyParser = require('body-parser');
 const circularJSON = require('circular-json');
+// 更新 json 数据
+const { getFileData, setFileData } = require('./readOrWriteFile')
 
 //设置跨域访问
 app.all('*', function (req, res, next) {
@@ -39,18 +41,40 @@ app.post('/user/login', (req, res) => {
     }
 })
 
-// 当前用户信息
-app.post('/user/getUserInfo', (req, res) => {
-    const { token } = req.headers
+// 获取用户信息
+app.post('/user/getUserInfo', async (req, res) => {
+    const { token } = req.headers;
+    const fileData = await getFileData('user');
     
     if(token){
         res.send({
             code: 200,
-            data: {
-                'userName': '小猪',
-                'sex': '男',
-                'token': 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9'
-            },
+            data: fileData,
+            msg: '',
+        })
+    }else{
+        res.send({
+            code: -1,
+            data: '',
+            msg: '未登录'
+        })
+    }
+})
+
+// 修改用户信息
+app.post('/user/setUserInfo', async (req, res) => {
+    const { token } = req.headers;
+    const { userName, sex } = req['body'];
+
+    if(token){
+        await setFileData('user', {
+            userName,
+            sex,
+            token
+        })
+        res.send({
+            code: 200,
+            data: '',
             msg: '',
         })
     }else{

@@ -21,10 +21,9 @@ import { useStorePinia } from "@/store"
 import mainContent from './main-content'
 import mainNavbar from './main-navbar'
 import mainSidebar from './main-sidebar'
-import { userGetUserInfo } from '@/api/user'
 
 const store = useStorePinia()
-const { setUserInfo } = store;
+const { getUserInfo } = store;
 let { documentClientHeight } = storeToRefs(store)
 let loading = ref(true);
 let isRefresh = ref(false); //main-content是否刷新
@@ -47,13 +46,7 @@ const updateDocumentClientHeight = function () {
 onMounted(() => {
     loading.value = false;
     updateDocumentClientHeight()
-    userGetUserInfoFun()
+    getUserInfo()
 })
 
-//获取当前用户信息
-const userGetUserInfoFun = () => {
-    userGetUserInfo().then(({ data }) => {
-        setUserInfo(data)
-    })
-}
 </script>

@@ -13,6 +13,7 @@
                         </span>
                         <template #dropdown>
                             <el-dropdown-menu >
+                                <el-dropdown-item @click="navigatorFun">用户信息</el-dropdown-item>
                                 <el-dropdown-item @click="logoutHandle">退出</el-dropdown-item>
                             </el-dropdown-menu>
                         </template>
@@ -44,6 +45,10 @@ const logoutHandle = () => {
         clearLoginInfo()
         router.push({ name: 'login' })
     }).catch(() => {})
+}
+// 跳转到用户信息页
+const navigatorFun = () => {
+    router.push({ name: 'userInfor' })
 }
 </script>
 

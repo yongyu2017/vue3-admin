@@ -3,12 +3,7 @@ import { createRouter, createWebHashHistory } from "vue-router";
 import { ElLoading } from 'element-plus'
 import { isURL, clearLoginInfo } from '@/utils/utils'
 import { userMenuList } from '@/api/user'
-
-import { storeToRefs } from "pinia"
-import { useStorePinia, pinia } from "@/store"
-const store = useStorePinia(pinia)
-const { updateMenuList, updateCommonStore } = store;
-const { token } = storeToRefs(store)
+import { useStorePinia } from "@/store"
 
 // 全局路由(无需嵌套上左右整体布局)
 let globalRoutes = [
@@ -27,6 +22,7 @@ let mainRoutes = {
         // 2. iframeUrl: 是否通过iframe嵌套展示内容, '以http[s]://开头': 是, '': 否
         // 提示: 如需要通过iframe嵌套展示内容, 但不通过tab打开, 请自行创建组件使用iframe处理!
         { path: '/home', component: () => import('@/views/home'), name: 'home', meta: { title: '首页' } },
+        { path: '/userInfor', component: () => import('@/views/userInfor'), name: 'userInfor', meta: { title: '首页', isTab: false } },
     ],
 };
 let router = createRouter({
@@ -36,7 +32,9 @@ let router = createRouter({
 let loading = null;
 
 router.beforeEach((to, from, next) => {
-    if(!token.value && (fnCurrentRouteType(to, globalRoutes) != 'global')){
+    const token = localStorage.getItem('token');
+
+    if(!token && (fnCurrentRouteType(to, globalRoutes) != 'global')){
         clearLoginInfo()
         next({
             name: 'login',
@@ -57,6 +55,7 @@ router.beforeEach((to, from, next) => {
             loading.close()
             fnAddDynamicMenuRoutes(data.list)
             router.options.isAddDynamicMenuRoutes = true;
+            const { updateMenuList } = useStorePinia();
             updateMenuList(data.list || [])
 
             next({ ...to, replace: true })
@@ -95,7 +94,7 @@ function fnAddDynamicMenuRoutes (menuList = []) {
     mainRoutes.children = routes;
     router.addRoute(mainRoutes)
 
-    // sessionStorage.setItem('dynamicMenuRoutes', JSON.stringify(mainRoutes.children || '[]'))
+    const { updateCommonStore } = useStorePinia();
     updateCommonStore('dynamicMenuRoutes', mainRoutes.children || [])
     console.log('%c!<-------------------- 动态(菜单)路由 s -------------------->', 'color:blue')
     console.log(mainRoutes.children)

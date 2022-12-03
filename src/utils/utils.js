@@ -1,8 +1,3 @@
-import router from '@/router'
-import { useStorePinia, pinia } from "@/store"
-const store = useStorePinia(pinia)
-const { loginOut } = store;
-
 //深拷贝
 export function deepCopy(obj) {
     var result = Array.isArray(obj) ? [] : {};
@@ -30,7 +25,6 @@ export function isURL (s) {
  * 清除登录信息
  */
 export function clearLoginInfo () {
-    router.options.isAddDynamicMenuRoutes = false;
-    loginOut()
+    localStorage.removeItem('token')
 }
 
