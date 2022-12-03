@@ -58,12 +58,14 @@ http.interceptors.response.use(response => {
     }else{
         if(code == 401){
             clearLoginInfo()
-            router.push({
-                name: 'login',
-                query: {
-                    url: encodeURIComponent(router.app._route.fullPath),
-                },
-            })
+            setTimeout(() => {
+                router.push({
+                    name: 'login',
+                    query: {
+                        url: encodeURIComponent(router.currentRoute.value.fullPath),
+                    },
+                })
+            }, 2000)
         }
         ElMessage.error(data.msg || '程序异常')
 

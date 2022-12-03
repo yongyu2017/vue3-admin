@@ -158,7 +158,7 @@ app.post('/user/menuList', (req, res) => {
 
 // 员工列表
 app.post('/user/userList', (req, res) => {
-    const { token } = req.headers
+    let { token } = req.headers
     const { pageIndex, pageSize, name } = req['body'];
     
     if(token){
@@ -194,9 +194,9 @@ app.post('/user/userList', (req, res) => {
         })
     }else{
         res.send({
-            code: -1,
+            code: 401,
             data: '',
-            msg: '未登录'
+            msg: '登录过期，请重新登录！'
         })
     }
 })

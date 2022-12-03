@@ -45,6 +45,7 @@ router.beforeEach((to, from, next) => {
         })
         return
     }
+
     if(router.options.isAddDynamicMenuRoutes || fnCurrentRouteType(to, globalRoutes) === 'global'){
         next()
     }else{
