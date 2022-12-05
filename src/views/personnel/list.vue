@@ -14,9 +14,7 @@
         <el-table-column type="selection" header-align="center" align="center" width="55"></el-table-column>
         <el-table-column prop="id" header-align="center" align="center" label="ID"></el-table-column>
         <el-table-column prop="name" header-align="center" align="center" label="姓名"></el-table-column>
-        <el-table-column prop="sex" header-align="center" align="center" label="性别">
-            <template #default="scope">{{ scope.row.sex == 1 ? '男' : '女' }}</template>
-        </el-table-column>
+        <el-table-column prop="sex" header-align="center" align="center" label="性别"></el-table-column>
         <el-table-column prop="age" header-align="center" align="center" label="年龄"></el-table-column>
         <el-table-column header-align="center" align="center" label="操作">
             <template #default="scope">
