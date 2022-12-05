@@ -156,31 +156,26 @@ app.post('/user/menuList', (req, res) => {
     }
 })
 
-// 员工列表
-app.post('/user/userList', (req, res) => {
-    let { token } = req.headers
+// 获取员工列表
+app.post('/user/userList', async (req, res) => {
+    const { token } = req.headers
+    const fileData = await getFileData('people');
     const { pageIndex, pageSize, name } = req['body'];
-    
+
     if(token){
-        let list= [],
-            sum= 85,
+        let list= fileData.list,
+            sum= list.length,
             start= (pageIndex- 1) * pageSize,
             end= start+ pageSize;
 
-        for(let i = 0; i < sum; i++){
-            list.push({
-                id: i + 1,
-                name: '张三_' + i,
-                age: Math.floor(Math.random() * 100),
-                sex: 1
-            })
-        }
         list = list.filter((value)=> {
-            if(name == ''){
-                return true
-            }else{
-                if(value.name.indexOf(name.toLocaleLowerCase()) != -1){
+            if(value.state == 1){
+                if(name == ''){
                     return true
+                }else{
+                    if(value.name.indexOf(name.toLocaleLowerCase()) != -1){
+                        return true
+                    }
                 }
             }
         })
@@ -190,6 +185,105 @@ app.post('/user/userList', (req, res) => {
                 list: list.slice(start, end),
                 sum: sum,
             },
+            msg: '',
+        })
+    }else{
+        res.send({
+            code: 401,
+            data: '',
+            msg: '登录过期，请重新登录！'
+        })
+    }
+})
+
+// 新增或修改员工信息
+app.post('/user/addOrModifyPeople', async (req, res) => {
+    const { token } = req.headers
+    const { id, name, sex, age } = req['body'];
+    const data = { id, name, sex, age };
+    const fileData = await getFileData('people');
+
+    if (data.id) {
+        fileData.list.forEach((value) => {
+            if (value.id == data.id) {
+                for (let i in data) {
+                    value[i] = data[i]
+                }
+            }
+        })
+    } else {
+        fileData.list.push({
+            id: fileData.list.length + 1, 
+            name, 
+            sex, 
+            age,
+            state: 1
+        })
+    }
+
+    if(token){
+        await setFileData('people', fileData)
+        res.send({
+            code: 200,
+            data: {
+            },
+            msg: '',
+        })
+    }else{
+        res.send({
+            code: 401,
+            data: '',
+            msg: '登录过期，请重新登录！'
+        })
+    }
+})
+
+// 删除员工信息
+app.post('/user/deletePeople', async (req, res) => {
+    const { token } = req.headers
+    const { id } = req['body'];
+    const ids = (id + '').split(',');
+    const fileData = await getFileData('people');
+
+    if(token){
+        fileData.list.forEach((value) => {
+            if(ids.includes(value.id + '')){
+                value.state = 0;
+            }
+        })
+        await setFileData('people', fileData)
+        res.send({
+            code: 200,
+            data: {
+            },
+            msg: '',
+        })
+    }else{
+        res.send({
+            code: 401,
+            data: '',
+            msg: '登录过期，请重新登录！'
+        })
+    }
+})
+
+// 获取员工信息
+app.post('/user/getPeople', async (req, res) => {
+    const { token } = req.headers
+    const { id } = req['body'];
+    const fileData = await getFileData('people');
+
+    if(token){
+        let data = {};
+        fileData.list.forEach((value) => {
+            if(value.id == id){
+                data = value;
+            }
+        })
+        await setFileData('people', fileData)
+        res.send({
+            code: 200,
+            data,
             msg: '',
         })
     }else{

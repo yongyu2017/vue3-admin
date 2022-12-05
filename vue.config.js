@@ -2,7 +2,6 @@ const { defineConfig } = require('@vue/cli-service')
 const path = require("path");
 const resolve = (dir) => path.join(__dirname, dir);
 
-console.log()
 module.exports = defineConfig({
     lintOnSave: true,
     transpileDependencies: true,
