@@ -4,7 +4,9 @@ import { userGetUserInfo } from '@/api/user'
 export const useStorePinia = defineStore('main', {
     state () {
         return {
-            userInfo: {},
+            userInfo: {
+            },
+            permission: [],
             menuList: [],
             dynamicMenuRoutes: [],
             menuActiveName: '',
@@ -26,7 +28,10 @@ export const useStorePinia = defineStore('main', {
         getUserInfo () {
             return new Promise((resolve) => {
                 userGetUserInfo().then(({ data }) => {
-                    this.userInfo = { ...data }
+                    for (let i in data) {
+                        this.userInfo[i] = data[i];
+                    }
+                    this.permission = data.permission;
 
                     resolve(data)
                 })

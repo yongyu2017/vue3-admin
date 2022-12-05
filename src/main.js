@@ -6,11 +6,13 @@ import ElementPlus from 'element-plus'
 import 'element-plus/dist/index.css'
 import zhCn from 'element-plus/dist/locale/zh-cn.mjs'
 import * as ElementPlusIconsVue from '@element-plus/icons-vue'
+import hasPermission from './directive/hasPermi'
 
 const app = createApp(App)
 for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
     app.component(key, component)
 }
+app.directive('hasPermission', hasPermission)
 app.use(pinia)
 app.use(ElementPlus, {
     locale: zhCn,

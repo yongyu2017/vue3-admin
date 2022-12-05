@@ -220,7 +220,8 @@ app.post('/user/addOrModifyPeople', async (req, res) => {
                 sex, 
                 age,
                 state: 1,
-                createTime: new Date().getTime()
+                createTime: new Date().getTime(),
+                updateTime: new Date().getTime(),
             })
         }
         await setFileData('people', fileData)

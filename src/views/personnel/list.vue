@@ -6,7 +6,7 @@
         <el-form-item>
             <el-button type="primary" @click="searchFun">查询</el-button>
             <el-button @click="addOrUpdateFun()">新增</el-button>
-            <el-button type="danger" @click="delFun()">删除</el-button>
+            <el-button type="danger" @click="delFun()" v-hasPermission="['people:list:delete']">删除</el-button>
         </el-form-item>
     </el-form>
 

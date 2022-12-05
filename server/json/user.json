@@ -1,5 +1,6 @@
 {
   "userName": "小猪",
   "sex": "男",
-  "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9"
+  "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9",
+  "permission": ["people:list:delete", "people:list:page"]
 }

@@ -43,10 +43,10 @@ const updateDocumentClientHeight = function () {
     }, false)
 }
 
-onMounted(() => {
-    loading.value = false;
+onMounted(async () => {
+    await getUserInfo()
     updateDocumentClientHeight()
-    getUserInfo()
+    loading.value = false;
 })
 
 </script>
