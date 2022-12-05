@@ -1,7 +1,6 @@
 let express = require('express');
 let app = express();
 let bodyParser = require('body-parser');
-const circularJSON = require('circular-json');
 // 更新 json 数据
 const { getFileData, setFileData } = require('./readOrWriteFile')
 
