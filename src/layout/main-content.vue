@@ -1,6 +1,6 @@
 <template>
     <div :class="['site-content', route.meta.isTab ? 'site-content--tabs' : '']">
-        <el-tabs v-if="route.meta.isTab" v-model="mainTabsActiveName" :closable="true" @tab-click="selectedTabHandle"
+        <el-tabs v-if="route.meta.isTab" v-model="tabModel" :closable="true" @tab-click="selectedTabHandle"
             @tab-remove="removeTabHandle">
             <el-dropdown class="site-tabs__tools" :show-timeout="0">
                 <span class="icon-box">
@@ -14,8 +14,8 @@
                         <el-dropdown-item @click="refreshHandle">刷新当前标签页</el-dropdown-item>
                     </el-dropdown-menu>
                 </template>
-
             </el-dropdown>
+
             <el-tab-pane v-for="item in mainTabs" :key="item.name" :label="item.title" :name="item.name">
                 <el-card :body-style="siteContentViewHeight">
                     <iframe v-if="item.type === 'iframe'" :src="item.iframeUrl" width="100%" height="100%"
@@ -38,11 +38,12 @@
                 </keep-alive>
             </router-view>
         </el-card>
+
     </div>
 </template>
 
 <script setup>
-import { inject, watch, onMounted, computed } from 'vue'
+import { inject, watch, onMounted, computed, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { storeToRefs } from "pinia"
 import { useStorePinia } from "@/store"
@@ -53,6 +54,7 @@ const route = useRoute();
 const router = useRouter();
 const store = useStorePinia();
 const { menuActiveName, mainTabsActiveName, documentClientHeight, mainTabs } = storeToRefs(store);
+const tabModel = ref('');
 
 watch(route, (newVal) => {
     routeHandle(newVal)
@@ -75,7 +77,7 @@ const routeHandle = function (route) {
                 return value.name== route.name
             })[0],
             Index= (()=> {
-                var poc= 0;
+                let poc= 0;
                 mainTabs.value.forEach((value, index)=> {
                     if(value.name === route.name){
                         poc= index
@@ -101,8 +103,9 @@ const routeHandle = function (route) {
         }
 
         mainTabsActiveName.value = tab.name;
+        tabModel.value = tab.name;
     }
-    menuActiveName.value= route.meta.menuId+ '';
+    menuActiveName.value= route.meta.menuId + '';
 }
 // tabs，刷下当前页
 const refreshHandle = () => {
@@ -118,7 +121,6 @@ const selectedTabHandle = (TabsPaneContext) => {
         if (tab.name == route.name) {
             return
         }
-
         router.push({
             name: tab.name,
             query: tab.query,
