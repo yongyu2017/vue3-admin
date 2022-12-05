@@ -16,6 +16,8 @@
         <el-table-column prop="name" header-align="center" align="center" label="姓名"></el-table-column>
         <el-table-column prop="sex" header-align="center" align="center" label="性别"></el-table-column>
         <el-table-column prop="age" header-align="center" align="center" label="年龄"></el-table-column>
+        <el-table-column prop="createTime" header-align="center" align="center" label="创建时间"></el-table-column>
+        <el-table-column prop="updateTime" header-align="center" align="center" label="修改时间"></el-table-column>
         <el-table-column header-align="center" align="center" label="操作">
             <template #default="scope">
                 <el-button type="primary" link @click="addOrUpdateFun(scope.row)">编辑</el-button>
@@ -44,6 +46,7 @@ import { onMounted, ref, reactive, nextTick } from 'vue'
 import { userUserList, userDeletePeople } from '@/api/user'
 import listAddOrUpdate from './list-add-or-update.vue'
 import { ElLoading, ElMessage, ElMessageBox } from 'element-plus'
+const dayjs = require('dayjs')
 
 let formData = reactive({
     name: '',
@@ -70,6 +73,10 @@ const queryList = () => {
         pageSize: pageSize.value
     }).then(({ data }) => {
         dataListLoading.value = false;
+        data.list.forEach((value) => {
+            value['createTime'] = dayjs(value.createTime).format('YYYY-MM-DD HH:mm:ss')
+            value['updateTime'] = dayjs(value.updateTime).format('YYYY-MM-DD HH:mm:ss')
+        })
         dataList.value = data.list.slice();
         totalPage.value = data.sum;
     }).catch(() => {
