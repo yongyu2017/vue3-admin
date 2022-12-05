@@ -163,7 +163,6 @@ app.post('/user/userList', async (req, res) => {
 
     if(token){
         let list= fileData.list,
-            sum= list.length,
             start= (pageIndex- 1) * pageSize,
             end= start+ pageSize;
 
@@ -177,6 +176,8 @@ app.post('/user/userList', async (req, res) => {
                     }
                 }
             }
+        }).sort((a, b) => {
+            return b.id - a.id
         })
         res.send({
             code: 200,
@@ -202,25 +203,26 @@ app.post('/user/addOrModifyPeople', async (req, res) => {
     const data = { id, name, sex, age };
     const fileData = await getFileData('people');
 
-    if (data.id) {
-        fileData.list.forEach((value) => {
-            if (value.id == data.id) {
-                for (let i in data) {
-                    value[i] = data[i]
-                }
-            }
-        })
-    } else {
-        fileData.list.push({
-            id: fileData.list.length + 1, 
-            name, 
-            sex, 
-            age,
-            state: 1
-        })
-    }
-
     if(token){
+        if (data.id) {
+            fileData.list.forEach((value) => {
+                if (value.id == data.id) {
+                    for (let i in data) {
+                        value[i] = data[i]
+                    }
+                    value['updateTime'] = new Date().getTime();
+                }
+            })
+        } else {
+            fileData.list.push({
+                id: fileData.list.length + 1, 
+                name, 
+                sex, 
+                age,
+                state: 1,
+                createTime: new Date().getTime()
+            })
+        }
         await setFileData('people', fileData)
         res.send({
             code: 200,
