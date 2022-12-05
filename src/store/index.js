@@ -25,17 +25,14 @@ export const useStorePinia = defineStore('main', {
         loginOut () {
             this.updateMenuList([])
         },
-        getUserInfo () {
-            return new Promise((resolve) => {
-                userGetUserInfo().then(({ data }) => {
-                    for (let i in data) {
-                        this.userInfo[i] = data[i];
-                    }
-                    this.permission = data.permission;
+        async getUserInfo () {
+            const { data } = await userGetUserInfo();
+            for (let i in data) {
+                this.userInfo[i] = data[i];
+            }
+            this.permission = data.permission;
 
-                    resolve(data)
-                })
-            })            
+            return data           
         },
     },
 });
