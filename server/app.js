@@ -182,7 +182,7 @@ app.post('/user/userList', async (req, res) => {
             code: 200,
             data: {
                 list: list.slice(start, end),
-                sum: sum,
+                sum: list.length,
             },
             msg: '',
         })
