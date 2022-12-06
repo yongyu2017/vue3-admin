@@ -1,10 +1,6 @@
 <template>
     <el-form :inline="true" :model="formData" @submit.prevent>
         <el-form-item>
-            <el-input v-model="formData.name" placeholder="请输入姓名" clearable class="inp-dom" />
-        </el-form-item>
-        <el-form-item>
-            <el-button type="primary" @click="searchFun">查询</el-button>
             <el-button @click="addOrUpdateFun()">新增</el-button>
         </el-form-item>
     </el-form>
@@ -36,7 +32,7 @@
     </el-table>
 
      <!-- 员工信息弹窗 -->
-     <listAddOrUpdate ref="listAddOrUpdateRef" @refreshDataList="searchFun" @close="listAddOrUpdateVisible= false" v-if="listAddOrUpdateVisible"></listAddOrUpdate>
+     <listAddOrUpdate ref="listAddOrUpdateRef" @refreshDataList="queryList" @close="listAddOrUpdateVisible= false" v-if="listAddOrUpdateVisible"></listAddOrUpdate>
 </template>
 
 <script setup>
@@ -68,10 +64,6 @@ const queryList = () => {
     }).catch(() => {
         dataListLoading.value = false;
     })
-}
-// 搜索
-const searchFun = () => {
-    queryList()
 }
 //新增或者修改
 const addOrUpdateFun = (item) => {

@@ -115,7 +115,7 @@
       "orderNum": 10,
       "status": 1,
       "createTime": 1670295045783,
-      "modifiedTime": 1670295045783
+      "modifiedTime": 1670296432518
     },
     {
       "id": 10,
@@ -129,6 +129,19 @@
       "status": 1,
       "createTime": 1670295100119,
       "modifiedTime": 1670295100119
+    },
+    {
+      "id": 11,
+      "menuName": "角色管理",
+      "parentId": 8,
+      "jumpUrl": "role/list",
+      "roleUrl": "",
+      "type": 1,
+      "icon": "Orange",
+      "orderNum": 20,
+      "status": 1,
+      "createTime": 1670296357880,
+      "modifiedTime": 1670296357880
     }
   ]
 }
