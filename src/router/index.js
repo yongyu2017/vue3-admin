@@ -1,7 +1,7 @@
 // import { defineAsyncComponent } from "vue";
 import { createRouter, createWebHashHistory } from "vue-router";
 import { ElLoading } from 'element-plus'
-import { isURL, clearLoginInfo } from '@/utils/utils'
+import { isURL, clearLoginInfo, menuToTreeMenu } from '@/utils/utils'
 import { userMenuList } from '@/api/user'
 import { useStorePinia } from "@/store"
 
@@ -54,10 +54,13 @@ router.beforeEach((to, from, next) => {
         })
         userMenuList().then(({ data })=> {
             loading.close()
-            fnAddDynamicMenuRoutes(data.list)
+            const list = menuToTreeMenu(data.menuList)
+            console.log(data.menuList)
+            
+            fnAddDynamicMenuRoutes(list)
             router.options.isAddDynamicMenuRoutes = true;
             const { updateMenuList } = useStorePinia();
-            updateMenuList(data.list || [])
+            updateMenuList(list || [])
 
             next({ ...to, replace: true })
         }).catch(()=> {
@@ -103,8 +106,8 @@ function fnAddDynamicMenuRoutes (menuList = []) {
 
     function computedMenuRoutes (list) {
         for (var i = 0; i < list.length; i++) {
-            if (list[i].list && list[i].list.length >= 1) {
-                computedMenuRoutes(list[i].list)
+            if (list[i].children && list[i].children.length >= 1) {
+                computedMenuRoutes(list[i].children)
             } else {
                 list[i].url = list[i].url.replace(/^\//, '')
                 let item = {

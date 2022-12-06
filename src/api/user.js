@@ -72,3 +72,29 @@ export function userGetPeople(data) {
     })
 }
 
+//获取菜单列表
+export function userNav(data) {
+    return request({
+        url: '/user/nav',
+        method: 'post',
+        data: data
+    })
+}
+
+//新增或修改菜单
+export function userAddOrModifyNav(data) {
+    return request({
+        url: '/user/addOrModifyNav',
+        method: 'post',
+        data: data
+    })
+}
+
+//获取菜单信息
+export function userGetNav(data) {
+    return request({
+        url: '/user/getNav',
+        method: 'post',
+        data: data
+    })
+}

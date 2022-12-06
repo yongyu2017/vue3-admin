@@ -86,64 +86,20 @@ app.post('/user/setUserInfo', async (req, res) => {
 })
 
 // 菜单
-app.post('/user/menuList', (req, res) => {
+app.post('/user/menuList', async (req, res) => {
     const { token } = req.headers
     
     if(token){
+        const fileData = await getFileData('menu');
+        fileData.menuList = fileData.menuList.filter((value) => {
+            value['menuId'] = value.id;
+            value['name'] = value.menuName;
+            value['url'] = value.jumpUrl;
+            return value.type === 0 || value.type === 1
+        })
         res.send({
             code: 200,
-            data: {
-                list: [
-                    {
-                        menuId: 1,
-                        name: '人事管理',
-                        url: '',
-                        icon: 'user',
-                        list: [
-                            {
-                                menuId: 2,
-                                name: '员工列表',
-                                url: 'personnel/list',
-                                icon: 'document',
-                            },
-                            {
-                                menuId: 3,
-                                name: '考勤管理',
-                                url: '',
-                                icon: 'goods',
-                                list: [
-                                    {
-                                        menuId: 4,
-                                        name: '考勤列表',
-                                        url: 'attendance/list',
-                                        icon: 'help',
-                                    }
-                                ],
-                            }
-                        ]
-                    },
-                    {
-                        menuId: 5,
-                        name: '商户管理',
-                        url: '',
-                        icon: 'takeawayBox',
-                        list: [
-                            {
-                                menuId: 6,
-                                name: '商户列表',
-                                url: 'merchants/list',
-                                icon: 'video-camera',
-                            },
-                        ]
-                    },
-                    {
-                        menuId: 7,
-                        name: 'Element',
-                        url: 'https://element.eleme.cn/#/zh-CN/component/tabs',
-                        icon: 'discount',
-                    }
-                ]
-            },
+            data: fileData,
             msg: '',
         })
     }else{
@@ -151,6 +107,96 @@ app.post('/user/menuList', (req, res) => {
             code: -1,
             data: '',
             msg: '未登录'
+        })
+    }
+})
+
+// 菜单列表
+app.post('/user/nav', async (req, res) => {
+    const { token } = req.headers
+    
+    if(token){
+        const fileData = await getFileData('menu');
+
+        res.send({
+            code: 200,
+            data: fileData,
+            msg: '',
+        })
+    }else{
+        res.send({
+            code: -1,
+            data: '',
+            msg: '未登录'
+        })
+    }
+})
+
+// 新增或修改菜单
+app.post('/user/addOrModifyNav', async (req, res) => {
+    const { token } = req.headers
+    const { id, menuName, parentId, jumpUrl, roleUrl, type, icon, orderNum } = req['body'];
+    const data = { id, menuName, parentId, jumpUrl, roleUrl, type, icon, orderNum };
+    const fileData = await getFileData('menu');
+
+    if(token){
+        if (data.id) {
+            fileData.menuList.forEach((value) => {
+                if (value.id == data.id) {
+                    for (let i in data) {
+                        value[i] = data[i]
+                    }
+                    value['modifiedTime'] = new Date().getTime();
+                }
+            })
+        } else {
+            fileData.menuList.push({
+                id: fileData.menuList.length + 1, 
+                menuName, parentId, jumpUrl, roleUrl, type, icon, orderNum,
+                status: 1,
+                createTime: new Date().getTime(),
+                modifiedTime: new Date().getTime(),
+            })
+        }
+        await setFileData('menu', fileData)
+        res.send({
+            code: 200,
+            data: {
+            },
+            msg: '',
+        })
+    }else{
+        res.send({
+            code: 401,
+            data: '',
+            msg: '登录过期，请重新登录！'
+        })
+    }
+})
+
+// 获取菜单信息
+app.post('/user/getNav', async (req, res) => {
+    const { token } = req.headers
+    const { id } = req['body'];
+    const fileData = await getFileData('menu');
+
+    if(token){
+        let data = {};
+        fileData.menuList.forEach((value) => {
+            if(value.id == id){
+                data = value;
+            }
+        })
+        res.send({
+            code: 200,
+            data,
+            msg: '',
+        })
+    }else{
+        res.send({
+            code: 401,
+            data: '',
+            msg: '登录过期，请重新登录！'
         })
     }
 })
@@ -282,7 +328,6 @@ app.post('/user/getPeople', async (req, res) => {
                 data = value;
             }
         })
-        await setFileData('people', fileData)
         res.send({
             code: 200,
             data,

@@ -28,3 +28,25 @@ export function clearLoginInfo () {
     localStorage.removeItem('token')
 }
 
+// 将一维数据转为树形结构
+export function menuToTreeMenu (source) {
+    const len = source.length
+    for (let i = 0; i < len; i++) {
+        let arrTemp = []
+        for (let j = 0; j < len; j++) {
+            if (source[i].id == source[j].parentId) {
+                arrTemp.push(source[j])
+                source[i].children = arrTemp
+            }
+        }
+    }
+    
+    let result = []
+    for (let i = 0; i < source.length; i++) {
+        if (source[i].parentId == 0) {
+            result.push(source[i])
+        }
+    }
+
+    return result
+}
