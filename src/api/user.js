@@ -98,3 +98,39 @@ export function userGetNav(data) {
         data: data
     })
 }
+
+//获取角色列表
+export function userRole(data) {
+    return request({
+        url: '/user/role',
+        method: 'post',
+        data: data
+    })
+}
+
+//新增或修改角色信息
+export function userAddOrModifyRole(data) {
+    return request({
+        url: '/user/addOrModifyRole',
+        method: 'post',
+        data: data
+    })
+}
+
+//删除角色信息
+export function userDeleteRole(data) {
+    return request({
+        url: '/user/deleteRole',
+        method: 'post',
+        data: data
+    })
+}
+
+//获取角色信息
+export function userGetRole(data) {
+    return request({
+        url: '/user/getRole',
+        method: 'post',
+        data: data
+    })
+}

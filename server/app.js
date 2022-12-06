@@ -342,6 +342,145 @@ app.post('/user/getPeople', async (req, res) => {
     }
 })
 
+// 获取角色列表
+app.post('/user/role', async (req, res) => {
+    const { token } = req.headers
+    const fileData = await getFileData('role');
+    const { pageIndex, pageSize, name } = req['body'];
+
+    if(token){
+        let list= fileData.list,
+            start= (pageIndex- 1) * pageSize,
+            end= start+ pageSize;
+
+        list = list.filter((value)=> {
+            if(value.state == 1){
+                if(name == ''){
+                    return true
+                }else{
+                    if(value.name.indexOf(name.toLocaleLowerCase()) != -1){
+                        return true
+                    }
+                }
+            }
+        }).sort((a, b) => {
+            return b.id - a.id
+        })
+        res.send({
+            code: 200,
+            data: {
+                list: list.slice(start, end),
+                sum: list.length,
+            },
+            msg: '',
+        })
+    }else{
+        res.send({
+            code: 401,
+            data: '',
+            msg: '登录过期，请重新登录！'
+        })
+    }
+})
+// 新增或修改角色信息
+app.post('/user/addOrModifyRole', async (req, res) => {
+    const { token } = req.headers
+    const { id, name, des, role } = req['body'];
+    const data = { id, name, des, role };
+    const fileData = await getFileData('role');
+
+    if(token){
+        if (data.id) {
+            fileData.list.forEach((value) => {
+                if (value.id == data.id) {
+                    for (let i in data) {
+                        value[i] = data[i]
+                    }
+                    value['updateTime'] = new Date().getTime();
+                }
+            })
+        } else {
+            fileData.list.push({
+                id: fileData.list.length + 1, 
+                name, 
+                des,
+                role,
+                state: 1,
+                createTime: new Date().getTime(),
+                updateTime: new Date().getTime(),
+            })
+        }
+        await setFileData('role', fileData)
+        res.send({
+            code: 200,
+            data: {
+            },
+            msg: '',
+        })
+    }else{
+        res.send({
+            code: 401,
+            data: '',
+            msg: '登录过期，请重新登录！'
+        })
+    }
+})
+
+// 删除角色信息
+app.post('/user/deleteRole', async (req, res) => {
+    const { token } = req.headers
+    const { id } = req['body'];
+    const fileData = await getFileData('role');
+
+    if(token){
+        fileData.list.forEach((value) => {
+            if(value.id == id){
+                value.state = 0;
+            }
+        })
+        await setFileData('role', fileData)
+        res.send({
+            code: 200,
+            data: {
+            },
+            msg: '',
+        })
+    }else{
+        res.send({
+            code: 401,
+            data: '',
+            msg: '登录过期，请重新登录！'
+        })
+    }
+})
+
+// 获取角色信息
+app.post('/user/getRole', async (req, res) => {
+    const { token } = req.headers
+    const { id } = req['body'];
+    const fileData = await getFileData('role');
+
+    if(token){
+        let data = {};
+        fileData.list.forEach((value) => {
+            if(value.id == id){
+                data = value;
+            }
+        })
+        res.send({
+            code: 200,
+            data,
+            msg: '',
+        })
+    }else{
+        res.send({
+            code: 401,
+            data: '',
+            msg: '登录过期，请重新登录！'
+        })
+    }
+})
+
 //配置服务端口
 app.listen(8000, () => {
     console.log('node接口服务正常运行')
