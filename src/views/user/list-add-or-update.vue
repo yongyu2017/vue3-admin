@@ -2,24 +2,23 @@
     <el-dialog @close="closeFun" :title="!dataForm.id ? '新增' : '修改'" :close-on-click-modal="false" v-model="visible">
         <el-form ref="dataFormRef" :model="dataForm" :rules="dataRule" @keyup.enter="dataFormSubmit()"
             label-width="100px">
-            <el-form-item label="角色名称：" prop="name">
-                <el-input v-model.trim="dataForm.name" placeholder="请输入" class="inp-dom"></el-input>
+            <el-form-item label="账号：" prop="name">
+                <el-input v-model.trim="dataForm.name" placeholder="请输入" :disabled="dataForm.id != ''" class="inp-dom"></el-input>
             </el-form-item>
-            <el-form-item label="角色描述：" prop="des">
+            <el-form-item label="密码：" prop="pwd">
+                <el-input v-model.trim="dataForm.pwd" placeholder="请输入" type="password" class="inp-dom"></el-input>
+            </el-form-item>
+            <el-form-item label="角色：" prop="role">
+                <el-select v-model="dataForm.role" :disabled="dataForm.id === 1" class="inp-dom">
+                    <el-option :label="item.name" :value="item.id" v-for="(item, index) in roleList" :key="index" />
+                </el-select>
+            </el-form-item>
+            <el-form-item label="邮箱：" prop="email">
+                <el-input v-model.trim="dataForm.email" placeholder="请输入" class="inp-dom"></el-input>
+            </el-form-item>
+            <el-form-item label="备注：" prop="des">
                 <el-input v-model.trim="dataForm.des" placeholder="请输入" :rows="3" type="textarea"
                     class="inp-dom"></el-input>
-            </el-form-item>
-            <el-form-item label="角色权限：" prop="role">
-                <el-tree ref="treeRef"
-                    class="inp-dom"
-                    :data="roleList" 
-                    show-checkbox 
-                    default-expand-all 
-                    node-key="id" 
-                    highlight-current
-                    check-on-click-node
-                    :expand-on-click-node="false"
-                    :props="defaultProps" />
             </el-form-item>
         </el-form>
 
@@ -35,28 +34,46 @@
 <script setup>
 import { ref, reactive, defineEmits, nextTick, defineExpose } from 'vue'
 import { ElLoading } from 'element-plus'
-import { userGetRole, userAddOrModifyRole, userNav } from '@/api/user'
-import { menuToTreeMenu } from '@/utils/utils'
+import { userGetUser, userAddOrModifyUser, userRole } from '@/api/user'
+import { checkEamil }  from '@/utils/utils'
 
+// 校验邮箱
+const emailValidator = (rule, value, callback) => {
+    if (value) {
+        if (checkEamil(value)) {
+            callback()
+        }else {
+            callback(new Error('请输入正确的邮箱！'))
+        }
+    } else {
+        callback(new Error('请输入邮箱！'))
+    }
+}
 const dataFormRef = ref();
 let visible = ref(false);
 let dataForm = ref({
     id: '',  //修改时填写
     name: '',
+    pwd: '',
+    role: '',
+    email: '',
     des: '',
-    role: [],
 })
 const dataRule = reactive({
     name: [
         { required: true, message: '请输入', trigger: 'blur' },
     ],
+    pwd: [
+        { required: true, message: '请输入', trigger: 'blur' },
+    ],
+    role: [
+        { required: true, message: '请选择', trigger: 'change' },
+    ],
+    email: [
+        { required: true, validator: emailValidator, trigger: 'blur' },
+    ]
 })
-const treeRef = ref(null);
 const roleList = ref([]);
-const defaultProps = {
-    children: 'children',
-    label: 'label',
-}
 const emit = defineEmits(['refreshDataList', 'close'])
 
 // eslint-disable-next-line
@@ -64,31 +81,24 @@ var init = (item) => {
     visible.value = true;
 
     nextTick(async () => {
-        await userNavFun()
+        userRoleFun()
         if (item) {
-            userGetRole({
+            userGetUser({
                 id: item.id,
             }).then(({ data }) => {
-                data['role'] = data['role'] ? data['role'].split(',') : [];
                 dataForm.value = data;
-
-                dataForm.value.role.forEach((value) => {
-                    console.log(value)
-                    value = Number(value);
-                })
-                treeRef.value.setCheckedKeys(dataForm.value.role, false)
             })
         }
     })
 }
-// 获取权限列表
-const userNavFun = async () => {
-    await userNav().then(({ data }) => {
-        data.menuList.forEach((value) => {
-            value['value'] = value.id;
-            value['label'] = value.menuName + '+' + value.id;
-        })
-        roleList.value = menuToTreeMenu(data.menuList);
+// 获取角色列表
+const userRoleFun = () => {
+    userRole({
+        name: '',
+        pageIndex: 1,
+        pageSize: 1000
+    }).then(({ data }) => {
+        roleList.value = data.list.slice();
     })
 }
 // 表单提交
@@ -99,9 +109,7 @@ const dataFormSubmit = () => {
                 lock: true,
             })
 
-            dataForm.value.role = treeRef.value.getCheckedKeys(false).join(',');
-
-            userAddOrModifyRole({
+            userAddOrModifyUser({
                 ...dataForm.value
             }).then(() => {
                 loading.close()

@@ -9,7 +9,7 @@ export function userLogin(data) {
     })
 }
 
-//获取用户信息
+//获取当前用户信息
 export function userGetUserInfo(data) {
     return request({
         url: '/user/getUserInfo',
@@ -18,7 +18,7 @@ export function userGetUserInfo(data) {
     })
 }
 
-//设置用户信息
+//修改当前用户信息
 export function userSetUserInfo(data) {
     return request({
         url: 'user/setUserInfo',
@@ -27,7 +27,7 @@ export function userSetUserInfo(data) {
     })
 }
 
-//菜单
+//获取当前用户菜单
 export function userMenuList(data) {
     return request({
         url: '/user/menuList',
@@ -37,9 +37,9 @@ export function userMenuList(data) {
 }
 
 //获取员工列表
-export function userUserList(data) {
+export function userPeopleList(data) {
     return request({
-        url: '/user/userList',
+        url: '/user/peopleList',
         method: 'post',
         data: data
     })
@@ -130,6 +130,42 @@ export function userDeleteRole(data) {
 export function userGetRole(data) {
     return request({
         url: '/user/getRole',
+        method: 'post',
+        data: data
+    })
+}
+
+//获取用户列表
+export function userUserList(data) {
+    return request({
+        url: '/user/userList',
+        method: 'post',
+        data: data
+    })
+}
+
+//新增或修改用户信息
+export function userAddOrModifyUser(data) {
+    return request({
+        url: '/user/addOrModifyUser',
+        method: 'post',
+        data: data
+    })
+}
+
+//删除用户信息
+export function userDeleteUser(data) {
+    return request({
+        url: '/user/deleteUser',
+        method: 'post',
+        data: data
+    })
+}
+
+//获取用户信息
+export function userGetUser(data) {
+    return request({
+        url: '/user/getUser',
         method: 'post',
         data: data
     })

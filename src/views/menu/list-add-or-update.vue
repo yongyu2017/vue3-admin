@@ -187,9 +187,11 @@ defineExpose({
     overflow-y: auto;
     .el-button--primary{
         color: var(--el-color-white);
-        font-size: 24px;
         border-color: var(--el-color-primary);
         background-color: var(--el-color-primary);
+    }
+    .el-button{
+        font-size: 16px;
     }
     .flex-box{
         display: flex;

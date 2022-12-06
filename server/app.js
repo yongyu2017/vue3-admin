@@ -18,17 +18,37 @@ app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())  //data参数以字典格式传输
 
 // 登录
-app.post('/user/login', (req, res) => {
+app.post('/user/login', async (req, res) => {
     const { name, pwd } = req['body'];
 
-    if((name && pwd) && (name == 'admin' && pwd == '123456')){
+    if(name && pwd){
+        const userFileData = await getFileData('user');
+        const roleFileData = await getFileData('role');
+        const menuFileData = await getFileData('menu');
+        let data = {};
+        let userRole = '';
+        let roleIds = [];
+        userFileData.list.forEach((value) => {
+            if (value.name == name && value.pwd == pwd) {
+                const { name, email, id, role } = value;
+                data = { name, email, id, token: id, permission: [] }
+                userRole = role;
+            }
+        })
+        roleFileData.list.forEach((value) => {
+            if (value.id == userRole) {
+                roleIds = value.role ? value.role.split(',') : [];
+            }
+        })
+        menuFileData.menuList.forEach((value) => {
+            if (roleIds.includes(value.id + '') && value.roleUrl) {
+                data.permission.push(value.roleUrl)
+            }
+        })
+        
         res.send({
             code: 200,
-            data: {
-                'userName': '小猪',
-                'sex': '男',
-                'token': 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9'
-            },
+            data,
             msg: '',
         })
     }else{
@@ -40,15 +60,37 @@ app.post('/user/login', (req, res) => {
     }
 })
 
-// 获取用户信息
+// 获取当前用户信息
 app.post('/user/getUserInfo', async (req, res) => {
     const { token } = req.headers;
-    const fileData = await getFileData('user');
     
     if(token){
+        const userFileData = await getFileData('user');
+        const roleFileData = await getFileData('role');
+        const menuFileData = await getFileData('menu');
+        let data = {};
+        let userRole = '';
+        let roleIds = [];
+        userFileData.list.forEach((value) => {
+            if (value.id == token) {
+                const { name, email, id, role } = value;
+                data = { name, email, id, token: id, permission: [] }
+                userRole = role;
+            }
+        })
+        roleFileData.list.forEach((value) => {
+            if (value.id == userRole) {
+                roleIds = value.role ? value.role.split(',') : [];
+            }
+        })
+        menuFileData.menuList.forEach((value) => {
+            if (roleIds.includes(value.id + '') && value.roleUrl) {
+                data.permission.push(value.roleUrl)
+            }
+        })
         res.send({
             code: 200,
-            data: fileData,
+            data,
             msg: '',
         })
     }else{
@@ -60,7 +102,7 @@ app.post('/user/getUserInfo', async (req, res) => {
     }
 })
 
-// 修改用户信息
+// 修改当前用户信息
 app.post('/user/setUserInfo', async (req, res) => {
     const { token } = req.headers;
     const { userName, sex } = req['body'];
@@ -85,21 +127,35 @@ app.post('/user/setUserInfo', async (req, res) => {
     }
 })
 
-// 菜单
+// 获取当前用户菜单
 app.post('/user/menuList', async (req, res) => {
     const { token } = req.headers
     
     if(token){
-        const fileData = await getFileData('menu');
-        fileData.menuList = fileData.menuList.filter((value) => {
+        const userFileData = await getFileData('user');
+        const roleFileData = await getFileData('role');
+        const menuFileData = await getFileData('menu');
+        let userRole = '';
+        let roleIds = [];
+        userFileData.list.forEach((value) => {
+            if (value.id == token) {
+                userRole = value.role;
+            }
+        })
+        roleFileData.list.forEach((value) => {
+            if (value.id == userRole) {
+                roleIds = value.role ? value.role.split(',') : [];
+            }
+        })
+        menuFileData.menuList = menuFileData.menuList.filter((value) => {
             value['menuId'] = value.id;
             value['name'] = value.menuName;
             value['url'] = value.jumpUrl;
-            return value.type === 0 || value.type === 1
+            return (value.type === 0 || value.type === 1) && roleIds.includes(value.id + '')
         })
         res.send({
             code: 200,
-            data: fileData,
+            data: menuFileData,
             msg: '',
         })
     }else{
@@ -202,7 +258,7 @@ app.post('/user/getNav', async (req, res) => {
 })
 
 // 获取员工列表
-app.post('/user/userList', async (req, res) => {
+app.post('/user/peopleList', async (req, res) => {
     const { token } = req.headers
     const fileData = await getFileData('people');
     const { pageIndex, pageSize, name } = req['body'];
@@ -459,6 +515,148 @@ app.post('/user/getRole', async (req, res) => {
     const { token } = req.headers
     const { id } = req['body'];
     const fileData = await getFileData('role');
+
+    if(token){
+        let data = {};
+        fileData.list.forEach((value) => {
+            if(value.id == id){
+                data = value;
+            }
+        })
+        res.send({
+            code: 200,
+            data,
+            msg: '',
+        })
+    }else{
+        res.send({
+            code: 401,
+            data: '',
+            msg: '登录过期，请重新登录！'
+        })
+    }
+})
+
+// 获取用户列表
+app.post('/user/userList', async (req, res) => {
+    const { token } = req.headers
+    const fileData = await getFileData('user');
+    const { pageIndex, pageSize, name } = req['body'];
+
+    if(token){
+        let list= fileData.list,
+            start= (pageIndex- 1) * pageSize,
+            end= start+ pageSize;
+
+        list = list.filter((value)=> {
+            if(value.state == 1){
+                if(name == ''){
+                    return true
+                }else{
+                    if(value.name.indexOf(name.toLocaleLowerCase()) != -1){
+                        return true
+                    }
+                }
+            }
+        }).sort((a, b) => {
+            return b.id - a.id
+        })
+        res.send({
+            code: 200,
+            data: {
+                list: list.slice(start, end),
+                sum: list.length,
+            },
+            msg: '',
+        })
+    }else{
+        res.send({
+            code: 401,
+            data: '',
+            msg: '登录过期，请重新登录！'
+        })
+    }
+})
+
+// 新增或修改用户信息
+app.post('/user/addOrModifyUser', async (req, res) => {
+    const { token } = req.headers
+    const { id, name, des, role, email, pwd } = req['body'];
+    const data = { id, name, des, role, email, pwd };
+    const fileData = await getFileData('user');
+
+    if(token){
+        if (data.id) {
+            fileData.list.forEach((value) => {
+                if (value.id == data.id) {
+                    for (let i in data) {
+                        value[i] = data[i]
+                    }
+                    value['updateTime'] = new Date().getTime();
+                }
+            })
+        } else {
+            fileData.list.push({
+                id: fileData.list.length + 1, 
+                name, 
+                des,
+                role,
+                email,
+                pwd,
+                state: 1,
+                createTime: new Date().getTime(),
+                updateTime: new Date().getTime(),
+            })
+        }
+        await setFileData('user', fileData)
+        res.send({
+            code: 200,
+            data: {
+            },
+            msg: '',
+        })
+    }else{
+        res.send({
+            code: 401,
+            data: '',
+            msg: '登录过期，请重新登录！'
+        })
+    }
+})
+
+// 删除用户信息
+app.post('/user/deleteUser', async (req, res) => {
+    const { token } = req.headers
+    const { id } = req['body'];
+    const fileData = await getFileData('user');
+
+    if(token){
+        fileData.list.forEach((value) => {
+            if(value.id == id){
+                value.state = 0;
+            }
+        })
+        await setFileData('user', fileData)
+        res.send({
+            code: 200,
+            data: {
+            },
+            msg: '',
+        })
+    }else{
+        res.send({
+            code: 401,
+            data: '',
+            msg: '登录过期，请重新登录！'
+        })
+    }
+})
+
+// 获取用户信息
+app.post('/user/getUser', async (req, res) => {
+    const { token } = req.headers
+    const { id } = req['body'];
+    const fileData = await getFileData('user');
 
     if(token){
         let data = {};

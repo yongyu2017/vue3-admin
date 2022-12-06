@@ -21,6 +21,11 @@ export function isURL (s) {
     return /^http[s]?:\/\/.*/.test(s)
 }
 
+// 校验邮箱地址
+export function checkEamil (str) {
+    return /^[a-zA-Z0-9]+([-_.][A-Za-zd]+)*@([a-zA-Z0-9]+[-.])+[A-Za-zd]{2,5}$/.test(str)
+}
+
 /**
  * 清除登录信息
  */

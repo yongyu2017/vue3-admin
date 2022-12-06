@@ -25,7 +25,7 @@ const store = useStorePinia()
 const { getUserInfo } = store;
 const dataFormRef = ref();
 let dataForm = ref({
-    userName: '',
+    name: '',
     sex: '',
 })
 const dataRule = reactive({

@@ -142,6 +142,19 @@
       "status": 1,
       "createTime": 1670296357880,
       "modifiedTime": 1670296357880
+    },
+    {
+      "id": 12,
+      "menuName": "用户管理",
+      "parentId": 8,
+      "jumpUrl": "user/list",
+      "roleUrl": "",
+      "type": 1,
+      "icon": "Notification",
+      "orderNum": 30,
+      "status": 1,
+      "createTime": 1670306672730,
+      "modifiedTime": 1670306672730
     }
   ]
 }

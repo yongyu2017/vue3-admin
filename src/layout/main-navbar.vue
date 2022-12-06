@@ -9,7 +9,7 @@
                 <el-menu-item class="site-navbar__avatar" index="1">
                     <el-dropdown :show-timeout="0" placement="bottom">
                         <span class="el-dropdown-link">
-                            <img src="~@/assets/img/avatar.png" :alt="userInfo.userName">{{ userInfo.userName }}
+                            <img src="~@/assets/img/avatar.png" :alt="userInfo.name">{{ userInfo.name }}
                         </span>
                         <template #dropdown>
                             <el-dropdown-menu >
