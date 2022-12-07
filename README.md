@@ -1,8 +1,8 @@
 # 介绍
 
-此项目是一个基于vue3+ElementPlus+webpack的中后台管理系统基础解决方案。<br>提供基于express的本地接口服务，便于整个项目流程的查看。
+此项目是一个基于vue3+ElementPlus+webpack的中后台管理系统基础解决方案。提供基于express的本地接口服务，便于整个项目流程的查看。
 
-超级管理员：admin 123456
+超级管理员：admin 123456<br>
 测试人员：test 123456
 
 ## 技术栈
