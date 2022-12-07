@@ -82,7 +82,7 @@ const userNavFun = async () => {
     await userNav().then(({ data }) => {
         data.menuList.forEach((value) => {
             value['value'] = value.id;
-            value['label'] = value.menuName + '+' + value.id;
+            value['label'] = value.menuName;
         })
         roleList.value = menuToTreeMenu(data.menuList);
     })

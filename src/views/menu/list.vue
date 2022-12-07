@@ -27,6 +27,7 @@
         <el-table-column header-align="center" align="center" label="操作">
             <template #default="scope">
                 <el-button type="primary" link @click="addOrUpdateFun(scope.row)">编辑</el-button>
+                <el-button type="primary" link @click="delFun(scope.row.id)">删除</el-button>
             </template>
         </el-table-column>
     </el-table>
@@ -37,11 +38,10 @@
 
 <script setup>
 import { onMounted, ref, reactive, nextTick } from 'vue'
-import { userNav } from '@/api/user'
+import { userNav, userDeleteNav } from '@/api/user'
 import listAddOrUpdate from './list-add-or-update.vue'
 import { menuToTreeMenu } from '@/utils/utils'
-// import { ElLoading, ElMessage, ElMessageBox } from 'element-plus'
-// const dayjs = require('dayjs')
+import { ElLoading, ElMessage, ElMessageBox } from 'element-plus'
 
 let formData = reactive({
     name: '',
@@ -71,6 +71,35 @@ const addOrUpdateFun = (item) => {
     nextTick(() => {
         listAddOrUpdateRef.value.init(item || '')
     })
+}
+//删除
+const delFun = (id) => {
+    ElMessageBox.confirm(
+        `确定要删除ID为${ id }的数据吗?`,
+        'Warning',
+        {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning',
+        }
+    ).then(() => {
+
+        const loading = ElLoading.service({
+            lock: true,
+        })
+
+        userDeleteNav({
+            id,
+        }).then(() => {
+            loading.close()
+            queryList()
+
+            ElMessage.success('操作成功')
+        }).catch(() => {
+            loading.close()
+        })
+
+    }) 
 }
 </script>
 

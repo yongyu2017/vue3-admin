@@ -23,7 +23,7 @@ const setFileData = async (fileName, data) => {
 // 查找父节点
 const findParentNode = (ids, list) => {
     let tempList = [];
-    let tree = menuToTreeMenu(list);
+    let tree = menuToTreeMenu(deepCopy(list));
 
     ids.forEach((value) => {
         tempList.push(...findP(value, tree, []))
@@ -54,8 +54,42 @@ const findParentNode = (ids, list) => {
     }
 }
 
+// 查找子节点
+const findChildNode = (id, list) => {
+    let tree = menuToTreeMenu(deepCopy(list));
+
+    return getAllChildrenNodes(tree, id)
+
+    function getAllChildrenNodes(list, id) {
+        var result = [];
+        for (let i in list) {
+            if (list[i].id === id) {
+                if (list[i].children && list[i].children.length > 0) {
+                    result = getChild(list[i].children)
+                }
+            } else {
+                if (list[i].children && list[i].children.length > 0) {
+                    getAllChildrenNodes(list[i].children, id)
+                }
+            }
+        }
+        return result
+    }
+    function getChild(list) {
+        var arr = [];
+        list.forEach(v => {
+            arr.push(v.id)
+            if (v.children) {
+                arr.push(...getChild(v.children))
+                return false
+            }
+        })
+        return arr
+    }
+}
+
 // 将一维数据转为树形结构
-function menuToTreeMenu (source) {
+function menuToTreeMenu(source) {
     const len = source.length
     for (let i = 0; i < len; i++) {
         let arrTemp = []
@@ -66,7 +100,7 @@ function menuToTreeMenu (source) {
             }
         }
     }
-    
+
     let result = []
     for (let i = 0; i < source.length; i++) {
         if (source[i].parentId == 0) {
@@ -96,15 +130,23 @@ function deepCopy(params) {
         return newnew // 克隆完以后，再返回出结果
     }
     // 如果是普通数据类型
-    return params 
+    return params
 }
 
+//获取最大值
+function getMax (list) {
+    var arr = list.map((value) => value.id).sort((a, b) => (a - b));
+    return arr.length > 0 ? arr[arr.length - 1] : 0
+}
 
 module.exports = {
     getFileData,
     setFileData,
     findParentNode,
+    findChildNode,
+    menuToTreeMenu,
     deepCopy,
+    getMax,
 }
 
 

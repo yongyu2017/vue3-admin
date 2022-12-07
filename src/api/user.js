@@ -90,6 +90,15 @@ export function userAddOrModifyNav(data) {
     })
 }
 
+//删除菜单
+export function userDeleteNav(data) {
+    return request({
+        url: '/user/deleteNav',
+        method: 'post',
+        data: data
+    })
+}
+
 //获取菜单信息
 export function userGetNav(data) {
     return request({

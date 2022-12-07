@@ -3,7 +3,7 @@ let app = express();
 let bodyParser = require('body-parser');
 // 更新 json 数据
 // const { getFileData, setFileData } = require('./readOrWriteFile')
-const { getFileData, setFileData, findParentNode, deepCopy } = require('./utils/index.js')
+const { getFileData, setFileData, findParentNode, findChildNode, getMax } = require('./utils/index.js');
 
 //设置跨域访问
 app.all('*', function (req, res, next) {
@@ -151,13 +151,13 @@ app.post('/user/menuList', async (req, res) => {
         roleIds = roleIds.map((value) => {
             return Number(value)
         })
-        const parentIds = findParentNode(roleIds, deepCopy(menuFileData.menuList))
+        const parentIds = findParentNode(roleIds, menuFileData.menuList)
         roleIds.push(...parentIds)
         menuFileData.menuList = menuFileData.menuList.filter((value) => {
             value['menuId'] = value.id;
             value['name'] = value.menuName;
             value['url'] = value.jumpUrl;
-            return value.type != 2 && roleIds.includes(value.id)
+            return value.type != 2 && roleIds.includes(value.id) && value.status == 1
         })
         res.send({
             code: 200,
@@ -180,6 +180,9 @@ app.post('/user/nav', async (req, res) => {
     if(token){
         const fileData = await getFileData('menu');
 
+        fileData.menuList = fileData.menuList.filter((value) => {
+            return value.status == 1
+        })
         res.send({
             code: 200,
             data: fileData,
@@ -212,14 +215,45 @@ app.post('/user/addOrModifyNav', async (req, res) => {
                 }
             })
         } else {
+            const max = getMax(fileData.menuList);
             fileData.menuList.push({
-                id: fileData.menuList.length + 1, 
+                id: max + 1, 
                 menuName, parentId, jumpUrl, roleUrl, type, icon, orderNum,
                 status: 1,
                 createTime: new Date().getTime(),
                 modifiedTime: new Date().getTime(),
             })
         }
+        await setFileData('menu', fileData)
+        res.send({
+            code: 200,
+            data: {
+            },
+            msg: '',
+        })
+    }else{
+        res.send({
+            code: 401,
+            data: '',
+            msg: '登录过期，请重新登录！'
+        })
+    }
+})
+
+// 删除菜单
+app.post('/user/deleteNav', async (req, res) => {
+    const { token } = req.headers
+    const { id } = req['body'];
+    const fileData = await getFileData('menu');
+
+    if(token){
+        const ids = [id];
+        ids.push(...findChildNode(id, fileData.menuList))
+        fileData.menuList.forEach((value) => {
+            if(ids.includes(value.id)){
+                value.status = 0;
+            }
+        })
         await setFileData('menu', fileData)
         res.send({
             code: 200,
@@ -322,8 +356,9 @@ app.post('/user/addOrModifyPeople', async (req, res) => {
                 }
             })
         } else {
+            const max = getMax(fileData.list);
             fileData.list.push({
-                id: fileData.list.length + 1, 
+                id: max + 1, 
                 name, 
                 sex, 
                 age,
@@ -444,6 +479,7 @@ app.post('/user/role', async (req, res) => {
         })
     }
 })
+
 // 新增或修改角色信息
 app.post('/user/addOrModifyRole', async (req, res) => {
     const { token } = req.headers
@@ -462,8 +498,9 @@ app.post('/user/addOrModifyRole', async (req, res) => {
                 }
             })
         } else {
+            const max = getMax(fileData.list);
             fileData.list.push({
-                id: fileData.list.length + 1, 
+                id: max + 1, 
                 name, 
                 des,
                 role,
@@ -602,8 +639,9 @@ app.post('/user/addOrModifyUser', async (req, res) => {
                 }
             })
         } else {
+            const max = getMax(fileData.list);
             fileData.list.push({
-                id: fileData.list.length + 1, 
+                id: max + 1, 
                 name, 
                 des,
                 role,

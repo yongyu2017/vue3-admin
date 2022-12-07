@@ -181,6 +181,19 @@
       "status": 1,
       "createTime": 1670316546875,
       "modifiedTime": 1670316546875
+    },
+    {
+      "id": 15,
+      "menuName": "删除",
+      "parentId": 6,
+      "jumpUrl": "",
+      "roleUrl": "merchants:list:delete",
+      "type": 2,
+      "icon": "",
+      "orderNum": 0,
+      "status": 1,
+      "createTime": 1670378313741,
+      "modifiedTime": 1670378332048
     }
   ]
 }
