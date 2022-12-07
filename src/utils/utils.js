@@ -1,3 +1,6 @@
+import { useStorePinia } from '@/store'
+import router from '@/router'
+
 //深拷贝
 export function deepCopy(obj) {
     var result = Array.isArray(obj) ? [] : {};
@@ -30,7 +33,12 @@ export function checkEamil (str) {
  * 清除登录信息
  */
 export function clearLoginInfo () {
+    const store = useStorePinia()
+    const { resetStore } = store;
     localStorage.removeItem('token')
+    router.options.isAddDynamicMenuRoutes = false;
+    resetStore()
+    
 }
 
 // 将一维数据转为树形结构

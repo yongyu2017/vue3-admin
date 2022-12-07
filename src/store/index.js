@@ -22,8 +22,14 @@ export const useStorePinia = defineStore('main', {
         updateCommonStore (name, val) {
             this[name] = val;
         },
-        loginOut () {
-            this.updateMenuList([])
+        resetStore () {
+            this.userInfo = {};
+            this.permission = [];
+            this.menuList = [];
+            this.dynamicMenuRoutes = [];
+            this.menuActiveName = '';
+            this.mainTabs = [];
+            this.mainTabsActiveName = '';
         },
         async getUserInfo () {
             const { data } = await userGetUserInfo();

@@ -55,7 +55,6 @@ router.beforeEach((to, from, next) => {
         userMenuList().then(({ data })=> {
             loading.close()
             const list = menuToTreeMenu(data.menuList)
-            console.log(data.menuList)
             
             fnAddDynamicMenuRoutes(list)
             router.options.isAddDynamicMenuRoutes = true;
