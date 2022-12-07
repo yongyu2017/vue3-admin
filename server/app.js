@@ -29,13 +29,23 @@ app.post('/user/login', async (req, res) => {
         let data = {};
         let userRole = '';
         let roleIds = [];
+        let isLogin = false;
         userFileData.list.forEach((value) => {
             if (value.name == name && value.pwd == pwd) {
                 const { name, email, id, role } = value;
                 data = { name, email, id, token: id, permission: [] }
                 userRole = role;
+                isLogin = true;
             }
         })
+        if (!isLogin) {
+            res.send({
+                code: -1,
+                data: {},
+                msg: '密码或者账号错误！',
+            })
+            return
+        }
         roleFileData.list.forEach((value) => {
             if (value.id == userRole) {
                 roleIds = value.role ? value.role.split(',') : [];
