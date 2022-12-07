@@ -13,17 +13,16 @@
     </el-form>
 
      <!-- 员工信息弹窗 -->
-     <passwordModify ref="passwordModifyRef" @close="passwordModifyVisible= false" v-if="passwordModifyVisible"></passwordModify>
+     <indexPasswordModify ref="indexPasswordModifyRef" @close="indexPasswordModifyVisible= false" v-if="indexPasswordModifyVisible"></indexPasswordModify>
 </template>
 
 <script setup>
-import { reactive, onMounted, ref } from 'vue'
+import { reactive, onMounted, ref, nextTick } from 'vue'
 import { useStorePinia } from "@/store"
 import { ElLoading } from 'element-plus'
 import { userSetUserInfo } from '@/api/user'
 import { checkEamil }  from '@/utils/utils'
-import passwordModify from './passwordModify.vue'
-import { nextTick } from 'process'
+import indexPasswordModify from './index-password-modify.vue'
 
 // 校验邮箱
 const emailValidator = (rule, value, callback) => {
@@ -50,8 +49,8 @@ const dataRule = reactive({
         { required: true, validator: emailValidator, trigger: 'blur' },
     ]
 });
-const passwordModifyRef = ref(null)
-let passwordModifyVisible = ref(false);
+const indexPasswordModifyRef = ref(null)
+let indexPasswordModifyVisible = ref(false);
 
 onMounted(() => {
     userGetUserInfoFun()
@@ -82,9 +81,9 @@ const submitFun = () => {
 }
 //修改密码
 const modifyPwdFun = () => {
-    passwordModifyVisible.value = true;
+    indexPasswordModifyVisible.value = true;
     nextTick(() => {
-        passwordModifyRef.value.init()
+        indexPasswordModifyRef.value.init()
     })
 }
 </script>
