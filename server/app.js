@@ -2,7 +2,8 @@ let express = require('express');
 let app = express();
 let bodyParser = require('body-parser');
 // 更新 json 数据
-const { getFileData, setFileData } = require('./readOrWriteFile')
+// const { getFileData, setFileData } = require('./readOrWriteFile')
+const { getFileData, setFileData, findParentNode, deepCopy } = require('./utils/index.js')
 
 //设置跨域访问
 app.all('*', function (req, res, next) {
@@ -147,11 +148,16 @@ app.post('/user/menuList', async (req, res) => {
                 roleIds = value.role ? value.role.split(',') : [];
             }
         })
+        roleIds = roleIds.map((value) => {
+            return Number(value)
+        })
+        const parentIds = findParentNode(roleIds, deepCopy(menuFileData.menuList))
+        roleIds.push(...parentIds)
         menuFileData.menuList = menuFileData.menuList.filter((value) => {
             value['menuId'] = value.id;
             value['name'] = value.menuName;
             value['url'] = value.jumpUrl;
-            return (value.type === 0 || value.type === 1) && roleIds.includes(value.id + '')
+            return value.type != 2 && roleIds.includes(value.id)
         })
         res.send({
             code: 200,

@@ -72,10 +72,6 @@ var init = (item) => {
                 data['role'] = data['role'] ? data['role'].split(',') : [];
                 dataForm.value = data;
 
-                dataForm.value.role.forEach((value) => {
-                    console.log(value)
-                    value = Number(value);
-                })
                 treeRef.value.setCheckedKeys(dataForm.value.role, false)
             })
         }
@@ -99,7 +95,8 @@ const dataFormSubmit = () => {
                 lock: true,
             })
 
-            dataForm.value.role = treeRef.value.getCheckedKeys(false).join(',');
+            dataForm.value.role = treeRef.value.getCheckedKeys(true).join(',');
+            console.log(treeRef.value.getHalfCheckedKeys())
 
             userAddOrModifyRole({
                 ...dataForm.value

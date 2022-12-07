@@ -155,6 +155,32 @@
       "status": 1,
       "createTime": 1670306672730,
       "modifiedTime": 1670306672730
+    },
+    {
+      "id": 13,
+      "menuName": "修改",
+      "parentId": 2,
+      "jumpUrl": "",
+      "roleUrl": "people:list:edit",
+      "type": 2,
+      "icon": "",
+      "orderNum": 0,
+      "status": 1,
+      "createTime": 1670316532197,
+      "modifiedTime": 1670316532197
+    },
+    {
+      "id": 14,
+      "menuName": "新增",
+      "parentId": 2,
+      "jumpUrl": "",
+      "roleUrl": "people:list:add",
+      "type": 2,
+      "icon": "",
+      "orderNum": 0,
+      "status": 1,
+      "createTime": 1670316546875,
+      "modifiedTime": 1670316546875
     }
   ]
 }
