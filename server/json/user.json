@@ -1,26 +1,26 @@
 {
-    "list": [
-      {
-        "id": 1,
-        "name": "admin",
-        "des": "dfg",
-        "role": 1,
-        "state": 1,
-        "createTime": 1670308726394,
-        "updateTime": 1670309407097,
-        "email": "45@qq.com",
-        "pwd": "123456"
-      },
-      {
-        "id": 2,
-        "name": "test",
-        "des": "dsfds",
-        "role": 2,
-        "email": "564@W.com",
-        "pwd": "123456",
-        "state": 1,
-        "createTime": 1670309609814,
-        "updateTime": 1670309618245
-      }
-    ]
-  }
+  "list": [
+    {
+      "id": 1,
+      "name": "admin",
+      "des": "dfg",
+      "role": 1,
+      "state": 1,
+      "createTime": 1670308726394,
+      "updateTime": 1670309407097,
+      "email": "451@qq.com",
+      "pwd": "123456"
+    },
+    {
+      "id": 2,
+      "name": "test",
+      "des": "dsfds",
+      "role": 2,
+      "email": "562224@W.com",
+      "pwd": "123456",
+      "state": 1,
+      "createTime": 1670309609814,
+      "updateTime": 1670309618245
+    }
+  ]
+}

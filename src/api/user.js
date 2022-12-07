@@ -21,7 +21,16 @@ export function userGetUserInfo(data) {
 //修改当前用户信息
 export function userSetUserInfo(data) {
     return request({
-        url: 'user/setUserInfo',
+        url: '/user/setUserInfo',
+        method: 'post',
+        data: data
+    })
+}
+
+// 修改当前用户密码
+export function userModifyPwd(data) {
+    return request({
+        url: '/user/modifyPwd',
         method: 'post',
         data: data
     })

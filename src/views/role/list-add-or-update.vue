@@ -34,7 +34,7 @@
 
 <script setup>
 import { ref, reactive, defineEmits, nextTick, defineExpose } from 'vue'
-import { ElLoading } from 'element-plus'
+import { ElLoading, ElMessage } from 'element-plus'
 import { userGetRole, userAddOrModifyRole, userNav } from '@/api/user'
 import { menuToTreeMenu } from '@/utils/utils'
 
@@ -104,6 +104,7 @@ const dataFormSubmit = () => {
                 loading.close()
                 visible.value = false
                 emit('refreshDataList')
+                ElMessage.success('操作成功！')
             }).catch(() => {
                 loading.close()
             })

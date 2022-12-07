@@ -15,6 +15,7 @@
         <el-table-column prop="role" header-align="center" align="center" label="角色">
             <template #default="scope">{{ roleStr(scope.row.role) }}</template>
         </el-table-column>
+        <el-table-column prop="email" header-align="center" align="center" label="邮箱"></el-table-column>
         <el-table-column prop="createTime" header-align="center" align="center" label="创建时间"></el-table-column>
         <el-table-column prop="updateTime" header-align="center" align="center" label="修改时间"></el-table-column>
         <el-table-column header-align="center" align="center" label="操作">

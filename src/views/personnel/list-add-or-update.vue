@@ -30,7 +30,7 @@
 
 <script setup>
 import { ref, reactive, defineEmits, nextTick, defineExpose } from 'vue'
-import { ElLoading } from 'element-plus'
+import { ElLoading, ElMessage } from 'element-plus'
 import { userAddOrModifyPeople, userGetPeople } from '@/api/user'
 
 const dataFormRef = ref();
@@ -83,6 +83,7 @@ const dataFormSubmit = () => {
                 loading.close()
                 visible.value = false
                 emit('refreshDataList')
+                ElMessage.success('操作成功！')
             }).catch(() => {
                 loading.close()
             })

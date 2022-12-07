@@ -65,7 +65,7 @@
 
 <script setup>
 import { ref, reactive, defineEmits, nextTick, defineExpose, computed } from 'vue'
-import { ElLoading } from 'element-plus'
+import { ElLoading, ElMessage } from 'element-plus'
 import { userNav, userGetNav, userAddOrModifyNav } from '@/api/user'
 import { menuToTreeMenu } from '@/utils/utils'
 import * as ElementPlusIconsVue from '@element-plus/icons-vue'
@@ -163,6 +163,7 @@ const dataFormSubmit = () => {
                 loading.close()
                 visible.value = false
                 emit('refreshDataList')
+                ElMessage.success('操作成功！')
             }).catch(() => {
                 loading.close()
             })

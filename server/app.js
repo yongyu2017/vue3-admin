@@ -106,18 +106,56 @@ app.post('/user/getUserInfo', async (req, res) => {
 // 修改当前用户信息
 app.post('/user/setUserInfo', async (req, res) => {
     const { token } = req.headers;
-    const { userName, sex } = req['body'];
+    const { email } = req['body'];
+    const data = { email };
 
     if(token){
-        await setFileData('user', {
-            userName,
-            sex,
-            token
+        const fileData = await getFileData('user');
+        fileData.list.forEach((value) => {
+            if (value.id == token) {
+                for (let i in data) {
+                    value[i] = data[i];
+                }
+            }
         })
+        await setFileData('user', fileData)
         res.send({
             code: 200,
             data: '',
             msg: '',
+        })
+    }else{
+        res.send({
+            code: -1,
+            data: '',
+            msg: '未登录'
+        })
+    }
+})
+
+// 修改当前用户密码
+app.post('/user/modifyPwd', async (req, res) => {
+    const { token } = req.headers;
+    const { oldPwd, pwd } = req['body'];
+
+    if(token){
+        const fileData = await getFileData('user');
+        let valid = false;
+        fileData.list.forEach((value) => {
+            if (value.id == token) {
+                if (value.pwd == oldPwd) {
+                    value.pwd = pwd;
+                    valid = true;
+                } else {
+                    valid = false;
+                }
+            }
+        })
+        await setFileData('user', fileData)
+        res.send({
+            code: valid ? 200 : 400,
+            data: '',
+            msg: valid ? '' : '旧密码错误！',
         })
     }else{
         res.send({
