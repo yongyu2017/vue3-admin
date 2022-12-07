@@ -96,7 +96,6 @@ const dataFormSubmit = () => {
             })
 
             dataForm.value.role = treeRef.value.getCheckedKeys(true).join(',');
-            console.log(treeRef.value.getHalfCheckedKeys())
 
             userAddOrModifyRole({
                 ...dataForm.value
