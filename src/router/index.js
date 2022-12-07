@@ -8,7 +8,7 @@ import { useStorePinia } from "@/store"
 // 全局路由(无需嵌套上左右整体布局)
 let globalRoutes = [
     { path: '/login', name: 'login', meta: { title: '登录' }, component: () => import("@/views/login/index") },
-    // { path: '*', redirect: { name: '404' } },
+    { path: '/404', name: '404', meta: { title: '404' }, component: () => import("@/views/404/index") },
 ];
 let mainRoutes = {
     path: '/',
@@ -97,6 +97,10 @@ function fnAddDynamicMenuRoutes (menuList = []) {
     mainRoutes.name = 'main-dynamic';
     mainRoutes.children = routes;
     router.addRoute(mainRoutes)
+    router.addRoute({
+        path: '/:pathMatch(.*)*',
+        redirect: '/404'
+    })
 
     const { updateCommonStore } = useStorePinia();
     updateCommonStore('dynamicMenuRoutes', mainRoutes.children || [])
