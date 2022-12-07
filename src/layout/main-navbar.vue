@@ -52,5 +52,10 @@ const navigatorFun = () => {
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+.site-navbar__body{
+    .el-menu--horizontal{
+        border-bottom: 0;
+    }
+}
 </style>
