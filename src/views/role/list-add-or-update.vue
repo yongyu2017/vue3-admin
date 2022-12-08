@@ -11,7 +11,7 @@
             </el-form-item>
             <el-form-item label="角色权限：" prop="role">
                 <el-tree ref="treeRef"
-                    class="inp-dom"
+                    style="width: 100%"
                     :data="roleList" 
                     show-checkbox 
                     default-expand-all 
