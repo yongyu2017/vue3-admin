@@ -3,10 +3,10 @@
         <el-form ref="dataFormRef" :model="dataForm" :rules="dataRule" @keyup.enter="dataFormSubmit()"
             label-width="100px">
             <el-form-item label="角色名称：" prop="name">
-                <el-input v-model.trim="dataForm.name" placeholder="请输入" class="inp-dom"></el-input>
+                <el-input v-model="dataForm.name" placeholder="请输入" class="inp-dom"></el-input>
             </el-form-item>
             <el-form-item label="角色描述：" prop="des">
-                <el-input v-model.trim="dataForm.des" placeholder="请输入" :rows="3" type="textarea"
+                <el-input v-model="dataForm.des" placeholder="请输入" :rows="3" type="textarea"
                     class="inp-dom"></el-input>
             </el-form-item>
             <el-form-item label="角色权限：" prop="role">

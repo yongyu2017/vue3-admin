@@ -6,7 +6,7 @@
         v-model="visible">
         <el-form ref="dataFormRef" :model="dataForm" :rules="dataRule" @keyup.enter="dataFormSubmit()" label-width="100px">
             <el-form-item label="姓名：" prop="name">
-                <el-input v-model.trim="dataForm.name" placeholder="请输入" class="inp-dom"></el-input>
+                <el-input v-model="dataForm.name" placeholder="请输入" class="inp-dom"></el-input>
             </el-form-item>
             <el-form-item label="性别：" prop="sex">
                 <el-select v-model="dataForm.sex" class="inp-dom">
@@ -15,7 +15,7 @@
                 </el-select>
             </el-form-item>
             <el-form-item label="年龄：" prop="age">
-                <el-input v-model.trim="dataForm.age" placeholder="请输入" class="inp-dom"></el-input>
+                <el-input v-model="dataForm.age" placeholder="请输入" class="inp-dom"></el-input>
             </el-form-item>
         </el-form>
 

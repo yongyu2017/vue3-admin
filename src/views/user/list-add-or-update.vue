@@ -3,10 +3,10 @@
         <el-form ref="dataFormRef" :model="dataForm" :rules="dataRule" @keyup.enter="dataFormSubmit()"
             label-width="100px">
             <el-form-item label="账号：" prop="name">
-                <el-input v-model.trim="dataForm.name" placeholder="请输入" :disabled="dataForm.id != ''" class="inp-dom"></el-input>
+                <el-input v-model="dataForm.name" placeholder="请输入" :disabled="dataForm.id != ''" class="inp-dom"></el-input>
             </el-form-item>
             <el-form-item label="密码：" prop="pwd">
-                <el-input v-model.trim="dataForm.pwd" placeholder="请输入" type="password" class="inp-dom"></el-input>
+                <el-input v-model="dataForm.pwd" placeholder="请输入" type="password" class="inp-dom"></el-input>
             </el-form-item>
             <el-form-item label="角色：" prop="role">
                 <el-select v-model="dataForm.role" :disabled="dataForm.id === 1" class="inp-dom">
@@ -14,10 +14,10 @@
                 </el-select>
             </el-form-item>
             <el-form-item label="邮箱：" prop="email">
-                <el-input v-model.trim="dataForm.email" placeholder="请输入" class="inp-dom"></el-input>
+                <el-input v-model="dataForm.email" placeholder="请输入" class="inp-dom"></el-input>
             </el-form-item>
             <el-form-item label="备注：" prop="des">
-                <el-input v-model.trim="dataForm.des" placeholder="请输入" :rows="3" type="textarea"
+                <el-input v-model="dataForm.des" placeholder="请输入" :rows="3" type="textarea"
                     class="inp-dom"></el-input>
             </el-form-item>
         </el-form>

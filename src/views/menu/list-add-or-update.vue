@@ -11,7 +11,7 @@
                 </el-radio-group>
             </el-form-item>
             <el-form-item :label="menuNameStr" prop="menuName">
-                <el-input v-model.trim="dataForm.menuName" placeholder="请输入" class="inp-dom"></el-input>
+                <el-input v-model="dataForm.menuName" placeholder="请输入" class="inp-dom"></el-input>
             </el-form-item>
             <el-form-item label="上级菜单：" prop="parentId">
                 <el-tree-select
@@ -27,10 +27,10 @@
                 <el-input-number v-model="dataForm.orderNum" :step="1" step-strictly  class="inp-dom" />
             </el-form-item>
             <el-form-item label="菜单路由：" prop="jumpUrl" v-if="dataForm.type === 1">
-                <el-input v-model.trim="dataForm.jumpUrl" placeholder="请输入" class="inp-dom"></el-input>
+                <el-input v-model="dataForm.jumpUrl" placeholder="请输入" class="inp-dom"></el-input>
             </el-form-item>
             <el-form-item label="授权标识：" prop="roleUrl" v-if="dataForm.type !== 0">
-                <el-input v-model.trim="dataForm.roleUrl" placeholder="请输入" class="inp-dom"></el-input>
+                <el-input v-model="dataForm.roleUrl" placeholder="请输入" class="inp-dom"></el-input>
             </el-form-item>
             <el-form-item label="菜单图标：" prop="icon" v-if="dataForm.type != 2">
                 <el-popover
@@ -48,7 +48,7 @@
                         </div>
                     </div>
                     <template #reference>
-                        <el-input v-model.trim="dataForm.icon" placeholder="请选择" readonly clearable class="inp-dom"></el-input>
+                        <el-input v-model="dataForm.icon" placeholder="请选择" readonly clearable class="inp-dom"></el-input>
                     </template>
                 </el-popover>
             </el-form-item>

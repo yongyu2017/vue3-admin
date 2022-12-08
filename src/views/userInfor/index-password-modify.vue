@@ -3,13 +3,13 @@
         <el-form ref="dataFormRef" :model="dataForm" :rules="dataRule" @keyup.enter="dataFormSubmit()"
             label-width="100px">
             <el-form-item label="旧密码：" prop="oldPwd">
-                <el-input v-model.trim="dataForm.oldPwd" placeholder="请输入" type="password" class="inp-dom"></el-input>
+                <el-input v-model="dataForm.oldPwd" placeholder="请输入" type="password" class="inp-dom"></el-input>
             </el-form-item>
             <el-form-item label="新密码：" prop="pwd">
-                <el-input v-model.trim="dataForm.pwd" placeholder="请输入" type="password" class="inp-dom"></el-input>
+                <el-input v-model="dataForm.pwd" placeholder="请输入" type="password" class="inp-dom"></el-input>
             </el-form-item>
             <el-form-item label="确认密码：" prop="pwd2">
-                <el-input v-model.trim="dataForm.pwd2" placeholder="请输入" type="password" class="inp-dom"></el-input>
+                <el-input v-model="dataForm.pwd2" placeholder="请输入" type="password" class="inp-dom"></el-input>
             </el-form-item>
         </el-form>
 
