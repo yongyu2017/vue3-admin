@@ -9,7 +9,7 @@ import { useStorePinia } from "@/store"
 // 全局路由(无需嵌套上左右整体布局)
 let globalRoutes = [
     { path: '/login', name: 'login', meta: { title: '登录' }, component: () => import("@/views/login/index") },
-    { path: '/404', name: '404', meta: { title: '404' }, component: () => import("@/views/404/index") },
+    { path: '/404', name: '404', meta: { title: '404' }, component: () => import("@/views/common/404/index") },
 ];
 let mainRoutes = {
     path: '/',
@@ -132,7 +132,7 @@ function fnAddDynamicMenuRoutes (menuList = []) {
                     item['path'] = `i-${list[i].menuId}`
                     item['name'] = `i-${list[i].menuId}`
                     item['meta']['iframeUrl'] = list[i].url
-                    item['component'] = () => import('@/views/iframe')
+                    item['component'] = () => import('@/views/common/iframe')
                 } else {
                     // const routeUrl = '@/views/'+ list[i].url;
                     // item['component'] = () => import(routeUrl)
