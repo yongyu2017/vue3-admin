@@ -8,7 +8,7 @@
             <span>{{ menu.name }}</span>
         </template>
 
-        <mainSidebarSubMenu :menu="item" v-for="(item, index) in menu.children" :key="index"></mainSidebarSubMenu>
+        <indexSidebarSubMenu :menu="item" v-for="(item, index) in menu.children" :key="index"></indexSidebarSubMenu>
     </el-sub-menu>
     <el-menu-item :index="menu.menuId + ''" @click="gotoRouteHandle(menu)" v-else>
         <template #title>
@@ -25,7 +25,7 @@ import { defineProps, onMounted, toRefs } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { storeToRefs } from 'pinia'
 import { useStorePinia } from '@/store'
-import mainSidebarSubMenu from './main-sidebar-sub-menu.vue'
+import indexSidebarSubMenu from './index-sidebar-sub-menu.vue'
 
 const route = useRoute();
 const router = useRouter();

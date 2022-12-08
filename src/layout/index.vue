@@ -5,10 +5,10 @@
         element-loading-text="拼命加载中"
     >
         <template v-if="!loading">
-            <mainNavbar />
-            <mainSidebar />
+            <indexNavbar />
+            <indexSidebar />
             <div class="site-content__wrapper" :style="{ 'min-height': documentClientHeight- 50 + 'px' }">
-                <main-content v-if="!isRefresh" />
+                <indexContent v-if="!isRefresh" />
             </div>
         </template>
     </div>
@@ -18,9 +18,9 @@
 import { provide, ref, nextTick, onMounted } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useStorePinia } from "@/store"
-import mainContent from './main-content'
-import mainNavbar from './main-navbar'
-import mainSidebar from './main-sidebar'
+import indexContent from './index-content'
+import indexNavbar from './index-navbar'
+import indexSidebar from './index-sidebar'
 
 const store = useStorePinia()
 const { getUserInfo } = store;

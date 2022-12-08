@@ -8,14 +8,14 @@
                         <span>首页</span>
                     </template>
                 </el-menu-item>
-                <mainSidebarSubMenu :menu="item" v-for="(item, index) in menuList" :key="index"></mainSidebarSubMenu>
+                <indexSidebarSubMenu :menu="item" v-for="(item, index) in menuList" :key="index"></indexSidebarSubMenu>
             </el-menu>
         </div>
     </div>
 </template>
 
 <script setup>
-import mainSidebarSubMenu from './main-sidebar-sub-menu'
+import indexSidebarSubMenu from './index-sidebar-sub-menu'
 import { storeToRefs } from "pinia"
 import { useStorePinia } from '@/store'
 import { useRouter } from 'vue-router'

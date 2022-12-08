@@ -123,7 +123,6 @@ var init = (item) => {
                 id: item.id,
             }).then(({ data }) => {
                 dataForm.value = data;
-                console.log(dataForm.value)
             })
         }
     })
