@@ -58,8 +58,8 @@ router.beforeEach((to, from, next) => {
             
             fnAddDynamicMenuRoutes(list)
             router.options.isAddDynamicMenuRoutes = true;
-            const { updateMenuList } = useStorePinia();
-            updateMenuList(list || [])
+            const { updateCommonStore } = useStorePinia();
+            updateCommonStore('menuList', list || [])
 
             next({ ...to, replace: true })
         }).catch(()=> {

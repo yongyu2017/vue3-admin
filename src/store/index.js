@@ -10,7 +10,7 @@ export const useStorePinia = defineStore('main', {
             menuList: [],  //右侧菜单
             dynamicMenuRoutes: [],  //动态路由
             mainTabs: [],  //tab列表
-            mainTabsActiveName: '',
+            mainTabsActiveName: '',  //tab选中值
             documentClientHeight: 0,
         };
     },
@@ -27,9 +27,6 @@ export const useStorePinia = defineStore('main', {
         },
     },
     actions: {
-        updateMenuList (val) {
-            this.menuList = val.slice();
-        },
         updateCommonStore (name, val) {
             this[name] = val;
         },
