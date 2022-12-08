@@ -10,10 +10,10 @@
             </div>
 
             <el-menu class="site-navbar__menu" mode="horizontal" :ellipsis="false">
-                <el-menu-item class="site-navbar__avatar" index="2" @click="changeFullscreen">
+                <el-menu-item class="site-navbar__avatar" @click="changeFullscreen">
                     <svg-icon :icon="isFullscreen ? 'exit-fullscreen' : 'fullscreen'" class="svg-icon-dom"></svg-icon>
                 </el-menu-item>
-                <el-menu-item class="site-navbar__avatar" index="1">
+                <el-menu-item class="site-navbar__avatar">
                     <el-dropdown :show-timeout="0" placement="bottom">
                         <span class="el-dropdown-link">
                             <img src="~@/assets/img/avatar.png" :alt="userInfo.name">{{ userInfo.name }}
@@ -88,6 +88,9 @@ const changeFullscreen = () => {
             border: 0;
             border-radius: 0;
         }
+    }
+    .el-menu--horizontal>.el-menu-item.is-active{
+        color: #606266 !important;
     }
 }
 </style>
