@@ -3,6 +3,7 @@ import { createRouter, createWebHashHistory } from "vue-router";
 import { ElLoading } from 'element-plus'
 import { isURL, clearLoginInfo, menuToTreeMenu } from '@/utils/utils'
 import { userMenuList } from '@/api/user'
+import { storeToRefs } from 'pinia'
 import { useStorePinia } from "@/store"
 
 // 全局路由(无需嵌套上左右整体布局)
@@ -32,9 +33,11 @@ let router = createRouter({
 let loading = null;
 
 router.beforeEach((to, from, next) => {
-    const token = localStorage.getItem('token');
+    const store = useStorePinia()
+    const { updateCommonStore } = store;
+    const { token } = storeToRefs(store);
 
-    if(!token && (fnCurrentRouteType(to, globalRoutes) != 'global')){
+    if(!token.value && (fnCurrentRouteType(to, globalRoutes) != 'global')){
         clearLoginInfo()
         next({
             name: 'login',
@@ -58,7 +61,6 @@ router.beforeEach((to, from, next) => {
             
             fnAddDynamicMenuRoutes(list)
             router.options.isAddDynamicMenuRoutes = true;
-            const { updateCommonStore } = useStorePinia();
             updateCommonStore('menuList', list || [])
 
             next({ ...to, replace: true })

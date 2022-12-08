@@ -26,9 +26,12 @@ import { ref, reactive, onMounted } from 'vue'
 import { useRoute, useRouter } from "vue-router"
 import { ElLoading } from 'element-plus'
 import { userLogin } from '@/api/user'
+import { useStorePinia } from '@/store'
 
 const route = useRoute()
 const router = useRouter()
+const store = useStorePinia();
+const { setToken } = store;
 const dataForm = reactive({
     name: '',
     pwd: '',
@@ -72,7 +75,7 @@ const loginFun = () => {
                     localStorage.removeItem('name')
                     localStorage.removeItem('pwd')
                 }
-                localStorage.setItem('token', data.token)
+                setToken(data.token)
                 router.replace({
                     path: route.query.url ? decodeURIComponent(route.query.url) : '/home'
                 })

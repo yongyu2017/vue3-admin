@@ -2,6 +2,8 @@ import axios from 'axios'
 import { ElMessage } from 'element-plus'
 import router from '@/router'
 import { clearLoginInfo } from '@/utils/utils'
+import { storeToRefs } from 'pinia'
+import { useStorePinia } from "@/store"
 
 const http = axios.create({
     baseURL: process.env.NODE_ENV == 'development'? process.env.VUE_APP_BASE_API: '',
@@ -29,7 +31,9 @@ const http = axios.create({
  * 请求拦截
  */
 http.interceptors.request.use(config => {
-    config['headers']['token']= localStorage.getItem('token') || '';  //请求头带上token
+    const store = useStorePinia()
+    const { token } = storeToRefs(store);
+    config['headers']['token']= token.value;  //请求头带上token
     config.data= config.data || {};
 
     // removePending(config) //在一个ajax发送前执行一下取消操作

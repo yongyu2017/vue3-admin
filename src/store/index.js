@@ -4,8 +4,8 @@ import { userGetUserInfo } from '@/api/user'
 export const useStorePinia = defineStore('main', {
     state () {
         return {
-            userInfo: {
-            },
+            token: sessionStorage.getItem('token') || '',
+            userInfo: {},
             permission: [],  //权限
             menuList: [],  //右侧菜单
             dynamicMenuRoutes: [],  //动态路由
@@ -27,10 +27,16 @@ export const useStorePinia = defineStore('main', {
         },
     },
     actions: {
+        setToken (val) {
+            this.token = val;
+            sessionStorage.setItem('token', val)
+        },
         updateCommonStore (name, val) {
             this[name] = val;
         },
         resetStore () {
+            this.token = '';
+            sessionStorage.removeItem('token')
             this.userInfo = {};
             this.permission = [];
             this.menuList = [];

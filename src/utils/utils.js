@@ -35,10 +35,8 @@ export function checkEamil (str) {
 export function clearLoginInfo () {
     const store = useStorePinia()
     const { resetStore } = store;
-    localStorage.removeItem('token')
     router.options.isAddDynamicMenuRoutes = false;
     resetStore()
-    
 }
 
 // 将一维数据转为树形结构
