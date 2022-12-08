@@ -161,39 +161,39 @@
       "menuName": "新增",
       "parentId": 6,
       "jumpUrl": "",
-      "roleUrl": "personnel:list:add",
+      "roleUrl": "people:list:add",
       "type": 2,
       "icon": "",
       "orderNum": 0,
       "status": 1,
       "createTime": 1670478543036,
-      "modifiedTime": 1670478543036
+      "modifiedTime": 1670479897672
     },
     {
       "id": 14,
       "menuName": "修改",
       "parentId": 6,
       "jumpUrl": "",
-      "roleUrl": "personnel:list:edit",
+      "roleUrl": "people:list:edit",
       "type": 2,
       "icon": "",
       "orderNum": 0,
       "status": 1,
       "createTime": 1670478563090,
-      "modifiedTime": 1670478563090
+      "modifiedTime": 1670479902457
     },
     {
       "id": 15,
       "menuName": "删除",
       "parentId": 6,
       "jumpUrl": "",
-      "roleUrl": "personnel:list:delete",
+      "roleUrl": "people:list:delete",
       "type": 2,
       "icon": "",
       "orderNum": 0,
       "status": 1,
       "createTime": 1670478585233,
-      "modifiedTime": 1670478585233
+      "modifiedTime": 1670479907946
     }
   ]
 }
