@@ -37,6 +37,7 @@ ol, ul {
     z-index: 1020;
     width: 230px;
     background-color: #263238;
+    transition: width 0.3s ease 0s;
     overflow: hidden;
     .site-sidebar__inner {
         position: relative;
@@ -90,6 +91,7 @@ ol, ul {
         width: 230px;
         height: 50px;
         background-color: #35444c;
+        transition: width 0.3s ease 0s;
         .site-navbar__brand{
             margin: 0 8px;
             line-height: 50px;
@@ -103,6 +105,7 @@ ol, ul {
     .site-navbar__body{
         margin-left: 230px;
         height: 50px;
+        transition: margin-left 0.3s ease 0s;
         .site-navbar__menu{
             float: right;
             &>.el-menu-item{
@@ -135,6 +138,7 @@ ol, ul {
     margin-left: 230px;
     min-height: 100%;
     background: #f1f4f5;
+    transition: margin-left 0.3s ease 0s;
     .site-content{
         padding: 15px;
         &.site-content--tabs{
@@ -154,6 +158,7 @@ ol, ul {
             -webkit-box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.12), 0 0 6px 0 rgba(0, 0, 0, 0.04);
             box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.12), 0 0 6px 0 rgba(0, 0, 0, 0.04);
             background-color: #fff;
+            transition: left 0.3s ease 0s;
             .el-tabs__nav-wrap:after{
                 content: '';
                 height: 0;
@@ -179,6 +184,27 @@ ol, ul {
 }
 /** 主体内容 **/
 
+.site-wrapper{
+    &.collapse{
+        .site-sidebar{
+            width: 64px;
+        }
+        .site-navbar{
+            .site-navbar__header{
+                width: 64px;
+            }
+            .site-navbar__body{
+                margin-left: 64px;
+            }
+        }
+        .site-content__wrapper{
+            margin-left: 64px;
+            .site-content > .el-tabs > .el-tabs__header{
+                left: 64px;
+            }
+        }
+    }
+}
 .el-pagination{
     margin-top: 15px;
     justify-content: flex-end;

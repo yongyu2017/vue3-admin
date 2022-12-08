@@ -4,17 +4,16 @@
             <el-icon v-if="menu.icon">
                 <component :is="menu.icon" />
             </el-icon>
-            <i :class="['el-icon-'+ menu.icon]" v-if="menu.icon"></i>
             <span>{{ menu.name }}</span>
         </template>
 
         <indexSidebarSubMenu :menu="item" v-for="(item, index) in menu.children" :key="index"></indexSidebarSubMenu>
     </el-sub-menu>
     <el-menu-item :index="menu.menuId + ''" @click="gotoRouteHandle(menu)" v-else>
+        <el-icon v-if="menu.icon">
+            <component :is="menu.icon" />
+        </el-icon>
         <template #title>
-            <el-icon v-if="menu.icon">
-                <component :is="menu.icon" />
-            </el-icon>
             <span>{{ menu.name }}</span>
         </template>
     </el-menu-item>

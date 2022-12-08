@@ -1,11 +1,18 @@
 <template>
     <div class="site-navbar">
         <div class="site-navbar__header">
-            <h1 class="site-navbar__brand">后台管理系统</h1>
+            <h1 class="site-navbar__brand" title="后台管理系统">后台管理系统</h1>
         </div>
 
         <div class="site-navbar__body fix">
+            <div class="site-navbar__body-left">
+                <el-button :icon="isExpand? 'Fold' : 'Expand'" class="expand-btn" @click="isExpand = !isExpand"></el-button>
+            </div>
+
             <el-menu class="site-navbar__menu" mode="horizontal" :ellipsis="false">
+                <el-menu-item class="site-navbar__avatar" index="2" @click="changeFullscreen">
+                    <svg-icon :icon="isFullscreen ? 'exit-fullscreen' : 'fullscreen'" class="svg-icon-dom"></svg-icon>
+                </el-menu-item>
                 <el-menu-item class="site-navbar__avatar" index="1">
                     <el-dropdown :show-timeout="0" placement="bottom">
                         <span class="el-dropdown-link">
@@ -25,15 +32,24 @@
 </template>
 
 <script setup>
+import { onMounted, ref } from 'vue'
 import { ElMessageBox } from 'element-plus'
-import { clearLoginInfo } from '@/utils'
+import { clearLoginInfo, Fullscreen } from '@/utils'
 import { storeToRefs } from "pinia"
 import { useStorePinia } from "@/store"
 import { useRouter } from 'vue-router'
+import { Fold, Expand } from '@element-plus/icons-vue'  // eslint-disable-line
 
 const store = useStorePinia()
-const { userInfo } = storeToRefs(store)
+const { userInfo, isExpand } = storeToRefs(store)
 const router = useRouter()
+let isFullscreen = ref(false);
+
+onMounted(() => {
+    document.addEventListener('fullscreenchange', () => {
+        isFullscreen.value = document.fullscreenElement ? true : false;
+    })
+})
 
 // 退出
 const logoutHandle = () => {
@@ -50,12 +66,28 @@ const logoutHandle = () => {
 const navigatorFun = () => {
     router.push({ name: 'userInfor' })
 }
+// 全屏切换
+const changeFullscreen = () => {
+    isFullscreen.value ? Fullscreen.exitFullscreen() : Fullscreen.launchFullscreen(document.documentElement)
+}
 </script>
 
 <style lang="scss" scoped>
 .site-navbar__body{
     .el-menu--horizontal{
         border-bottom: 0;
+        .svg-icon-dom{
+            font-size: 16px;
+        }
+    }
+    .site-navbar__body-left{
+        display: inline-block;
+        padding-top: 9px;
+        .expand-btn{
+            font-size: 16px;
+            border: 0;
+            border-radius: 0;
+        }
     }
 }
 </style>

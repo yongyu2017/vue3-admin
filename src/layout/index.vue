@@ -1,6 +1,6 @@
 <template>
     <div
-        class="site-wrapper"
+        :class="['site-wrapper', isExpand ? '' : 'collapse']"
         v-loading.fullscreen.lock="loading"
         element-loading-text="拼命加载中"
     >
@@ -24,7 +24,7 @@ import indexSidebar from './index-sidebar'
 
 const store = useStorePinia()
 const { getUserInfo } = store;
-let { documentClientHeight } = storeToRefs(store)
+let { documentClientHeight, isExpand } = storeToRefs(store)
 let loading = ref(true);
 let isRefresh = ref(false); //main-content是否刷新
 

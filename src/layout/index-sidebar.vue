@@ -1,10 +1,10 @@
 <template>
     <div class="site-sidebar site-sidebar--dark">
         <div class="site-sidebar__inner">
-            <el-menu class="site-sidebar__menu" :default-active="menuActiveName || 'home'">
+            <el-menu class="site-sidebar__menu" :default-active="menuActiveName || 'home'" :collapse="!isExpand">
                 <el-menu-item index="home" @click="router.push({ name: 'home' })">
+                    <el-icon><House /></el-icon>
                     <template #title>
-                        <el-icon><House /></el-icon>
                         <span>首页</span>
                     </template>
                 </el-menu-item>
@@ -21,10 +21,12 @@ import { useStorePinia } from '@/store'
 import { useRouter } from 'vue-router'
 
 const store = useStorePinia()
-let { menuList, menuActiveName } = storeToRefs(store)
+let { menuList, menuActiveName, isExpand } = storeToRefs(store)
 const router = useRouter()
 </script>
 
-<style scoped>
-
+<style lang="scss" scoped>
+.el-menu--collapse{
+    border-right: 0;
+}
 </style>

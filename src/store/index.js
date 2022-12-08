@@ -12,6 +12,7 @@ export const useStorePinia = defineStore('main', {
             mainTabs: [],  //tab列表
             mainTabsActiveName: '',  //tab选中值
             documentClientHeight: 0,
+            isExpand: true,
         };
     },
     getters : {
