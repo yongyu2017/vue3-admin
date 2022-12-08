@@ -27,6 +27,7 @@ import { useRoute, useRouter } from "vue-router"
 import { ElLoading } from 'element-plus'
 import { userLogin } from '@/api/user'
 import { useStorePinia } from '@/store'
+import { Base64 } from 'js-base64'
 
 const route = useRoute()
 const router = useRouter()
@@ -49,8 +50,8 @@ const dataFormRef = ref(null);
 
 onMounted(() => {
     if(localStorage.getItem('name')){
-        dataForm.name = localStorage.getItem('name');
-        dataForm.pwd = localStorage.getItem('pwd');
+        dataForm.name = Base64.decode(localStorage.getItem('name'));
+        dataForm.pwd = Base64.decode(localStorage.getItem('pwd'));
     }
 })
 
@@ -69,8 +70,8 @@ const loginFun = () => {
             }).then(({ data }) => {
                 loading.close()
                 if(dataForm.remember){
-                    localStorage.setItem('name', dataForm.name)
-                    localStorage.setItem('pwd', dataForm.pwd)
+                    localStorage.setItem('name', Base64.encode(dataForm.name))
+                    localStorage.setItem('pwd', Base64.encode(dataForm.pwd))
                 }else{
                     localStorage.removeItem('name')
                     localStorage.removeItem('pwd')
