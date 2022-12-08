@@ -36,7 +36,7 @@
 import { ref, reactive, defineEmits, nextTick, defineExpose } from 'vue'
 import { ElLoading, ElMessage } from 'element-plus'
 import { userGetRole, userAddOrModifyRole, userNav } from '@/api/user'
-import { menuToTreeMenu } from '@/utils/utils'
+import { menuToTreeMenu } from '@/utils'
 
 const dataFormRef = ref();
 let visible = ref(false);

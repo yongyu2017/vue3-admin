@@ -67,7 +67,7 @@
 import { ref, reactive, defineEmits, nextTick, defineExpose, computed } from 'vue'
 import { ElLoading, ElMessage } from 'element-plus'
 import { userNav, userGetNav, userAddOrModifyNav } from '@/api/user'
-import { menuToTreeMenu } from '@/utils/utils'
+import { menuToTreeMenu } from '@/utils'
 import * as ElementPlusIconsVue from '@element-plus/icons-vue'
 
 const dataFormRef = ref();

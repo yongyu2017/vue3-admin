@@ -21,7 +21,7 @@ import { reactive, onMounted, ref, nextTick } from 'vue'
 import { useStorePinia } from "@/store"
 import { ElLoading } from 'element-plus'
 import { userSetUserInfo } from '@/api/user'
-import { checkEamil }  from '@/utils/utils'
+import { checkEamil }  from '@/utils'
 import indexPasswordModify from './index-password-modify.vue'
 
 // 校验邮箱

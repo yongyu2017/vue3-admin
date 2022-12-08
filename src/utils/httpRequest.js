@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { ElMessage } from 'element-plus'
 import router from '@/router'
-import { clearLoginInfo } from '@/utils/utils'
+import { clearLoginInfo } from '@/utils'
 import { storeToRefs } from 'pinia'
 import { useStorePinia } from "@/store"
 

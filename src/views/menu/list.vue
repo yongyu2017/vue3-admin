@@ -40,7 +40,7 @@
 import { onMounted, ref, reactive, nextTick } from 'vue'
 import { userNav, userDeleteNav } from '@/api/user'
 import listAddOrUpdate from './list-add-or-update.vue'
-import { menuToTreeMenu } from '@/utils/utils'
+import { menuToTreeMenu } from '@/utils'
 import { ElLoading, ElMessage, ElMessageBox } from 'element-plus'
 
 let formData = reactive({

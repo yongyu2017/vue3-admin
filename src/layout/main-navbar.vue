@@ -26,7 +26,7 @@
 
 <script setup>
 import { ElMessageBox } from 'element-plus'
-import { clearLoginInfo } from '@/utils/utils'
+import { clearLoginInfo } from '@/utils'
 import { storeToRefs } from "pinia"
 import { useStorePinia } from "@/store"
 import { useRouter } from 'vue-router'

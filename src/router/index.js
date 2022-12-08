@@ -1,7 +1,7 @@
 // import { defineAsyncComponent } from "vue";
 import { createRouter, createWebHashHistory } from "vue-router";
 import { ElLoading } from 'element-plus'
-import { isURL, clearLoginInfo, menuToTreeMenu } from '@/utils/utils'
+import { isURL, clearLoginInfo, menuToTreeMenu } from '@/utils'
 import { userMenuList } from '@/api/user'
 import { storeToRefs } from 'pinia'
 import { useStorePinia } from "@/store"

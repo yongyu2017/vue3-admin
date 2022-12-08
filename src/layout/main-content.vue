@@ -34,7 +34,7 @@ import { inject, watch, onMounted, computed, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { storeToRefs } from "pinia"
 import { useStorePinia } from "@/store"
-import { isURL } from '@/utils/utils'
+import { isURL } from '@/utils'
 
 const refresh = inject('refresh');
 const route = useRoute();

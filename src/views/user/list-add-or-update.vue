@@ -35,7 +35,7 @@
 import { ref, reactive, defineEmits, nextTick, defineExpose } from 'vue'
 import { ElLoading, ElMessage } from 'element-plus'
 import { userGetUser, userAddOrModifyUser, userRole } from '@/api/user'
-import { checkEamil }  from '@/utils/utils'
+import { checkEamil }  from '@/utils'
 
 // 校验邮箱
 const emailValidator = (rule, value, callback) => {
