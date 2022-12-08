@@ -6,14 +6,25 @@ export const useStorePinia = defineStore('main', {
         return {
             userInfo: {
             },
-            permission: [],
-            menuList: [],
-            dynamicMenuRoutes: [],
-            menuActiveName: '',
-            mainTabs: [],
+            permission: [],  //权限
+            menuList: [],  //右侧菜单
+            dynamicMenuRoutes: [],  //动态路由
+            mainTabs: [],  //tab列表
             mainTabsActiveName: '',
             documentClientHeight: 0,
         };
+    },
+    getters : {
+        //右侧菜单选中值
+        menuActiveName () {
+            let str = '';
+            this.dynamicMenuRoutes.forEach((value) => {
+                if (value.name == this.mainTabsActiveName) {
+                    str = value.meta.menuId + '';
+                }
+            })
+            return str
+        },
     },
     actions: {
         updateMenuList (val) {
@@ -27,7 +38,6 @@ export const useStorePinia = defineStore('main', {
             this.permission = [];
             this.menuList = [];
             this.dynamicMenuRoutes = [];
-            this.menuActiveName = '';
             this.mainTabs = [];
             this.mainTabsActiveName = '';
         },

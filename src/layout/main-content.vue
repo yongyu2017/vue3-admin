@@ -53,7 +53,7 @@ const refresh = inject('refresh');
 const route = useRoute();
 const router = useRouter();
 const store = useStorePinia();
-const { menuActiveName, mainTabsActiveName, documentClientHeight, mainTabs } = storeToRefs(store);
+const { mainTabsActiveName, documentClientHeight, mainTabs } = storeToRefs(store);
 const tabModel = ref('');
 
 watch(route, (newVal) => {
@@ -105,7 +105,6 @@ const routeHandle = function (route) {
         mainTabsActiveName.value = tab.name;
         tabModel.value = tab.name;
     }
-    menuActiveName.value= route.meta.menuId + '';
 }
 // tabs，刷下当前页
 const refreshHandle = () => {

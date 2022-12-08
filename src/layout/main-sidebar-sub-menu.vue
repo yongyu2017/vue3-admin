@@ -1,5 +1,5 @@
 <template>
-    <el-sub-menu :index="menu.menuId+ ''" v-if="menu.children && menu.children.length> 0">
+    <el-sub-menu :index="menu.menuId + ''" v-if="menu.children && menu.children.length> 0">
         <template #title>
             <el-icon v-if="menu.icon">
                 <component :is="menu.icon" />
@@ -10,7 +10,7 @@
 
         <mainSidebarSubMenu :menu="item" v-for="(item, index) in menu.children" :key="index"></mainSidebarSubMenu>
     </el-sub-menu>
-    <el-menu-item :index="menu.menuId+ ''" @click="gotoRouteHandle(menu)" v-else>
+    <el-menu-item :index="menu.menuId + ''" @click="gotoRouteHandle(menu)" v-else>
         <template #title>
             <el-icon v-if="menu.icon">
                 <component :is="menu.icon" />

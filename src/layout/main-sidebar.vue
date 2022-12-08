@@ -9,17 +9,12 @@
 </template>
 
 <script setup>
-import { onMounted } from 'vue'
 import mainSidebarSubMenu from './main-sidebar-sub-menu'
 import { storeToRefs } from "pinia"
 import { useStorePinia } from '@/store'
 
 const store = useStorePinia()
 let { menuList, menuActiveName } = storeToRefs(store)
-
-onMounted(() => {
-})
-
 </script>
 
 <style scoped>
