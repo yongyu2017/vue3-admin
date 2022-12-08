@@ -16,29 +16,16 @@
                 </template>
             </el-dropdown>
 
-            <el-tab-pane v-for="item in mainTabs" :key="item.name" :label="item.title" :name="item.name">
-                <el-card :body-style="siteContentViewHeight">
-                    <iframe v-if="item.type === 'iframe'" :src="item.iframeUrl" width="100%" height="100%"
-                        frameborder="0" scrolling="yes">
-                    </iframe>
-                    <template v-else>
-                        <router-view v-slot="{ Component }" v-if="item.name === mainTabsActiveName">
-                            <keep-alive>
-                                <component :is="Component"></component>
-                            </keep-alive>
-                        </router-view>
-                    </template>
-                </el-card>
-            </el-tab-pane>
+            <el-tab-pane v-for="item in mainTabs" :key="item.name" :label="item.title" :name="item.name"></el-tab-pane>
         </el-tabs>
-        <el-card :body-style="siteContentViewHeight" v-else>
+
+        <el-card :body-style="siteContentViewHeight">
             <router-view v-slot="{ Component }">
                 <keep-alive>
                     <component :is="Component"></component>
                 </keep-alive>
             </router-view>
         </el-card>
-
     </div>
 </template>
 

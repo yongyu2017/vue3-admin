@@ -132,6 +132,7 @@ function fnAddDynamicMenuRoutes (menuList = []) {
                     item['path'] = `i-${list[i].menuId}`
                     item['name'] = `i-${list[i].menuId}`
                     item['meta']['iframeUrl'] = list[i].url
+                    item['component'] = () => import('@/views/iframe')
                 } else {
                     // const routeUrl = '@/views/'+ list[i].url;
                     // item['component'] = () => import(routeUrl)
