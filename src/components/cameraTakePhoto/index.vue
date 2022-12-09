@@ -1,13 +1,21 @@
 <template>
-    <div class="video-tack-photo-wrap">
+    <div class="video-tack-photo-wrap" :style="{ width: videoWidth + 'px', height: videoHeight + 'px' }">
         <video ref="videoRef" autoplay="autoplay" :width="videoWidth" :height="videoHeight" class="video-dom"></video>
 
         <canvas ref="canvasRef" :width="videoWidth" :height="videoHeight" class="canvas-dom"></canvas>
+
+        <div class="error-tips-box" v-if="!isLinkVideoList">
+            <div class="p1">未搜索到摄像头设备，请检查摄像头！</div>
+            <div>
+                <el-button @click="openMedia">重新开启摄像头</el-button>
+            </div>
+        </div>
     </div>
 </template>
 
 <script setup>
-import { ref, toRefs, defineProps, defineEmits, defineExpose } from 'vue'
+import { ref, toRefs, defineProps, defineEmits, defineExpose, onMounted } from 'vue'
+import { ElMessage } from 'element-plus';
 
 const props = defineProps({
     videoWidth: {
@@ -24,7 +32,19 @@ const { videoWidth, videoHeight } = toRefs(props);
 const videoRef = ref(null)
 const canvasRef = ref(null)
 let mediaStream = ref()
+let isLinkVideoList = ref(false)  //是否链接上摄像头设备
+// let cameraIsOnline = ref(false)  // 判断摄像头是否在线
 
+onMounted(() => {
+    checkMediaDevices()
+})
+// 检测摄像头
+const checkMediaDevices = () => {
+    navigator.mediaDevices.enumerateDevices().then((devices) => {
+        let count = devices.filter(item => item.kind == 'videoinput').length;
+        isLinkVideoList.value = count > 0 ? true : false;
+    })
+}
 // 开启摄像头
 const openMedia = () => {
     let constraints = {
@@ -42,6 +62,11 @@ const openMedia = () => {
 }
 // 拍照
 let takePhoto = () => {
+    if (!mediaStream.value.active) {
+        isLinkVideoList.value = false;
+        ElMessage.warning('摄像头掉线了，请检查！')
+        return
+    }
     let ctx = canvasRef.value.getContext('2d')
     ctx.drawImage(videoRef.value, 0, 0, videoWidth.value, videoHeight.value)
     const base64Data = canvasRef.value.toDataURL()
@@ -96,6 +121,19 @@ defineExpose({
         top: 0;
         left: 0;
         opacity: 0;
+    }
+    .error-tips-box{
+        position: absolute;
+        z-index: 10;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(255, 255, 255, 0.75);
+        .p1{
+            margin-bottom: 12px;
+            font-size: 14px;
+        }
     }
 }
 </style>
