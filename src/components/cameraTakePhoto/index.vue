@@ -1,9 +1,8 @@
 <template>
     <ul class="step-list">
-        <li class="end">shouye</li>
-        <li class="active">haha</li>
-        <li>heihei</li>
-        <li>heihei</li>
+        <li class="end">第一步：填写报名信息</li>
+        <li class="active">第二步：上传报名资料</li>
+        <li>第三步：确认报名</li>
     </ul>
 
     <div class="video-tack-photo-wrap" :style="{ width: videoWidth + 'px', height: videoHeight + 'px' }">
@@ -152,7 +151,7 @@ defineExpose({
     display: flex;
     li{
         position: relative;
-        margin: 0 3px;
+        margin: 0 4px;
         flex: 1;
         line-height: 36px;
         text-align: center;
