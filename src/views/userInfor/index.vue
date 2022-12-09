@@ -12,17 +12,6 @@
         </el-form-item>
     </el-form>
 
-    <el-upload
-        :on-change="uploadFun"
-        accept="image/jpeg, image/jpg"
-        :show-file-list="false"
-        :auto-upload="false">
-        <el-button type="primary">选择图片</el-button>
-    </el-upload>
-
-    <!-- 图片裁剪 -->
-    <imageCropper ref="imageCropperRef" :autoCropWidth="171" :autoCropHeight="240" :enlarge="1.72" @refreshDataList="getImageCropper" @close="imageCropperVisible= false" v-if="imageCropperVisible"></imageCropper>
-
      <!-- 修改用户密码 -->
      <indexPasswordModify ref="indexPasswordModifyRef" @close="indexPasswordModifyVisible= false" v-if="indexPasswordModifyVisible"></indexPasswordModify>
 </template>
@@ -34,7 +23,6 @@ import { ElLoading } from 'element-plus'
 import { userSetUserInfo } from '@/api/user'
 import { checkEamil }  from '@/utils'
 import indexPasswordModify from './index-password-modify.vue'
-import imageCropper from '@/components/imageCropper'
 
 // 校验邮箱
 const emailValidator = (rule, value, callback) => {
@@ -63,8 +51,6 @@ const dataRule = reactive({
 });
 const indexPasswordModifyRef = ref(null)
 let indexPasswordModifyVisible = ref(false);
-const imageCropperRef = ref(null)
-let imageCropperVisible = ref(false);
 
 onMounted(() => {
     userGetUserInfoFun()
@@ -73,7 +59,6 @@ onMounted(() => {
 //获取当前用户信息
 const userGetUserInfoFun = async () => {
     const data = await getUserInfo();
-    console.log(data)
     dataForm.value = data;
 }
 //修改
@@ -99,21 +84,6 @@ const modifyPwdFun = () => {
     nextTick(() => {
         indexPasswordModifyRef.value.init()
     })
-}
-// 读取原图
-const uploadFun = (file) => {
-    let reader = new FileReader()
-    reader.readAsDataURL(file.raw)
-    reader.onload = e => {
-        imageCropperVisible.value = true;
-        nextTick(() => {
-            imageCropperRef.value.init(e.target.result)// base64
-        })
-    }
-}
-// 获取图片
-const getImageCropper = (img) => {
-    console.log(img)
 }
 </script>
 

@@ -194,6 +194,32 @@
       "status": 1,
       "createTime": 1670478585233,
       "modifiedTime": 1670479907946
+    },
+    {
+      "id": 16,
+      "menuName": "摄像头拍照",
+      "parentId": 0,
+      "jumpUrl": "camera/index",
+      "roleUrl": "",
+      "type": 1,
+      "icon": "CameraFilled",
+      "orderNum": 50,
+      "status": 1,
+      "createTime": 1670574019333,
+      "modifiedTime": 1670574019333
+    },
+    {
+      "id": 17,
+      "menuName": "图片裁剪",
+      "parentId": 0,
+      "jumpUrl": "cropper/index",
+      "roleUrl": "",
+      "type": 1,
+      "icon": "Scissor",
+      "orderNum": 60,
+      "status": 1,
+      "createTime": 1670580027973,
+      "modifiedTime": 1670580027973
     }
   ]
 }
