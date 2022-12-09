@@ -1,4 +1,11 @@
 <template>
+    <ul class="step-list">
+        <li class="end">shouye</li>
+        <li class="active">haha</li>
+        <li>heihei</li>
+        <li>heihei</li>
+    </ul>
+
     <div class="video-tack-photo-wrap" :style="{ width: videoWidth + 'px', height: videoHeight + 'px' }">
         <video ref="videoRef" autoplay="autoplay" :width="videoWidth" :height="videoHeight" class="video-dom"></video>
 
@@ -7,7 +14,7 @@
         <div class="error-tips-box" v-if="!isLinkVideoList">
             <div class="p1">未搜索到摄像头设备，请检查摄像头！</div>
             <div>
-                <el-button @click="openMedia">重新开启摄像头</el-button>
+                <el-button @click="openMedia">重启摄像头</el-button>
             </div>
         </div>
     </div>
@@ -43,6 +50,7 @@ const checkMediaDevices = () => {
     navigator.mediaDevices.enumerateDevices().then((devices) => {
         let count = devices.filter(item => item.kind == 'videoinput').length;
         isLinkVideoList.value = count > 0 ? true : false;
+        isLinkVideoList.value && openMedia()
     })
 }
 // 开启摄像头
@@ -53,6 +61,7 @@ const openMedia = () => {
     }
     let mediaPromise = navigator.mediaDevices.getUserMedia(constraints);
     mediaPromise.then((stream) => {
+        isLinkVideoList.value = true;
         mediaStream.value = stream;
         videoRef.value.srcObject = stream;
         videoRef.value.play();
@@ -130,10 +139,68 @@ defineExpose({
         left: 0;
         width: 100%;
         height: 100%;
+        padding: 12px;
         background: rgba(255, 255, 255, 0.75);
+        box-sizing: border-box;
         .p1{
             margin-bottom: 12px;
             font-size: 14px;
+        }
+    }
+}
+.step-list {
+    display: flex;
+    li{
+        position: relative;
+        margin: 0 3px;
+        flex: 1;
+        line-height: 36px;
+        text-align: center;
+        padding: 0 40px;
+        color: #090909;
+        font-size: 14px;
+        background: #eaeaea;
+        &:after{
+            content: "";
+            position: absolute;
+            right: -18px;
+            top: 0;
+            z-index: 10;
+            display: block;
+            border-top: 18px solid transparent;
+            border-bottom: 18px solid transparent;
+            border-left: 18px solid #eaeaea;
+        }
+        &:before{
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 0;
+            display: block;
+            border-top: 18px solid transparent;
+            border-bottom: 18px solid transparent;
+            border-left: 18px solid #fff;
+        }
+        &:first-child{
+            margin-left: 0;
+            padding: 0 20px;
+            &:before{
+                display: none;
+            }
+        }
+        &:last-child{
+            margin-right: 0;
+            padding: 0 20px 0 40px;
+            &:after {
+                display: none;
+            }
+        }
+        &.active, &.end {
+            color: #fff;
+            background-color: #1890FF;
+        }
+        &.active:after, &.end:after {
+            border-left-color: #1890FF;
         }
     }
 }
