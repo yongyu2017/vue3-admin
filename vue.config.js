@@ -1,4 +1,5 @@
 const { defineConfig } = require('@vue/cli-service')
+const NodePolyfillPlugin = require('node-polyfill-webpack-plugin')
 const path = require("path");
 const resolve = (dir) => path.join(__dirname, dir);
 
@@ -26,6 +27,7 @@ module.exports = defineConfig({
                 assets: resolve("src/assets"),
             },
         },
+        plugins: [new NodePolyfillPlugin()],
     },
     chainWebpack: config => {
         config.module.rules.delete("svg"); //重点:删除默认配置中处理svg,
