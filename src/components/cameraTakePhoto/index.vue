@@ -62,6 +62,7 @@ const openMedia = () => {
 }
 // 拍照
 let takePhoto = () => {
+    // mediaStream在摄像头拔出的一瞬间，active会从true变更为false，同时触发oninactive钩子，有了状态监听之后事情就简单了许多。代码经过测试后发现，对用户变更摄像头权限也有效。
     if (!mediaStream.value.active) {
         isLinkVideoList.value = false;
         ElMessage.warning('摄像头掉线了，请检查！')
