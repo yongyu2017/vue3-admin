@@ -7,7 +7,8 @@
     </div>
     
     <cameraTakePhoto ref="cameraTakePhotoRef" @getImg="getPhoto"></cameraTakePhoto>
-    <img :src="img" alt="" style="margin-left: 20px">
+
+    <img :src="img" alt="" style="margin-top: 20px">
 
 </template>
 

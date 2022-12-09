@@ -1,7 +1,9 @@
-<template>    
-    <video ref="videoRef" autoplay="autoplay" :width="videoWidth" :height="videoHeight" style="object-fit: fill;"></video>
+<template>
+    <div class="video-tack-photo-wrap">
+        <video ref="videoRef" autoplay="autoplay" :width="videoWidth" :height="videoHeight" class="video-dom"></video>
 
-    <canvas ref="canvasRef" :width="videoWidth" :height="videoHeight" v-show="false"></canvas>
+        <canvas ref="canvasRef" :width="videoWidth" :height="videoHeight" class="canvas-dom"></canvas>
+    </div>
 </template>
 
 <script setup>
@@ -79,6 +81,21 @@ defineExpose({
 })
 </script>
 
-<style>
-
+<style lang="scss" scoped>
+.video-tack-photo-wrap{
+    position: relative;
+    z-index: 0;
+    .video-dom{
+        position: relative;
+        z-index: 1;
+        object-fit: fill;
+    }
+    .canvas-dom{
+        position: absolute;
+        z-index: -1;
+        top: 0;
+        left: 0;
+        opacity: 0;
+    }
+}
 </style>
