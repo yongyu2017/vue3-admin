@@ -2,11 +2,7 @@ let express = require('express');
 let app = express();
 let bodyParser = require('body-parser');
 let mysql = require('mysql');
-// 更新 json 数据
-// const { getFileData, setFileData } = require('./readOrWriteFile')
-const { getFileData, setFileData, findParentNode, findChildNode, getMax } = require('./utils/index.js');
-const { userLogin, userGetUserInfo, userSetUserInfo, userModifyPwd, userMenuList, userNav, userAddOrModifyNav, userDeleteNav, userGetNav, userRole, userAddOrModifyRole, userDeleteRole, userGetRole, userUserList, userAddOrModifyUser, userDeleteUser, userGetUser, } = require('./api/user.js')
-const { userPeopleList, userAddOrModifyPeople, userDeletePeople, userGetPeople } = require('./api/personnel.js')
+const api = require('./api/index.js')
 
 //设置跨域访问
 app.all('*', function (req, res, next) {
@@ -36,48 +32,11 @@ connection.query('SELECT * FROM user WHERE state=1 and username LIKE \'%管理�
     console.log(error, results)
 })
 
-// 登录
-app.post('/user/login', userLogin)
-// 获取当前用户信息
-app.post('/user/getUserInfo', userGetUserInfo)
-// 修改当前用户信息
-app.post('/user/setUserInfo', userSetUserInfo)
-// 修改当前用户密码
-app.post('/user/modifyPwd', userModifyPwd)
-// 获取当前用户菜单
-app.post('/user/menuList', userMenuList)
-// 获取菜单列表
-app.post('/user/nav', userNav)
-// 新增或修改菜单
-app.post('/user/addOrModifyNav', userAddOrModifyNav)
-// 删除菜单
-app.post('/user/deleteNav', userDeleteNav)
-// 获取菜单详情
-app.post('/user/getNav', userGetNav)
-// 获取员工列表
-app.post('/user/peopleList', userPeopleList)
-// 新增或修改员工信息
-app.post('/user/addOrModifyPeople', userAddOrModifyPeople)
-// 删除员工信息
-app.post('/user/deletePeople', userDeletePeople)
-// 获取员工信息
-app.post('/user/getPeople', userGetPeople)
-// 获取角色列表
-app.post('/user/role', userRole)
-// 新增或修改角色信息
-app.post('/user/addOrModifyRole', userAddOrModifyRole)
-// 删除角色信息
-app.post('/user/deleteRole', userDeleteRole)
-// 获取角色详情
-app.post('/user/getRole', userGetRole)
-// 获取用户列表
-app.post('/user/userList', userUserList)
-// 新增或修改用户信息
-app.post('/user/addOrModifyUser', userAddOrModifyUser)
-// 删除用户信息
-app.post('/user/deleteUser', userDeleteUser)
-// 获取用户详情
-app.post('/user/getUser', userGetUser)
+// 注册接口
+for (let i in api) {
+    app.post(api[i].path, api[i].component)
+}
+
 
 //配置服务端口
 app.listen(8000, () => {
