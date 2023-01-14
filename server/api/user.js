@@ -1,4 +1,5 @@
 const { getFileData, setFileData, findParentNode, findChildNode, getMax, generateToken, verifyToken } = require('../utils/index.js')
+const statusCodeMap = require('../utils/statusCodeMap.js')
 
 // 登录
 async function userLogin (req, res) {
@@ -16,7 +17,7 @@ async function userLogin (req, res) {
         userFileData.list.forEach((value) => {
             if (value.name == name && value.pwd == pwd) {
                 const { name, email, id, role } = value;
-                token = generateToken({ name, pwd, id }, 60 * 5)
+                token = generateToken({ name, pwd, id }, 60 * 1)
                 data = { name, email, id, token, permission: [] }
                 userRole = role;
                 isLogin = true;
@@ -92,7 +93,7 @@ async function userGetUserInfo (req, res) {
         res.send({
             code: 401,
             data: '',
-            msg: '未登录'
+            msg: statusCodeMap['401']
         })
     }
 }
@@ -122,7 +123,7 @@ async function userSetUserInfo (req, res) {
         res.send({
             code: 401,
             data: '',
-            msg: '未登录'
+            msg: statusCodeMap['401']
         })
     }
 }
@@ -155,7 +156,7 @@ async function userModifyPwd (req, res) {
         res.send({
             code: 401,
             data: '',
-            msg: '未登录'
+            msg: statusCodeMap['401']
         })
     }
 }
@@ -200,7 +201,7 @@ async function userMenuList (req, res) {
         res.send({
             code: 401,
             data: '',
-            msg: '未登录'
+            msg: statusCodeMap['401']
         })
     }
 }
@@ -224,7 +225,7 @@ async function userNav (req, res) {
         res.send({
             code: 401,
             data: '',
-            msg: '未登录'
+            msg: statusCodeMap['401']
         })
     }
 }
@@ -324,7 +325,7 @@ async function userGetNav (req, res) {
         res.send({
             code: 401,
             data: '',
-            msg: '登录过期，请重新登录！'
+            msg: statusCodeMap['401']
         })
     }
 }
@@ -365,7 +366,7 @@ async function userRole (req, res) {
         res.send({
             code: 401,
             data: '',
-            msg: '登录过期，请重新登录！'
+            msg: statusCodeMap['401']
         })
     }
 }
@@ -410,7 +411,7 @@ async function userAddOrModifyRole (req, res) {
         res.send({
             code: 401,
             data: '',
-            msg: '登录过期，请重新登录！'
+            msg: statusCodeMap['401']
         })
     }
 }
@@ -438,7 +439,7 @@ async function userDeleteRole (req, res) {
         res.send({
             code: 401,
             data: '',
-            msg: '登录过期，请重新登录！'
+            msg: statusCodeMap['401']
         })
     }
 }
@@ -465,7 +466,7 @@ async function userGetRole (req, res) {
         res.send({
             code: 401,
             data: '',
-            msg: '登录过期，请重新登录！'
+            msg: statusCodeMap['401']
         })
     }
 }
@@ -506,7 +507,7 @@ async function userUserList (req, res) {
         res.send({
             code: 401,
             data: '',
-            msg: '登录过期，请重新登录！'
+            msg: statusCodeMap['401']
         })
     }
 }
@@ -553,7 +554,7 @@ async function userAddOrModifyUser (req, res) {
         res.send({
             code: 401,
             data: '',
-            msg: '登录过期，请重新登录！'
+            msg: statusCodeMap['401']
         })
     }
 }
@@ -581,7 +582,7 @@ async function userDeleteUser (req, res) {
         res.send({
             code: 401,
             data: '',
-            msg: '登录过期，请重新登录！'
+            msg: statusCodeMap['401']
         })
     }
 }
@@ -608,7 +609,7 @@ async function userGetUser (req, res) {
         res.send({
             code: 401,
             data: '',
-            msg: '登录过期，请重新登录！'
+            msg: statusCodeMap['401']
         })
     }
 }

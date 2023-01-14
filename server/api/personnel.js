@@ -1,4 +1,5 @@
 const { getFileData, setFileData, findParentNode, findChildNode, getMax, generateToken, verifyToken } = require('../utils/index.js')
+const statusCodeMap = require('../utils/statusCodeMap.js')
 
 // 获取员工列表
 async function userPeopleList (req, res) {
@@ -37,7 +38,7 @@ async function userPeopleList (req, res) {
         res.send({
             code: 401,
             data: '',
-            msg: '登录过期，请重新登录！'
+            msg: statusCodeMap['401']
         })
     }
 }
@@ -82,7 +83,7 @@ async function userAddOrModifyPeople (req, res) {
         res.send({
             code: 401,
             data: '',
-            msg: '登录过期，请重新登录！'
+            msg: statusCodeMap['401']
         })
     }
 }
@@ -111,7 +112,7 @@ async function userDeletePeople (req, res) {
         res.send({
             code: 401,
             data: '',
-            msg: '登录过期，请重新登录！'
+            msg: statusCodeMap['401']
         })
     }
 }
@@ -138,7 +139,7 @@ async function userGetPeople (req, res) {
         res.send({
             code: 401,
             data: '',
-            msg: '登录过期，请重新登录！'
+            msg: statusCodeMap['401']
         })
     }
 }

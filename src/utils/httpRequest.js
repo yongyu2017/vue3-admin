@@ -69,7 +69,7 @@ http.interceptors.response.use(response => {
                         url: encodeURIComponent(router.currentRoute.value.fullPath),
                     },
                 })
-            }, 2000)
+            }, 0)
         }
         ElMessage.error(data.msg || '程序异常')
 
