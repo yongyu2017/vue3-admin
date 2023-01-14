@@ -92,8 +92,12 @@ const props = defineProps({
         type: String,
         default: 'base64',  //base64, blob
     },
+    canScale: {
+        type: Boolean,
+        default: true
+    },
 })
-const { outputSize, outputType, autoCropWidth, autoCropHeight, enlarge, outputDataType } = toRefs(props)
+const { outputSize, outputType, autoCropWidth, autoCropHeight, enlarge, outputDataType, canScale } = toRefs(props)
 const options = ref({
     img: '', // url 地址, base64, blob
     outputSize: outputSize.value,  // 裁剪生成图片的质量0.1 ~ 1
@@ -105,7 +109,7 @@ const options = ref({
     autoCropHeight: autoCropHeight.value, // 截图框高度
     centerBox: false, // 截图框是否被限制在图片里面
     canMove: true, // 上传图片是否可以移动
-    canScale: false, // 图片是否允许滚轮缩放
+    canScale: canScale.value, // 图片是否允许滚轮缩放
     enlarge: enlarge.value,  //图片根据截图框输出比例倍数
 })
 const cropper = ref(null)

@@ -9,7 +9,7 @@
     <img :src="img" alt="" style="margin-top: 20px" />
 
     <!-- 图片裁剪 -->
-    <imageCropper ref="imageCropperRef" :autoCropWidth="171" :autoCropHeight="240" :enlarge="1.72" @refreshDataList="getImageCropper" @close="imageCropperVisible= false" v-if="imageCropperVisible"></imageCropper>
+    <imageCropper ref="imageCropperRef" :autoCropWidth="172" :autoCropHeight="241" :enlarge="1.715" @refreshDataList="getImageCropper" @close="imageCropperVisible= false" v-if="imageCropperVisible"></imageCropper>
 </template>
 
 <script setup>
