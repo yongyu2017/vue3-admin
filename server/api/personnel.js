@@ -36,9 +36,8 @@ async function userPeopleList (req, res) {
         })
     }else{
         res.send({
-            code: 401,
             data: '',
-            msg: statusCodeMap['401']
+            ...statusCodeMap['401']
         })
     }
 }
@@ -81,9 +80,8 @@ async function userAddOrModifyPeople (req, res) {
         })
     }else{
         res.send({
-            code: 401,
             data: '',
-            msg: statusCodeMap['401']
+            ...statusCodeMap['401']
         })
     }
 }
@@ -110,9 +108,8 @@ async function userDeletePeople (req, res) {
         })
     }else{
         res.send({
-            code: 401,
             data: '',
-            msg: statusCodeMap['401']
+            ...statusCodeMap['401']
         })
     }
 }
@@ -137,9 +134,8 @@ async function userGetPeople (req, res) {
         })
     }else{
         res.send({
-            code: 401,
             data: '',
-            msg: statusCodeMap['401']
+            ...statusCodeMap['401']
         })
     }
 }

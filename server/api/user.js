@@ -17,7 +17,7 @@ async function userLogin (req, res) {
         userFileData.list.forEach((value) => {
             if (value.name == name && value.pwd == pwd) {
                 const { name, email, id, role } = value;
-                token = generateToken({ name, pwd, id }, 60 * 1)
+                token = generateToken({ name, pwd, id }, 60 * 60 * 1)
                 data = { name, email, id, token, permission: [] }
                 userRole = role;
                 isLogin = true;
@@ -91,9 +91,8 @@ async function userGetUserInfo (req, res) {
         })
     }else{
         res.send({
-            code: 401,
             data: '',
-            msg: statusCodeMap['401']
+            ...statusCodeMap['401']
         })
     }
 }
@@ -121,9 +120,8 @@ async function userSetUserInfo (req, res) {
         })
     }else{
         res.send({
-            code: 401,
             data: '',
-            msg: statusCodeMap['401']
+            ...statusCodeMap['401']
         })
     }
 }
@@ -154,9 +152,8 @@ async function userModifyPwd (req, res) {
         })
     }else{
         res.send({
-            code: 401,
             data: '',
-            msg: statusCodeMap['401']
+            ...statusCodeMap['401']
         })
     }
 }
@@ -199,9 +196,8 @@ async function userMenuList (req, res) {
         })
     }else{
         res.send({
-            code: 401,
             data: '',
-            msg: statusCodeMap['401']
+            ...statusCodeMap['401']
         })
     }
 }
@@ -223,9 +219,8 @@ async function userNav (req, res) {
         })
     }else{
         res.send({
-            code: 401,
             data: '',
-            msg: statusCodeMap['401']
+            ...statusCodeMap['401']
         })
     }
 }
@@ -266,9 +261,8 @@ async function userAddOrModifyNav (req, res) {
         })
     }else{
         res.send({
-            code: 401,
             data: '',
-            msg: '登录过期，请重新登录！'
+            ...statusCodeMap['401']
         })
     }
 }
@@ -296,9 +290,8 @@ async function userDeleteNav (req, res) {
         })
     }else{
         res.send({
-            code: 401,
             data: '',
-            msg: '登录过期，请重新登录！'
+            ...statusCodeMap['401']
         })
     }
 }
@@ -323,9 +316,8 @@ async function userGetNav (req, res) {
         })
     }else{
         res.send({
-            code: 401,
             data: '',
-            msg: statusCodeMap['401']
+            ...statusCodeMap['401']
         })
     }
 }
@@ -364,9 +356,8 @@ async function userRole (req, res) {
         })
     }else{
         res.send({
-            code: 401,
             data: '',
-            msg: statusCodeMap['401']
+            ...statusCodeMap['401']
         })
     }
 }
@@ -409,9 +400,8 @@ async function userAddOrModifyRole (req, res) {
         })
     }else{
         res.send({
-            code: 401,
             data: '',
-            msg: statusCodeMap['401']
+            ...statusCodeMap['401']
         })
     }
 }
@@ -437,9 +427,8 @@ async function userDeleteRole (req, res) {
         })
     }else{
         res.send({
-            code: 401,
             data: '',
-            msg: statusCodeMap['401']
+            ...statusCodeMap['401']
         })
     }
 }
@@ -464,9 +453,8 @@ async function userGetRole (req, res) {
         })
     }else{
         res.send({
-            code: 401,
             data: '',
-            msg: statusCodeMap['401']
+            ...statusCodeMap['401']
         })
     }
 }
@@ -505,9 +493,8 @@ async function userUserList (req, res) {
         })
     }else{
         res.send({
-            code: 401,
             data: '',
-            msg: statusCodeMap['401']
+            ...statusCodeMap['401']
         })
     }
 }
@@ -552,9 +539,8 @@ async function userAddOrModifyUser (req, res) {
         })
     }else{
         res.send({
-            code: 401,
             data: '',
-            msg: statusCodeMap['401']
+            ...statusCodeMap['401']
         })
     }
 }
@@ -580,9 +566,8 @@ async function userDeleteUser (req, res) {
         })
     }else{
         res.send({
-            code: 401,
             data: '',
-            msg: statusCodeMap['401']
+            ...statusCodeMap['401']
         })
     }
 }
@@ -607,9 +592,8 @@ async function userGetUser (req, res) {
         })
     }else{
         res.send({
-            code: 401,
             data: '',
-            msg: statusCodeMap['401']
+            ...statusCodeMap['401']
         })
     }
 }
