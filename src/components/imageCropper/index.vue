@@ -90,7 +90,7 @@ const props = defineProps({
     },
     outputDataType : {
         type: String,
-        default: 'base64',  //base64, blob
+        default: 'base64',  //outputDataType值，base64|blob
     },
     canScale: {
         type: Boolean,
@@ -159,10 +159,7 @@ const rotateFun = (direction) => {
 }
 // 表单提交
 const dataFormSubmit = async () => {
-    let data = await getCropData()
-    if (outputDataType.value == 'blob') {
-        data = await getCropBlob()
-    }
+    let data = outputDataType.value == 'blob' ? await getCropBlob() : await getCropData()
     visible.value = false;
     emit('refreshDataList', data)
 }

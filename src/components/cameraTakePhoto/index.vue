@@ -75,8 +75,8 @@ let linkMedia = (device) => {
     const constraints = {
         audio: false, // 音频轨道
         video: {
-            width: videoWidth,
-            height: videoHeight,
+            width: videoWidth.value,
+            height: videoHeight.value,
             deviceId: { exact: device.deviceId || undefined }  // 部分电脑查询不到摄像头的deviceId和label（有可能是电脑驱动问题），需要传undefined进去，才可调用摄像头
         } // 视频轨道
     }
@@ -103,7 +103,7 @@ let takePhoto = async () => {
         return
     }
     const ctx = canvasRef.value.getContext('2d')
-    ctx.drawImage(videoRef.value, 0, 0, videoWidth, videoHeight)
+    ctx.drawImage(videoRef.value, 0, 0, videoWidth.value, videoHeight.value)
     const base64Data = canvasRef.value.toDataURL('image/jpeg', 1)
     emit('getImg', base64Data, selectedDevice.value)
     emit('getFile', base64ToFile(base64Data, 'filename'))
