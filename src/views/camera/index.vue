@@ -19,15 +19,21 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, onDeactivated } from 'vue'
 import cameraTakePhoto from '@/components/cameraTakePhoto'
 
 let img = ref('')
 const cameraTakePhotoRef = ref(null)
 
+onDeactivated(() => {
+    closeMedia()
+})
+
+// 摄像头拍照成功回调
 const getPhoto = (e) => {
     img.value = e;
 }
+// 开启摄像头
 const openMedia = () => {
     cameraTakePhotoRef.value.openMedia()
 }
