@@ -1,4 +1,4 @@
-const { getFileData, setFileData, findParentNode, findChildNode, getMax } = require('../utils/index.js')
+const { getFileData, setFileData, findParentNode, findChildNode, getMax, generateToken, verifyToken } = require('../utils/index.js')
 
 // 登录
 async function userLogin (req, res) {
@@ -12,10 +12,12 @@ async function userLogin (req, res) {
         let userRole = '';
         let roleIds = [];
         let isLogin = false;
+        let token = ''
         userFileData.list.forEach((value) => {
             if (value.name == name && value.pwd == pwd) {
                 const { name, email, id, role } = value;
-                data = { name, email, id, token: id, permission: [] }
+                token = generateToken({ name, pwd, id }, 60 * 5)
+                data = { name, email, id, token, permission: [] }
                 userRole = role;
                 isLogin = true;
             }
@@ -55,8 +57,9 @@ async function userLogin (req, res) {
 // 获取当前用户信息
 async function userGetUserInfo (req, res) {
     const { token } = req.headers;
+    const userInfo = await verifyToken(token)
 
-    if(token){
+    if(userInfo){
         const userFileData = await getFileData('user');
         const roleFileData = await getFileData('role');
         const menuFileData = await getFileData('menu');
@@ -64,9 +67,9 @@ async function userGetUserInfo (req, res) {
         let userRole = '';
         let roleIds = [];
         userFileData.list.forEach((value) => {
-            if (value.id == token) {
+            if (value.id == userInfo.id) {
                 const { name, email, id, role } = value;
-                data = { name, email, id, token: id, permission: [] }
+                data = { name, email, id, permission: [] }
                 userRole = role;
             }
         })
@@ -87,7 +90,7 @@ async function userGetUserInfo (req, res) {
         })
     }else{
         res.send({
-            code: -1,
+            code: 401,
             data: '',
             msg: '未登录'
         })
@@ -97,12 +100,13 @@ async function userGetUserInfo (req, res) {
 async function userSetUserInfo (req, res) {
     const { token } = req.headers;
     const { email } = req['body'];
+    const userInfo = await verifyToken(token)
     const data = { email };
 
-    if(token){
+    if(userInfo){
         const fileData = await getFileData('user');
         fileData.list.forEach((value) => {
-            if (value.id == token) {
+            if (value.id == userInfo.id) {
                 for (let i in data) {
                     value[i] = data[i];
                 }
@@ -116,7 +120,7 @@ async function userSetUserInfo (req, res) {
         })
     }else{
         res.send({
-            code: -1,
+            code: 401,
             data: '',
             msg: '未登录'
         })
@@ -125,13 +129,14 @@ async function userSetUserInfo (req, res) {
 // 修改当前用户密码
 async function userModifyPwd (req, res) {
     const { token } = req.headers;
+    const userInfo = await verifyToken(token)
     const { oldPwd, pwd } = req['body'];
 
-    if(token){
+    if(userInfo){
         const fileData = await getFileData('user');
         let valid = false;
         fileData.list.forEach((value) => {
-            if (value.id == token) {
+            if (value.id == userInfo.id) {
                 if (value.pwd == oldPwd) {
                     value.pwd = pwd;
                     valid = true;
@@ -148,7 +153,7 @@ async function userModifyPwd (req, res) {
         })
     }else{
         res.send({
-            code: -1,
+            code: 401,
             data: '',
             msg: '未登录'
         })
@@ -157,15 +162,16 @@ async function userModifyPwd (req, res) {
 // 获取当前用户菜单
 async function userMenuList (req, res) {
     const { token } = req.headers
+    const userInfo = await verifyToken(token)
 
-    if(token){
+    if(userInfo){
         const userFileData = await getFileData('user');
         const roleFileData = await getFileData('role');
         const menuFileData = await getFileData('menu');
         let userRole = '';
         let roleIds = [];
         userFileData.list.forEach((value) => {
-            if (value.id == token) {
+            if (value.id == userInfo.id) {
                 userRole = value.role;
             }
         })
@@ -192,7 +198,7 @@ async function userMenuList (req, res) {
         })
     }else{
         res.send({
-            code: -1,
+            code: 401,
             data: '',
             msg: '未登录'
         })
@@ -201,8 +207,9 @@ async function userMenuList (req, res) {
 // 获取菜单列表
 async function userNav (req, res) {
     const { token } = req.headers
+    const userInfo = await verifyToken(token)
 
-    if(token){
+    if(userInfo){
         const fileData = await getFileData('menu');
 
         fileData.menuList = fileData.menuList.filter((value) => {
@@ -215,7 +222,7 @@ async function userNav (req, res) {
         })
     }else{
         res.send({
-            code: -1,
+            code: 401,
             data: '',
             msg: '未登录'
         })
@@ -227,8 +234,9 @@ async function userAddOrModifyNav (req, res) {
     const { id, menuName, parentId, jumpUrl, roleUrl, type, icon, orderNum } = req['body'];
     const data = { id, menuName, parentId, jumpUrl, roleUrl, type, icon, orderNum };
     const fileData = await getFileData('menu');
+    const userInfo = await verifyToken(token)
 
-    if(token){
+    if(userInfo){
         if (data.id) {
             fileData.menuList.forEach((value) => {
                 if (value.id == data.id) {
@@ -268,8 +276,9 @@ async function userDeleteNav (req, res) {
     const { token } = req.headers
     const { id } = req['body'];
     const fileData = await getFileData('menu');
+    const userInfo = await verifyToken(token)
 
-    if(token){
+    if(userInfo){
         const ids = [id];
         ids.push(...findChildNode(id, fileData.menuList))
         fileData.menuList.forEach((value) => {
@@ -297,8 +306,9 @@ async function userGetNav (req, res) {
     const { token } = req.headers
     const { id } = req['body'];
     const fileData = await getFileData('menu');
+    const userInfo = await verifyToken(token)
 
-    if(token){
+    if(userInfo){
         let data = {};
         fileData.menuList.forEach((value) => {
             if(value.id == id){
@@ -323,8 +333,9 @@ async function userRole (req, res) {
     const { token } = req.headers
     const fileData = await getFileData('role');
     const { pageIndex, pageSize, name } = req['body'];
+    const userInfo = await verifyToken(token)
 
-    if(token){
+    if(userInfo){
         let list= fileData.list,
             start= (pageIndex- 1) * pageSize,
             end= start+ pageSize;
@@ -364,8 +375,9 @@ async function userAddOrModifyRole (req, res) {
     const { id, name, des, role } = req['body'];
     const data = { id, name, des, role };
     const fileData = await getFileData('role');
+    const userInfo = await verifyToken(token)
 
-    if(token){
+    if(userInfo){
         if (data.id) {
             fileData.list.forEach((value) => {
                 if (value.id == data.id) {
@@ -407,8 +419,9 @@ async function userDeleteRole (req, res) {
     const { token } = req.headers
     const { id } = req['body'];
     const fileData = await getFileData('role');
+    const userInfo = await verifyToken(token)
 
-    if(token){
+    if(userInfo){
         fileData.list.forEach((value) => {
             if(value.id == id){
                 value.state = 0;
@@ -434,8 +447,9 @@ async function userGetRole (req, res) {
     const { token } = req.headers
     const { id } = req['body'];
     const fileData = await getFileData('role');
+    const userInfo = await verifyToken(token)
 
-    if(token){
+    if(userInfo){
         let data = {};
         fileData.list.forEach((value) => {
             if(value.id == id){
@@ -460,8 +474,9 @@ async function userUserList (req, res) {
     const { token } = req.headers
     const fileData = await getFileData('user');
     const { pageIndex, pageSize, name } = req['body'];
+    const userInfo = await verifyToken(token)
 
-    if(token){
+    if(userInfo){
         let list= fileData.list,
             start= (pageIndex- 1) * pageSize,
             end= start+ pageSize;
@@ -501,8 +516,9 @@ async function userAddOrModifyUser (req, res) {
     const { id, name, des, role, email, pwd } = req['body'];
     const data = { id, name, des, role, email, pwd };
     const fileData = await getFileData('user');
+    const userInfo = await verifyToken(token)
 
-    if(token){
+    if(userInfo){
         if (data.id) {
             fileData.list.forEach((value) => {
                 if (value.id == data.id) {
@@ -546,8 +562,9 @@ async function userDeleteUser (req, res) {
     const { token } = req.headers
     const { id } = req['body'];
     const fileData = await getFileData('user');
+    const userInfo = await verifyToken(token)
 
-    if(token){
+    if(userInfo){
         fileData.list.forEach((value) => {
             if(value.id == id){
                 value.state = 0;
@@ -573,8 +590,9 @@ async function userGetUser (req, res) {
     const { token } = req.headers
     const { id } = req['body'];
     const fileData = await getFileData('user');
+    const userInfo = await verifyToken(token)
 
-    if(token){
+    if(userInfo){
         let data = {};
         fileData.list.forEach((value) => {
             if(value.id == id){

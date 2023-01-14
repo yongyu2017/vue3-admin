@@ -1,12 +1,13 @@
-const { getFileData, setFileData, findParentNode, findChildNode, getMax } = require('../utils/index.js')
+const { getFileData, setFileData, findParentNode, findChildNode, getMax, generateToken, verifyToken } = require('../utils/index.js')
 
 // 获取员工列表
 async function userPeopleList (req, res) {
     const { token } = req.headers
     const fileData = await getFileData('people');
     const { pageIndex, pageSize, name } = req['body'];
+    const userInfo = await verifyToken(token)
 
-    if(token){
+    if(userInfo){
         let list= fileData.list,
             start= (pageIndex- 1) * pageSize,
             end= start+ pageSize;
@@ -46,8 +47,9 @@ async function userAddOrModifyPeople (req, res) {
     const { id, name, sex, age } = req['body'];
     const data = { id, name, sex, age };
     const fileData = await getFileData('people');
+    const userInfo = await verifyToken(token)
 
-    if(token){
+    if(userInfo){
         if (data.id) {
             fileData.list.forEach((value) => {
                 if (value.id == data.id) {
@@ -90,8 +92,9 @@ async function userDeletePeople (req, res) {
     const { id } = req['body'];
     const ids = (id + '').split(',');
     const fileData = await getFileData('people');
+    const userInfo = await verifyToken(token)
 
-    if(token){
+    if(userInfo){
         fileData.list.forEach((value) => {
             if(ids.includes(value.id + '')){
                 value.state = 0;
@@ -117,8 +120,9 @@ async function userGetPeople (req, res) {
     const { token } = req.headers
     const { id } = req['body'];
     const fileData = await getFileData('people');
+    const userInfo = await verifyToken(token)
 
-    if(token){
+    if(userInfo){
         let data = {};
         fileData.list.forEach((value) => {
             if(value.id == id){

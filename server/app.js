@@ -28,9 +28,9 @@ let connection = mysql.createConnection({
 //连接数据库
 connection.connect()
 //操作数据库，sql语句为函数参数
-connection.query('SELECT * FROM user WHERE state=1 and username LIKE \'%管理员%\'', function (error, results, fields) {
-    console.log(error, results)
-})
+// connection.query('SELECT * FROM user WHERE state=1 and username LIKE \'%管理员%\'', function (error, results, fields) {
+//     console.log(error, results)
+// })
 
 // 注册接口
 for (let i in api) {

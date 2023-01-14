@@ -2,6 +2,8 @@ const fs = require('fs')
 // promisify 异步处理
 const { promisify } = require('util')
 const path = require('path')
+const { tokenSecret } = require('./setting.js')
+const jwt = require('jsonwebtoken')
 
 const readFile = promisify(fs.readFile)
 const writeFile = promisify(fs.writeFile)
@@ -12,14 +14,12 @@ const getFileData = async (fileName) => {
     const data = await readFile(filePath, 'utf-8')
     return JSON.parse(data)
 }
-
 // 修改 json 数据
 const setFileData = async (fileName, data) => {
     const filePath = path.join(__dirname, `../json/${fileName}.json`)
     const datas = JSON.stringify(data, null, '  ')
     await writeFile(filePath, datas)
 }
-
 // 查找父节点
 const findParentNode = (ids, list) => {
     let tempList = [];
@@ -53,7 +53,6 @@ const findParentNode = (ids, list) => {
         return false
     }
 }
-
 // 查找子节点
 const findChildNode = (id, list) => {
     let tree = menuToTreeMenu(deepCopy(list));
@@ -87,7 +86,6 @@ const findChildNode = (id, list) => {
         return arr
     }
 }
-
 // 将一维数据转为树形结构
 function menuToTreeMenu(source) {
     const len = source.length
@@ -110,7 +108,6 @@ function menuToTreeMenu(source) {
 
     return result
 }
-
 //深拷贝
 function deepCopy(params) {
     // 如果数组类型数据
@@ -132,11 +129,24 @@ function deepCopy(params) {
     // 如果是普通数据类型
     return params
 }
-
 //获取最大值
 function getMax (list) {
     var arr = list.map((value) => value.id).sort((a, b) => (a - b));
     return arr.length > 0 ? arr[arr.length - 1] : 0
+}
+// 生成token
+function generateToken (data, time) {
+    return jwt.sign(data, tokenSecret, {
+        expiresIn: time  // 单位：秒
+    })
+}
+// 验证token
+function verifyToken (token) {
+    return new Promise((resolve) => {
+        jwt.verify(token, tokenSecret, function (err, decode) {
+            resolve(decode)
+        })
+    })
 }
 
 module.exports = {
@@ -147,6 +157,8 @@ module.exports = {
     menuToTreeMenu,
     deepCopy,
     getMax,
+    generateToken,
+    verifyToken,
 }
 
 
