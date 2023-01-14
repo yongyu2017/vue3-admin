@@ -1,26 +1,31 @@
 <template>
-    <ul class="step-list">
-        <li class="end">第一步：填写报名信息</li>
-        <li class="active">第二步：上传报名资料</li>
-        <li>第三步：确认报名</li>
-    </ul>
-
     <div class="video-tack-photo-wrap" :style="{ width: videoWidth + 'px', height: videoHeight + 'px' }">
         <video ref="videoRef" autoplay="autoplay" :width="videoWidth" :height="videoHeight" class="video-dom"></video>
 
         <canvas ref="canvasRef" :width="videoWidth" :height="videoHeight" class="canvas-dom"></canvas>
 
-        <div class="error-tips-box" v-if="!isLinkVideoList">
-            <div class="p1">未搜索到摄像头设备，请检查摄像头！</div>
-            <div>
-                <el-button @click="openMedia">重启摄像头</el-button>
+        <div class="camera-txt-box" v-if="!iSOnline">
+            <div class="error-tips-box" v-if="devicesList.length === 0">
+                <div class="p1">未检测到可用摄像设备，如已连接，请拔插后刷新页面.</div>
+                <div>
+                    <el-button @click="openMedia">重新连接</el-button>
+                </div>
+            </div>
+            <div v-else>
+                <div class="p1">请选择摄像头：</div>
+                <ul class="devices-list">
+                    <li v-for="(item, index) in devicesList" :key="index">
+                        <div class="devices-name" :title="item.label">设备：{{ item.label || '未知设备' }}</div>
+                        <el-button link type="primary" class="ant-btn-link-custom" @click="linkMedia(item)">连接</el-button>
+                    </li>
+                </ul>
             </div>
         </div>
     </div>
 </template>
 
 <script setup>
-import { ref, toRefs, defineProps, defineEmits, defineExpose, onMounted } from 'vue'
+import { ref, toRefs, defineProps, defineEmits, defineExpose, onBeforeMount } from 'vue'
 import { ElMessage } from 'element-plus';
 
 const props = defineProps({
@@ -37,54 +42,75 @@ const emit = defineEmits(['getImg', 'getFile'])
 const { videoWidth, videoHeight } = toRefs(props);
 const videoRef = ref(null)
 const canvasRef = ref(null)
-let mediaStream = ref()
-let isLinkVideoList = ref(false)  //是否链接上摄像头设备
-// let cameraIsOnline = ref(false)  // 判断摄像头是否在线
+let mediaStream = ref(null)  // 摄像头视频流
+let iSOnline = ref(false)  // 判断摄像头是否在线
+let devicesList = ref([])  // 摄像头列表
+let selectedDevice = ref(null)  // 已连接的设备信息
 
-onMounted(() => {
-    checkMediaDevices()
+onBeforeMount(() => {
+    closeMedia()
 })
 // 检测摄像头
-const checkMediaDevices = () => {
-    navigator.mediaDevices.enumerateDevices().then((devices) => {
-        let count = devices.filter(item => item.kind == 'videoinput').length;
-        isLinkVideoList.value = count > 0 ? true : false;
-        isLinkVideoList.value && openMedia()
+const checkMediaDevices = async () => {
+    await navigator.mediaDevices.enumerateDevices().then((devices) => {
+        devicesList.value = devices.filter(item => item.kind === 'videoinput')
+        console.log('devices', devices)
+    }).catch((err) => {
+        console.log('enumerateDevices', err)
     })
 }
 // 开启摄像头
-const openMedia = () => {
-    let constraints = {
-        audio: false, //音频轨道
-        video: { width: videoWidth.value, height: videoHeight.value }  //视频轨道
+const openMedia = async (device) => {
+    await checkMediaDevices()
+    if (devicesList.value.length === 0) {
+        return
     }
-    let mediaPromise = navigator.mediaDevices.getUserMedia(constraints);
+    if (devicesList.value.length === 1 || device) {
+        linkMedia(device || devicesList.value[0])
+    }
+}
+// 链接摄像头
+let linkMedia = (device) => {
+    selectedDevice.value = device
+    const constraints = {
+        audio: false, // 音频轨道
+        video: {
+            width: videoWidth,
+            height: videoHeight,
+            deviceId: { exact: device.deviceId || undefined }  // 部分电脑查询不到摄像头的deviceId和label（有可能是电脑驱动问题），需要传undefined进去，才可调用摄像头
+        } // 视频轨道
+    }
+    const mediaPromise = navigator.mediaDevices.getUserMedia(constraints)
     mediaPromise.then((stream) => {
-        isLinkVideoList.value = true;
-        mediaStream.value = stream;
-        videoRef.value.srcObject = stream;
-        videoRef.value.play();
+        iSOnline.value = true
+        mediaStream.value = stream
+        videoRef.value.srcObject = stream
+        videoRef.value.play()
     }).catch((err) => {
-        console.log(err)
+        console.log('getUserMedia', err)
+        iSOnline.value = false
     })
 }
 // 拍照
-let takePhoto = () => {
+let takePhoto = async () => {
     // mediaStream在摄像头拔出的一瞬间，active会从true变更为false，同时触发oninactive钩子，有了状态监听之后事情就简单了许多。代码经过测试后发现，对用户变更摄像头权限也有效。
-    if (!mediaStream.value.active) {
-        isLinkVideoList.value = false;
+    if ((mediaStream.value && !mediaStream.value.active) || !iSOnline.value) {
+        mediaStream.value = null
+        selectedDevice.value = null
+        iSOnline.value = false
+        await checkMediaDevices()
         ElMessage.warning('摄像头掉线了，请检查！')
         return
     }
-    let ctx = canvasRef.value.getContext('2d')
-    ctx.drawImage(videoRef.value, 0, 0, videoWidth.value, videoHeight.value)
-    const base64Data = canvasRef.value.toDataURL()
-    emit('getImg', base64Data)
+    const ctx = canvasRef.value.getContext('2d')
+    ctx.drawImage(videoRef.value, 0, 0, videoWidth, videoHeight)
+    const base64Data = canvasRef.value.toDataURL('image/jpeg', 1)
+    emit('getImg', base64Data, selectedDevice.value)
     emit('getFile', base64ToFile(base64Data, 'filename'))
 }
 // 关闭摄像头
 let closeMedia = () => {
-    mediaStream.value.getTracks().forEach(track => {
+    mediaStream.value && mediaStream.value.getTracks().forEach(track => {
         track.stop()
     })
 }
@@ -116,91 +142,61 @@ defineExpose({
 </script>
 
 <style lang="scss" scoped>
-.video-tack-photo-wrap{
-    position: relative;
-    z-index: 0;
-    .video-dom{
+    .video-tack-photo-wrap{
         position: relative;
-        z-index: 1;
-        object-fit: fill;
-    }
-    .canvas-dom{
-        position: absolute;
-        z-index: -1;
-        top: 0;
-        left: 0;
-        opacity: 0;
-    }
-    .error-tips-box{
-        position: absolute;
-        z-index: 10;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        padding: 12px;
-        background: rgba(255, 255, 255, 0.75);
-        box-sizing: border-box;
-        .p1{
-            margin-bottom: 12px;
-            font-size: 14px;
+        z-index: 0;
+        background-color: #dcdcdc;
+
+        .video-dom{
+            position: relative;
+            z-index: 1;
+            object-fit: fill;
         }
-    }
-}
-.step-list {
-    display: flex;
-    li{
-        position: relative;
-        margin: 0 4px;
-        flex: 1;
-        line-height: 36px;
-        text-align: center;
-        padding: 0 40px;
-        color: #090909;
-        font-size: 14px;
-        background: #eaeaea;
-        &:after{
-            content: "";
+
+        .canvas-dom{
             position: absolute;
-            right: -18px;
+            z-index: -1;
             top: 0;
-            z-index: 10;
-            display: block;
-            border-top: 18px solid transparent;
-            border-bottom: 18px solid transparent;
-            border-left: 18px solid #eaeaea;
-        }
-        &:before{
-            content: "";
-            position: absolute;
             left: 0;
+            opacity: 0;
+        }
+
+        .camera-txt-box{
+            position: absolute;
+            z-index: 10;
             top: 0;
-            display: block;
-            border-top: 18px solid transparent;
-            border-bottom: 18px solid transparent;
-            border-left: 18px solid #fff;
-        }
-        &:first-child{
-            margin-left: 0;
-            padding: 0 20px;
-            &:before{
-                display: none;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            line-height: 20px;
+            padding: 6px;
+            background-color: #fff;
+            font-size: 14px;
+            box-sizing: border-box;
+            overflow-y: auto;
+
+            .p1{
+                margin-bottom: 6px;
             }
         }
-        &:last-child{
-            margin-right: 0;
-            padding: 0 20px 0 40px;
-            &:after {
-                display: none;
+
+        .devices-list {
+            li {
+                display: flex;
+                padding: 4px 0;
+                border-bottom: 1px dashed #dcdcdc;
+
+                &:last-child {
+                    border-bottom: 0;
+                }
+
+                .devices-name {
+                    flex: 1;
+                    white-space: nowrap;
+                    text-overflow: ellipsis;
+                    overflow: hidden;
+                }
             }
-        }
-        &.active, &.end {
-            color: #fff;
-            background-color: #1890FF;
-        }
-        &.active:after, &.end:after {
-            border-left-color: #1890FF;
         }
     }
-}
 </style>

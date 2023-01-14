@@ -1,4 +1,10 @@
 <template>
+    <ul class="step-list">
+        <li class="end">第一步：填写报名信息</li>
+        <li class="active">第二步：上传报名资料</li>
+        <li>第三步：确认报名</li>
+    </ul>
+
     <div style="margin-bottom: 20px">
         <el-button @click="openMedia">开启摄像头</el-button>
         <el-button @click="closeMedia">关闭摄像头</el-button>
@@ -35,6 +41,61 @@ let closeMedia = () => {
 }
 </script>
 
-<style>
-
+<style lang="scss" scoped>
+    .step-list {
+        display: flex;
+    li{
+        position: relative;
+        margin: 0 4px;
+        flex: 1;
+        line-height: 36px;
+        text-align: center;
+        padding: 0 40px;
+        color: #090909;
+        font-size: 14px;
+        background: #eaeaea;
+    &:after{
+         content: "";
+         position: absolute;
+         right: -18px;
+         top: 0;
+         z-index: 10;
+         display: block;
+         border-top: 18px solid transparent;
+         border-bottom: 18px solid transparent;
+         border-left: 18px solid #eaeaea;
+     }
+    &:before{
+         content: "";
+         position: absolute;
+         left: 0;
+         top: 0;
+         display: block;
+         border-top: 18px solid transparent;
+         border-bottom: 18px solid transparent;
+         border-left: 18px solid #fff;
+     }
+    &:first-child{
+         margin-left: 0;
+         padding: 0 20px;
+    &:before{
+         display: none;
+     }
+    }
+    &:last-child{
+         margin-right: 0;
+         padding: 0 20px 0 40px;
+    &:after {
+         display: none;
+     }
+    }
+    &.active, &.end {
+                   color: #fff;
+                   background-color: #1890FF;
+               }
+    &.active:after, &.end:after {
+                         border-left-color: #1890FF;
+                     }
+    }
+    }
 </style>
