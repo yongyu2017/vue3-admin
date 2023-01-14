@@ -25,7 +25,7 @@
 </template>
 
 <script setup>
-import { ref, toRefs, defineProps, defineEmits, defineExpose, onBeforeMount } from 'vue'
+import { ref, toRefs, defineProps, defineEmits, defineExpose, onBeforeUnmount } from 'vue'
 import { ElMessage } from 'element-plus';
 
 const props = defineProps({
@@ -47,7 +47,7 @@ let iSOnline = ref(false)  // 判断摄像头是否在线
 let devicesList = ref([])  // 摄像头列表
 let selectedDevice = ref(null)  // 已连接的设备信息
 
-onBeforeMount(() => {
+onBeforeUnmount(() => {
     closeMedia()
 })
 // 检测摄像头
