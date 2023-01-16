@@ -220,6 +220,19 @@
       "status": 1,
       "createTime": 1670580027973,
       "modifiedTime": 1670580027973
+    },
+    {
+      "id": 18,
+      "menuName": "videojs播放器",
+      "parentId": 0,
+      "jumpUrl": "video/index",
+      "roleUrl": "",
+      "type": 1,
+      "icon": "",
+      "orderNum": 70,
+      "status": 1,
+      "createTime": 1673849861466,
+      "modifiedTime": 1673849873351
     }
   ]
 }

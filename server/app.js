@@ -17,21 +17,6 @@ app.all('*', function (req, res, next) {
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())  //data参数以字典格式传输
 
-// 设置连接信息
-let connection = mysql.createConnection({
-    host : 'localhost',
-    user : 'root',
-    password : 'root',
-    port: '3306',
-    database : 'test'
-})
-//连接数据库
-connection.connect()
-//操作数据库，sql语句为函数参数
-// connection.query('SELECT * FROM user WHERE state=1 and username LIKE \'%管理员%\'', function (error, results, fields) {
-//     console.log(error, results)
-// })
-
 // 注册接口
 for (let i in api) {
     app.post(api[i].path, api[i].component)
