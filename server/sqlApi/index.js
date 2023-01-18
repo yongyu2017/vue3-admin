@@ -1,26 +1,45 @@
-const { userLogin, userGetUserInfo, userSetUserInfo, userModifyPwd, userMenuList, userNav, userAddOrModifyNav, userDeleteNav, userGetNav, userRole, userAddOrModifyRole, userDeleteRole, userGetRole, userUserList, userAddOrModifyUser, userDeleteUser, userGetUser, } = require('./user.js')
-const { userPeopleList, userAddOrModifyPeople, userDeletePeople, userGetPeople } = require('./personnel.js')
+const fs = require('fs')
+const path = require('path')
+const dir = path.join(__dirname, './modules/')
+let exportObject = {}
 
-module.exports = {
-    userLogin: { path: '/user/login', component: userLogin },
-    userGetUserInfo: { path: '/user/getUserInfo', component: userGetUserInfo },
-    userSetUserInfo: { path: '/user/setUserInfo', component: userSetUserInfo },
-    userModifyPwd: { path: '/user/modifyPwd', component: userModifyPwd },
-    userMenuList: { path: '/user/menuList', component: userMenuList },
-    userNav: { path: '/user/nav', component: userNav },
-    userAddOrModifyNav: { path: '/user/addOrModifyNav', component: userAddOrModifyNav },
-    userDeleteNav: { path: '/user/deleteNav', component: userDeleteNav },
-    userGetNav: { path: '/user/getNav', component: userGetNav },
-    userPeopleList: { path: '/user/peopleList', component: userPeopleList },
-    userAddOrModifyPeople: { path: '/user/addOrModifyPeople', component: userAddOrModifyPeople },
-    userDeletePeople: { path: '/user/deletePeople', component: userDeletePeople },
-    userGetPeople: { path: '/user/getPeople', component: userGetPeople },
-    userRole: { path: '/user/role', component: userRole },
-    userAddOrModifyRole: { path: '/user/addOrModifyRole', component: userAddOrModifyRole },
-    userDeleteRole: { path: '/user/deleteRole', component: userDeleteRole },
-    userGetRole: { path: '/user/getRole', component: userGetRole },
-    userUserList: { path: '/user/userList', component: userUserList },
-    userAddOrModifyUser: { path: '/user/addOrModifyUser', component: userAddOrModifyUser },
-    userDeleteUser: { path: '/user/deleteUser', component: userDeleteUser },
-    userGetUser: { path: '/user/getUser', component: userGetUser },
+const fileList = getJsonFiles(dir).map((value) => {
+    const Index = value.indexOf('modules')
+    const fileUrl = './' + value.substr(Index).replace(/\\/g, '\/')
+    const list = fileUrl.split('/')
+    const fileName = list[list.length - 1].replace('.js', '')
+    return {
+        fileName,
+        fileUrl,
+    }
+})
+fileList.forEach((value) => {
+    const requireObject = require(value.fileUrl)
+    exportObject[value.fileName] = {
+        path: requireObject.path,
+        component: requireObject.fn
+    }
+})
+
+module.exports = exportObject
+
+// 获取文件列表
+function getJsonFiles(jsonPath){
+    let jsonFiles = []
+    function findJsonFile(www){
+        let files = fs.readdirSync(www)
+        files.forEach(function (item) {
+            let fPath =  path.join(www, item)
+            let stat = fs.statSync(fPath)
+            if(stat.isDirectory() === true) {
+                findJsonFile(fPath)
+            }
+            if (stat.isFile() === true) {
+                jsonFiles.push(fPath)
+            }
+        })
+    }
+    findJsonFile(jsonPath)
+
+    return jsonFiles
 }

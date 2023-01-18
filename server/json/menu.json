@@ -228,11 +228,11 @@
       "jumpUrl": "video/index",
       "roleUrl": "",
       "type": 1,
-      "icon": "",
+      "icon": "VideoPlay",
       "orderNum": 70,
       "status": 1,
       "createTime": 1673849861466,
-      "modifiedTime": 1673849873351
+      "modifiedTime": 1673855750866
     }
   ]
 }

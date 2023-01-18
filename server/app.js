@@ -1,8 +1,7 @@
 let express = require('express');
 let app = express();
 let bodyParser = require('body-parser');
-let mysql = require('mysql');
-const api = require('./api/index.js')
+const api = require('./sqlApi/index.js')
 
 //设置跨域访问
 app.all('*', function (req, res, next) {
