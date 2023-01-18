@@ -19,7 +19,7 @@
 <script setup>
 import { reactive, onMounted, ref, nextTick } from 'vue'
 import { useStorePinia } from "@/store"
-import { ElLoading } from 'element-plus'
+import { ElLoading, ElMessage } from 'element-plus'
 import { userSetUserInfo } from '@/api/user'
 import { checkEamil }  from '@/utils'
 import indexPasswordModify from './index-password-modify.vue'
@@ -72,6 +72,7 @@ const submitFun = () => {
             userSetUserInfo(dataForm.value).then(() => {
                 loading.close()
                 userGetUserInfoFun()
+                ElMessage.success('操作成功！')
             }).catch(() => {
                 loading.close()
             })

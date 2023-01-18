@@ -14,7 +14,7 @@ module.exports={
             const db = mysql.createConnection(this.config)
             db.connect()
             // 第一个参数是执行sql语句,第二个参数是一个数据格式，数组元素的先后顺序，对应sql语句中的?的顺序
-            db.query(sql, params, (err, res) => {
+            db.query(sql, params, (err, res, fields) => {
                 cb && cb(err, res)
                 resolve([{ err, res }])
             })
