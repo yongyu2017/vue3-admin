@@ -9,10 +9,10 @@
                 <el-input v-model="dataForm.des" placeholder="请输入" :rows="3" type="textarea"
                     class="inp-dom"></el-input>
             </el-form-item>
-            <el-form-item label="角色权限：" prop="role">
+            <el-form-item label="角色权限：" prop="permission">
                 <el-tree ref="treeRef"
                     style="width: 100%"
-                    :data="roleList" 
+                    :data="permissionList"
                     show-checkbox 
                     default-expand-all 
                     node-key="id" 
@@ -44,7 +44,7 @@ let dataForm = ref({
     id: '',  //修改时填写
     name: '',
     des: '',
-    role: [],
+    permission: [],
 })
 const dataRule = reactive({
     name: [
@@ -52,7 +52,7 @@ const dataRule = reactive({
     ],
 })
 const treeRef = ref(null);
-const roleList = ref([]);
+const permissionList = ref([]);
 const defaultProps = {
     children: 'children',
     label: 'label',
@@ -69,10 +69,10 @@ var init = (item) => {
             userGetRole({
                 id: item.id,
             }).then(({ data }) => {
-                data['role'] = data['role'] ? data['role'].split(',') : [];
+                data['permission'] = data['permission'] ? data['permission'].split(',') : [];
                 dataForm.value = data;
 
-                treeRef.value.setCheckedKeys(dataForm.value.role, false)
+                treeRef.value.setCheckedKeys(dataForm.value.permission, false)
             })
         }
     })
@@ -84,7 +84,7 @@ const userNavFun = async () => {
             value['value'] = value.id;
             value['label'] = value.menuName;
         })
-        roleList.value = menuToTreeMenu(data.menuList);
+        permissionList.value = menuToTreeMenu(data.menuList);
     })
 }
 // 表单提交
@@ -95,7 +95,7 @@ const dataFormSubmit = () => {
                 lock: true,
             })
 
-            dataForm.value.role = treeRef.value.getCheckedKeys(true).join(',');
+            dataForm.value.permission = treeRef.value.getCheckedKeys(true).join(',');
 
             userAddOrModifyRole({
                 ...dataForm.value

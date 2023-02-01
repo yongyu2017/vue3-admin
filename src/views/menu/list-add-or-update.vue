@@ -29,7 +29,7 @@
             <el-form-item label="菜单路由：" prop="jumpUrl" v-if="dataForm.type === 1">
                 <el-input v-model="dataForm.jumpUrl" placeholder="请输入" class="inp-dom"></el-input>
             </el-form-item>
-            <el-form-item label="授权标识：" prop="roleUrl" v-if="dataForm.type !== 0">
+            <el-form-item label="授权标识：" prop="roleUrl" v-if="dataForm.type === 2">
                 <el-input v-model="dataForm.roleUrl" placeholder="请输入" class="inp-dom"></el-input>
             </el-form-item>
             <el-form-item label="菜单图标：" prop="icon" v-if="dataForm.type != 2">

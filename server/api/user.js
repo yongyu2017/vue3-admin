@@ -33,7 +33,7 @@ async function userLogin (req, res) {
         }
         roleFileData.list.forEach((value) => {
             if (value.id == userRole) {
-                roleIds = value.role ? value.role.split(',') : [];
+                roleIds = value.permission ? value.permission.split(',') : [];
             }
         })
         menuFileData.menuList.forEach((value) => {
@@ -76,7 +76,7 @@ async function userGetUserInfo (req, res) {
         })
         roleFileData.list.forEach((value) => {
             if (value.id == userRole) {
-                roleIds = value.role ? value.role.split(',') : [];
+                roleIds = value.permission ? value.permission.split(',') : [];
             }
         })
         menuFileData.menuList.forEach((value) => {
@@ -175,7 +175,7 @@ async function userMenuList (req, res) {
         })
         roleFileData.list.forEach((value) => {
             if (value.id == userRole) {
-                roleIds = value.role ? value.role.split(',') : [];
+                roleIds = value.permission ? value.permission.split(',') : [];
             }
         })
         roleIds = roleIds.map((value) => {
@@ -364,8 +364,8 @@ async function userRole (req, res) {
 // 新增或修改角色信息
 async function userAddOrModifyRole (req, res) {
     const { token } = req.headers
-    const { id, name, des, role } = req['body'];
-    const data = { id, name, des, role };
+    const { id, name, des, permission } = req['body'];
+    const data = { id, name, des, permission };
     const fileData = await getFileData('role');
     const userInfo = await verifyToken(token)
 
@@ -385,7 +385,7 @@ async function userAddOrModifyRole (req, res) {
                 id: max + 1,
                 name,
                 des,
-                role,
+                permission,
                 state: 1,
                 createTime: new Date().getTime(),
                 updateTime: new Date().getTime(),
@@ -501,8 +501,8 @@ async function userUserList (req, res) {
 // 新增或修改用户信息
 async function userAddOrModifyUser (req, res) {
     const { token } = req.headers
-    const { id, name, des, role, email, pwd } = req['body'];
-    const data = { id, name, des, role, email, pwd };
+    const { id, name, des, permission, email, pwd } = req['body'];
+    const data = { id, name, des, permission, email, pwd };
     const fileData = await getFileData('user');
     const userInfo = await verifyToken(token)
 
@@ -522,7 +522,7 @@ async function userAddOrModifyUser (req, res) {
                 id: max + 1,
                 name,
                 des,
-                role,
+                permission,
                 email,
                 pwd,
                 state: 1,
