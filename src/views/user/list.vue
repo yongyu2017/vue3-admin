@@ -11,7 +11,7 @@
     
     <el-table :data="dataList" border v-loading="dataListLoading" style="width: 100%">
         <el-table-column prop="id" header-align="center" align="center" label="ID"></el-table-column>
-        <el-table-column prop="name" header-align="center" align="center" label="账号"></el-table-column>
+        <el-table-column prop="account" header-align="center" align="center" label="账号"></el-table-column>
         <el-table-column prop="role" header-align="center" align="center" label="角色">
             <template #default="scope">{{ roleStr(scope.row.role) }}</template>
         </el-table-column>
@@ -21,7 +21,7 @@
         <el-table-column header-align="center" align="center" label="操作">
             <template #default="scope">
                 <el-button type="primary" link @click="addOrUpdateFun(scope.row)">编辑</el-button>
-                <el-button type="primary" link @click="delFun(scope.row.id)" v-hasPermission="['people:list:delete']" v-if="scope.row.id !== 1">删除</el-button>
+                <el-button type="primary" link @click="delFun(scope.row.id)" v-if="scope.row.id !== 1">删除</el-button>
             </template>
         </el-table-column>
     </el-table>

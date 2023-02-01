@@ -2,18 +2,20 @@
   "list": [
     {
       "id": 1,
-      "name": "admin",
+      "account": "admin",
+      "username": "admin1",
       "des": "dfg",
       "role": 1,
       "state": 1,
       "createTime": 1670308726394,
-      "updateTime": 1670309407097,
+      "updateTime": 1675246554460,
       "email": "451@qq.com",
       "pwd": "123456"
     },
     {
       "id": 2,
-      "name": "test",
+      "account": "test",
+      "username": "test",
       "des": "dsfds",
       "role": 2,
       "email": "562224@W.com",

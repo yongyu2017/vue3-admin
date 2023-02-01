@@ -2,11 +2,14 @@
     <el-dialog @close="closeFun" :title="!dataForm.id ? '新增' : '修改'" :close-on-click-modal="false" v-model="visible">
         <el-form ref="dataFormRef" :model="dataForm" :rules="dataRule" @keyup.enter="dataFormSubmit()"
             label-width="100px">
-            <el-form-item label="账号：" prop="name">
-                <el-input v-model="dataForm.name" placeholder="请输入" :disabled="dataForm.id != ''" class="inp-dom"></el-input>
+            <el-form-item label="账号：" prop="account">
+                <el-input v-model="dataForm.account" placeholder="请输入" :disabled="dataForm.id != ''" class="inp-dom"></el-input>
             </el-form-item>
             <el-form-item label="密码：" prop="pwd">
                 <el-input v-model="dataForm.pwd" placeholder="请输入" type="password" class="inp-dom"></el-input>
+            </el-form-item>
+            <el-form-item label="昵称：" prop="username">
+                <el-input v-model="dataForm.username" placeholder="请输入" class="inp-dom"></el-input>
             </el-form-item>
             <el-form-item label="角色：" prop="role">
                 <el-select v-model="dataForm.role" :disabled="dataForm.id === 1" class="inp-dom">
@@ -53,17 +56,21 @@ const dataFormRef = ref();
 let visible = ref(false);
 let dataForm = ref({
     id: '',  //修改时填写
-    name: '',
+    account: '',
     pwd: '',
+    username: '',
     role: '',
     email: '',
     des: '',
 })
 const dataRule = reactive({
-    name: [
+    account: [
         { required: true, message: '请输入', trigger: 'blur' },
     ],
     pwd: [
+        { required: true, message: '请输入', trigger: 'blur' },
+    ],
+    username: [
         { required: true, message: '请输入', trigger: 'blur' },
     ],
     role: [

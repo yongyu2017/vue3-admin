@@ -501,8 +501,8 @@ async function userUserList (req, res) {
 // 新增或修改用户信息
 async function userAddOrModifyUser (req, res) {
     const { token } = req.headers
-    const { id, name, des, permission, email, pwd } = req['body'];
-    const data = { id, name, des, permission, email, pwd };
+    const { id, account, des, role, email, pwd, username } = req['body'];
+    const data = { id, account, des, role, email, pwd, username };
     const fileData = await getFileData('user');
     const userInfo = await verifyToken(token)
 
@@ -520,11 +520,12 @@ async function userAddOrModifyUser (req, res) {
             const max = getMax(fileData.list);
             fileData.list.push({
                 id: max + 1,
-                name,
+                account,
                 des,
-                permission,
+                role,
                 email,
                 pwd,
+                username,
                 state: 1,
                 createTime: new Date().getTime(),
                 updateTime: new Date().getTime(),
@@ -585,6 +586,7 @@ async function userGetUser (req, res) {
                 data = value;
             }
         })
+        console.log(data)
         res.send({
             code: 200,
             data,
