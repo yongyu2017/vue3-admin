@@ -29,7 +29,6 @@ module.exports = {
             } else {
                 const menuFileData = (await db.connect('insert into user (account, des, role, email, pwd, username, state, createTime, updateTime) values (?,?,?,?,?,?,?,?,?)', [account, des, role, email, pwd, username, 1, currentTime, currentTime]))[0]
 
-                console.log(menuFileData)
                 if (menuFileData.err) {
                     res.send(statusCodeMap['-1'])
                     return
