@@ -18,7 +18,8 @@ module.exports = {
             res.send({
                 code: 200,
                 data: {
-                    list: menuFileData.res
+                    list: menuFileData.res,
+                    sum: 1
                 },
                 msg: '',
             })

@@ -7,16 +7,16 @@
       "permission": "2,3,4,13,14,15,8,10,11,12,16,17,18",
       "state": 1,
       "createTime": 1670305520020,
-      "updateTime": 1673850477179
+      "updateTime": 1675300698294
     },
     {
       "id": 2,
-      "name": "测试人员",
+      "name": "测试人员1",
       "des": "测试账号",
-      "permission": "2,13,14,15,8,10,11,12",
+      "permission": "2,3",
       "state": 1,
       "createTime": 1670305936215,
-      "updateTime": 1670479840806
+      "updateTime": 1675301033219
     },
     {
       "id": 3,

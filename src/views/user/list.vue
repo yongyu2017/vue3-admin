@@ -12,6 +12,7 @@
     <el-table :data="dataList" border v-loading="dataListLoading" style="width: 100%">
         <el-table-column prop="id" header-align="center" align="center" label="ID"></el-table-column>
         <el-table-column prop="account" header-align="center" align="center" label="账号"></el-table-column>
+        <el-table-column prop="username" header-align="center" align="center" label="昵称"></el-table-column>
         <el-table-column prop="role" header-align="center" align="center" label="角色">
             <template #default="scope">{{ roleStr(scope.row.role) }}</template>
         </el-table-column>

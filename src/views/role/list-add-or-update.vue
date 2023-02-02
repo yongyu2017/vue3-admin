@@ -82,7 +82,7 @@ const userNavFun = async () => {
     await userNav().then(({ data }) => {
         data.menuList.forEach((value) => {
             value['value'] = value.id;
-            value['label'] = value.menuName;
+            value['label'] = value.id + '' + value.menuName;
         })
         permissionList.value = menuToTreeMenu(data.menuList);
     })

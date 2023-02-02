@@ -57,6 +57,7 @@ const listAddOrUpdateRef = ref(null);
 let listAddOrUpdateVisible = ref(false);
 
 onMounted(() => {
+    console.log(22333)
     queryList()
 })
 

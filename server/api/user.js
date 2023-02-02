@@ -15,10 +15,10 @@ async function userLogin (req, res) {
         let isLogin = false;
         let token = ''
         userFileData.list.forEach((value) => {
-            if (value.name == name && value.pwd == pwd) {
-                const { name, email, id, role } = value;
-                token = generateToken({ name, pwd, id }, 60 * 60 * 1)
-                data = { name, email, id, token, permission: [] }
+            if (value.account == name && value.pwd == pwd) {
+                const { account, email, id, role } = value;
+                token = generateToken({ account, pwd, id }, 60 * 60 * 1)
+                data = { account, email, id, token, permission: [] }
                 userRole = role;
                 isLogin = true;
             }
@@ -69,8 +69,8 @@ async function userGetUserInfo (req, res) {
         let roleIds = [];
         userFileData.list.forEach((value) => {
             if (value.id == userInfo.id) {
-                const { name, email, id, role } = value;
-                data = { name, email, id, permission: [] }
+                const { account, email, id, role } = value;
+                data = { account, email, id, permission: [] }
                 userRole = role;
             }
         })
@@ -586,7 +586,6 @@ async function userGetUser (req, res) {
                 data = value;
             }
         })
-        console.log(data)
         res.send({
             code: 200,
             data,

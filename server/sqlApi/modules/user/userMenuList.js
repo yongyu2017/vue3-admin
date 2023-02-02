@@ -22,18 +22,23 @@ module.exports = {
                 return
             }
             const roleInfo = roleFileData.res[0]
-            const roleIds = roleInfo.permission ? roleInfo.permission.split(',') : []
+            let roleIds = (roleInfo.permission ? roleInfo.permission.split(',') : []).map((value) => {
+                return Number(value)
+            })
 
-            const menuFileData = (await db.connect(`SELECT * FROM menu WHERE state=1 and id IN (?)`, [roleIds]))[0]
+            const menuFileData = (await db.connect(`SELECT * FROM menu WHERE state=1`, []))[0]
             if (menuFileData.err) {
                 res.send(statusCodeMap['-1'])
                 return
             }
-            const menuList = menuFileData.res
-            menuList.forEach((value) => {
-                value['menuId'] = value.id
-                value['name'] = value.menuName
-                value['url'] = value.jumpUrl
+            let menuList = menuFileData.res
+            const parentIds = findParentNode(roleIds, menuList)
+            roleIds.push(...parentIds)
+            menuList = menuList.filter((value) => {
+                value['menuId'] = value.id;
+                value['name'] = value.menuName;
+                value['url'] = value.jumpUrl;
+                return value.type != 2 && roleIds.includes(value.id)
             })
 
             res.send({

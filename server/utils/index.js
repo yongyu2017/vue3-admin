@@ -24,6 +24,7 @@ const setFileData = async (fileName, data) => {
 const findParentNode = (ids, list) => {
     let tempList = [];
     let tree = menuToTreeMenu(deepCopy(list));
+    console.log(tree)
 
     ids.forEach((value) => {
         tempList.push(...findP(value, tree, []))

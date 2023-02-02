@@ -1,7 +1,7 @@
 <template>
     <el-form ref="dataFormRef" :model="dataForm" :rules="dataRule" label-width="80px" @keyup.enter="loginFun()" @submit.prevent class="login-form">
-        <el-form-item label="账号：" prop="name">
-            <el-input v-model="dataForm.name" disabled class="inp-dom"></el-input>
+        <el-form-item label="账号：" prop="account">
+            <el-input v-model="dataForm.account" disabled class="inp-dom"></el-input>
         </el-form-item>
         <el-form-item label="邮箱：" prop="email">
             <el-input v-model="dataForm.email" class="inp-dom"></el-input>
@@ -41,7 +41,7 @@ const store = useStorePinia()
 const { getUserInfo } = store;
 const dataFormRef = ref(null);
 let dataForm = ref({
-    name: '',
+    account: '',
     email: '',
 })
 const dataRule = reactive({
