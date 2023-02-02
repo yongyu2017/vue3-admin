@@ -45,42 +45,6 @@ export function userMenuList(data) {
     })
 }
 
-//获取员工列表
-export function userPeopleList(data) {
-    return request({
-        url: '/user/peopleList',
-        method: 'post',
-        data: data
-    })
-}
-
-//新增或修改员工信息
-export function userAddOrModifyPeople(data) {
-    return request({
-        url: '/user/addOrModifyPeople',
-        method: 'post',
-        data: data
-    })
-}
-
-//删除员工信息
-export function userDeletePeople(data) {
-    return request({
-        url: '/user/deletePeople',
-        method: 'post',
-        data: data
-    })
-}
-
-//获取员工信息
-export function userGetPeople(data) {
-    return request({
-        url: '/user/getPeople',
-        method: 'post',
-        data: data
-    })
-}
-
 //获取菜单列表
 export function userNav(data) {
     return request({

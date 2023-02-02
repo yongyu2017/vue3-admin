@@ -21,7 +21,7 @@
         <el-table-column header-align="center" align="center" label="操作">
             <template #default="scope">
                 <el-button type="primary" link @click="addOrUpdateFun(scope.row)">编辑</el-button>
-                <el-button type="primary" link @click="delFun(scope.row.id)" v-hasPermission="['people:list:delete']">删除</el-button>
+                <el-button type="primary" link @click="delFun(scope.row.id)">删除</el-button>
             </template>
         </el-table-column>
     </el-table>
@@ -43,7 +43,7 @@
 
 <script setup>
 import { onMounted, ref, reactive, nextTick } from 'vue'
-import { userPeopleList, userDeletePeople } from '@/api/user'
+import { personnelPeopleList, personnelDeletePeople } from '@/api/personnel'
 import listAddOrUpdate from './list-add-or-update.vue'
 import { ElLoading, ElMessage, ElMessageBox } from 'element-plus'
 const dayjs = require('dayjs')
@@ -67,7 +67,7 @@ onMounted(() => {
 // 获取员工列表
 const queryList = () => {
     dataListLoading.value = true;
-    userPeopleList({
+    personnelPeopleList({
         name: formData.name,
         pageIndex: pageIndex.value,
         pageSize: pageSize.value
@@ -131,7 +131,7 @@ const delFun = (id) => {
             lock: true,
         })
 
-        userDeletePeople({
+        personnelDeletePeople({
             id: ids,
         }).then(() => {
             loading.close()

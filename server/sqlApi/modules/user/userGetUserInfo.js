@@ -15,7 +15,7 @@ module.exports = {
                 res.send(statusCodeMap['-1'])
                 return
             }
-            const { id, username, email } = userFileData.res[0]
+            const { id, account, email } = userFileData.res[0]
             const roleFileData = (await db.connect('SELECT * FROM role WHERE state=1 and id=?', [id]))[0]
             if (roleFileData.err) {
                 res.send(statusCodeMap['-1'] || roleFileData.res.length == 0)
@@ -41,7 +41,7 @@ module.exports = {
                 code: 200,
                 data: {
                     id,
-                    name: username,
+                    account,
                     email,
                     permission,
                 },

@@ -1,7 +1,7 @@
 let express = require('express');
 let app = express();
 let bodyParser = require('body-parser');
-const api = require('./sqlApi/index.js')
+const api = require('./api/index.js')
 
 //设置跨域访问
 app.all('*', function (req, res, next) {

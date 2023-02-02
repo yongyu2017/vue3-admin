@@ -10,8 +10,8 @@
             </el-form-item>
             <el-form-item label="性别：" prop="sex">
                 <el-select v-model="dataForm.sex" class="inp-dom">
-                    <el-option label="男" value="男" />
-                    <el-option label="女" value="女" />
+                    <el-option label="男" :value="1" />
+                    <el-option label="女" :value="2" />
                 </el-select>
             </el-form-item>
             <el-form-item label="年龄：" prop="age">
@@ -31,7 +31,7 @@
 <script setup>
 import { ref, reactive, defineEmits, nextTick, defineExpose } from 'vue'
 import { ElLoading, ElMessage } from 'element-plus'
-import { userAddOrModifyPeople, userGetPeople } from '@/api/user'
+import { personnelAddOrModifyPeople, personnelGetPeople } from '@/api/personnel'
 
 const dataFormRef = ref();
 let visible = ref(false);
@@ -60,7 +60,7 @@ var init = (item) => {
 
     nextTick(() => {
         if (item) {
-            userGetPeople({
+            personnelGetPeople({
                 id: item.id,
             }).then(({ data }) => {
                 dataForm.value = data;
@@ -77,7 +77,7 @@ const dataFormSubmit = () => {
                 lock: true,
             })
 
-            userAddOrModifyPeople({
+            personnelAddOrModifyPeople({
                 ...dataForm.value
             }).then(() => {
                 loading.close()
