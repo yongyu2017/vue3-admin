@@ -21,10 +21,10 @@
 
         <el-card :body-style="siteContentViewHeight">
             <router-view v-slot="{ Component }">
-                <keep-alive>
-                    <component :is="Component"></component>
-                </keep-alive>
-                <!--<component :is="Component"></component>-->
+                <!--<keep-alive>-->
+                    <!--<component :is="Component"></component>-->
+                <!--</keep-alive>-->
+                <component :is="Component"></component>
             </router-view>
         </el-card>
     </div>
