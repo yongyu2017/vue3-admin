@@ -24,7 +24,7 @@ module.exports = {
             const roleInfo = roleFileData.res[0]
             const roleIds = roleInfo.permission ? roleInfo.permission.split(',') : []
 
-            const menuFileData = (await db.connect(`SELECT * FROM menu WHERE state=1 and id IN (?)`, [roleIds]))[0]
+            const menuFileData = (await db.connect(`SELECT * FROM menu WHERE state=1 and type=2`, []))[0]
             if (menuFileData.err) {
                 res.send(statusCodeMap['-1'])
                 return

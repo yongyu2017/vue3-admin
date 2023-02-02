@@ -19,6 +19,8 @@
                     highlight-current
                     check-on-click-node
                     :expand-on-click-node="false"
+                    :check-strictly="true"
+                    @check="treeCheck"
                     :props="defaultProps" />
             </el-form-item>
         </el-form>
@@ -82,10 +84,48 @@ const userNavFun = async () => {
     await userNav().then(({ data }) => {
         data.menuList.forEach((value) => {
             value['value'] = value.id;
-            value['label'] = value.id + '' + value.menuName;
+            value['label'] = value.menuName;
         })
         permissionList.value = menuToTreeMenu(data.menuList);
     })
+}
+// 权限树节点check
+const treeCheck = (e) => {
+    let childIds = []
+    let checkedList = treeRef.value.getCheckedKeys(false)
+    findTarget(e.id, permissionList.value)
+    const isCheck = checkedList.includes(e.id)  // 是否选中
+    if (isCheck) {
+        checkedList.push(...childIds)
+        checkedList = checkedList.filter((value, index, array) => {
+            return array.indexOf(value) === index
+        })
+    } else {
+        checkedList = checkedList.filter((value) => {
+            return !childIds.includes(value)
+        })
+    }
+    treeRef.value.setCheckedKeys(checkedList, false)
+
+    function findTarget(id, list) {
+        list.forEach((value) => {
+            if (value.id === id) {
+                (value.children && value.children) && (findChildIds(id, value.children))
+                return
+            }
+            if (value.children && value.children) {
+                findTarget(id, value.children)
+            }
+        })
+    }
+    function findChildIds (id, list) {
+        list.forEach((value) => {
+            childIds.push(value.id)
+            if (value.children && value.children) {
+                findChildIds(id, value.children)
+            }
+        })
+    }
 }
 // 表单提交
 const dataFormSubmit = () => {
@@ -95,7 +135,7 @@ const dataFormSubmit = () => {
                 lock: true,
             })
 
-            dataForm.value.permission = treeRef.value.getCheckedKeys(true).join(',');
+            dataForm.value.permission = treeRef.value.getCheckedKeys(false).join(',');
 
             userAddOrModifyRole({
                 ...dataForm.value
