@@ -14,7 +14,11 @@
         <el-table-column type="selection" header-align="center" align="center" width="55"></el-table-column>
         <el-table-column prop="id" header-align="center" align="center" label="ID"></el-table-column>
         <el-table-column prop="name" header-align="center" align="center" label="姓名"></el-table-column>
-        <el-table-column prop="sex" header-align="center" align="center" label="性别"></el-table-column>
+        <el-table-column prop="sex" header-align="center" align="center" label="性别">
+            <template #default="scope">
+                {{ sexComputed(scope.row.sex) }}
+            </template>
+        </el-table-column>
         <el-table-column prop="age" header-align="center" align="center" label="年龄"></el-table-column>
         <el-table-column prop="createTime" header-align="center" align="center" label="创建时间"></el-table-column>
         <el-table-column prop="updateTime" header-align="center" align="center" label="修改时间"></el-table-column>
@@ -42,10 +46,11 @@
 </template>
 
 <script setup>
-import { onMounted, ref, reactive, nextTick } from 'vue'
+import { onMounted, ref, reactive, nextTick, computed } from 'vue'
 import { personnelPeopleList, personnelDeletePeople } from '@/api/personnel'
 import listAddOrUpdate from './list-add-or-update.vue'
 import { ElLoading, ElMessage, ElMessageBox } from 'element-plus'
+import { codeToLabel } from '@/utils/index.js'
 const dayjs = require('dayjs')
 
 let formData = reactive({
@@ -59,6 +64,16 @@ let idList = ref([]);
 let dataListLoading = ref(false);
 const listAddOrUpdateRef = ref(null);
 let listAddOrUpdateVisible = ref(false);
+const sexList = [
+    { value: 1, label: '男' },
+    { value: 2, label: '女' },
+]
+
+const sexComputed = computed(() => {
+    return (val) => {
+        return codeToLabel(val, sexList)
+    }
+})
 
 onMounted(() => {
     queryList()

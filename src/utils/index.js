@@ -87,3 +87,16 @@ export const Fullscreen = {
         }
     }
 }
+
+// code转label名称
+export function codeToLabel (val, list){
+    let str= ''
+    if(list){
+        list.forEach((value)=> {
+            if(value.value === val){
+                str= value.label
+            }
+        })
+    }
+    return str || val
+}

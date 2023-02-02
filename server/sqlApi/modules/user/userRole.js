@@ -7,11 +7,15 @@ module.exports = {
     path: '/user/role',
     fn: async function (req, res) {
         const { token } = req.headers
+        const { name, pageIndex, pageSize } = req['body'];
         const tokenInfo = await verifyToken(token)
+        const start = (pageIndex - 1) * pageSize
 
         if(tokenInfo){
-            const menuFileData = (await db.connect('SELECT * FROM role WHERE state=1', []))[0]
-            if (menuFileData.err || menuFileData.res.length == 0) {
+            const menuFileData = (await db.connect("SELECT * FROM role WHERE state=1 AND name like '%"+ name + "%' ORDER BY id DESC limit ?,?", [start, pageSize]))[0]
+            const sum = (await db.connect("SELECT COUNT(*) as total FROM role WHERE state=1 AND name like '%"+ name + "%'", []))[0].res[0].total
+
+            if (menuFileData.err) {
                 res.send(statusCodeMap['-1'])
                 return
             }
@@ -19,7 +23,7 @@ module.exports = {
                 code: 200,
                 data: {
                     list: menuFileData.res,
-                    sum: 1
+                    sum
                 },
                 msg: '',
             })
