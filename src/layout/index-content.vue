@@ -16,17 +16,27 @@
                 </template>
             </el-dropdown>
 
-            <el-tab-pane v-for="item in mainTabs" :key="item.name" :label="item.title" :name="item.name"></el-tab-pane>
+            <el-tab-pane v-for="item in mainTabs" :key="item.name" :label="item.title" :name="item.name">
+                <el-card :body-style="siteContentViewHeight">
+                    <router-view v-slot="{ Component }">
+                        <keep-alive>
+                            <component :is="Component" v-if="item.name === mainTabsActiveName"></component>
+                        </keep-alive>
+                        <!--<component :is="Component"></component>-->
+                    </router-view>
+                </el-card>
+            </el-tab-pane>
         </el-tabs>
 
-        <el-card :body-style="siteContentViewHeight">
-            <router-view v-slot="{ Component }">
+        <!--<el-card-->
+                <!--:body-style="siteContentViewHeight">-->
+            <!--<router-view v-slot="{ Component }">-->
                 <!--<keep-alive>-->
                     <!--<component :is="Component"></component>-->
                 <!--</keep-alive>-->
-                <component :is="Component"></component>
-            </router-view>
-        </el-card>
+                <!--&lt;!&ndash;<component :is="Component"></component>&ndash;&gt;-->
+            <!--</router-view>-->
+        <!--</el-card>-->
     </div>
 </template>
 
