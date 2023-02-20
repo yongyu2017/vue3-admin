@@ -6,7 +6,7 @@
         <el-form-item>
             <el-button type="primary" @click="searchFun">查询</el-button>
             <el-button @click="addOrUpdateFun()">新增</el-button>
-            <el-button type="danger" @click="delFun()" v-hasPermission="['people:list:delete']">删除</el-button>
+            <el-button type="danger" @click="delFun()" v-hasPermission="['people:goods:delete']">删除</el-button>
         </el-form-item>
     </el-form>
 
@@ -25,7 +25,7 @@
         <el-table-column header-align="center" align="center" label="操作">
             <template #default="scope">
                 <el-button type="primary" link @click="addOrUpdateFun(scope.row)">编辑</el-button>
-                <el-button type="primary" link @click="delFun(scope.row.id)" v-hasPermission="['people:list:delete']">删除</el-button>
+                <el-button type="primary" link @click="delFun(scope.row.id)" v-hasPermission="['people:goods:delete']">删除</el-button>
             </template>
         </el-table-column>
     </el-table>
@@ -134,7 +134,7 @@ const delFun = (id) => {
     }
     ElMessageBox.confirm(
         `确定要删除ID为${ ids }的数据吗?`,
-        'Warning',
+        '提示',
         {
             confirmButtonText: '确定',
             cancelButtonText: '取消',

@@ -106,7 +106,7 @@ const addOrUpdateFun = (item) => {
 const delFun = (id) => {
     ElMessageBox.confirm(
         `确定要删除ID为${ id }的数据吗?`,
-        'Warning',
+        '提示',
         {
             confirmButtonText: '确定',
             cancelButtonText: '取消',
