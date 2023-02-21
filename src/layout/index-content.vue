@@ -1,7 +1,6 @@
 <template>
     <div :class="['site-content', route.meta.isTab ? 'site-content--tabs' : '']">
-        <el-tabs v-if="route.meta.isTab" v-model="tabModel" :closable="true" @tab-click="selectedTabHandle"
-            @tab-remove="removeTabHandle">
+        <el-tabs v-if="route.meta.isTab" v-model="tabModel" :closable="true" @tab-click="selectedTabHandle" @tab-remove="removeTabHandle">
             <el-dropdown class="site-tabs__tools" :show-timeout="0">
                 <span class="icon-box">
                     <el-icon><ArrowDown /></el-icon>
@@ -27,16 +26,11 @@
                 </el-card>
             </el-tab-pane>
         </el-tabs>
-
-        <!--<el-card-->
-                <!--:body-style="siteContentViewHeight">-->
-            <!--<router-view v-slot="{ Component }">-->
-                <!--<keep-alive>-->
-                    <!--<component :is="Component"></component>-->
-                <!--</keep-alive>-->
-                <!--&lt;!&ndash;<component :is="Component"></component>&ndash;&gt;-->
-            <!--</router-view>-->
-        <!--</el-card>-->
+        <el-card :body-style="siteContentViewHeight" v-else>
+            <router-view v-slot="{ Component }">
+                <component :is="Component"></component>
+            </router-view>
+        </el-card>
     </div>
 </template>
 
