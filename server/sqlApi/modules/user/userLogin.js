@@ -1,6 +1,7 @@
 const { getFileData, setFileData, findParentNode, findChildNode, getMax, generateToken, verifyToken } = require('#root/utils/index.js')
 const statusCodeMap = require('#root/utils/statusCodeMap.js')
 const db = require('#root/db/index.js')
+const { tokenSurvive } = require('#root/utils/setting.js')
 
 // 登录
 module.exports = {
@@ -20,7 +21,7 @@ module.exports = {
                 }
             }
             const { id, account, email } = userFileData.res[0]
-            const token = generateToken({ account, pwd, id }, 60 * 60 * 1)
+            const token = generateToken({ account, pwd, id }, tokenSurvive)
 
             res.send({
                 code: 200,

@@ -1,7 +1,7 @@
 const fs = require('fs')
 const { promisify } = require('util') // promisify 异步处理
 const path = require('path')
-const { tokenSecret, port } = require('./setting.js')
+const { tokenSecret, port, tokenSurvive } = require('./setting.js')
 const jwt = require('jsonwebtoken')
 const os = require('os')
 const readFile = promisify(fs.readFile)
@@ -143,6 +143,16 @@ function generateToken (data, time) {
 function verifyToken (token) {
     return new Promise((resolve) => {
         jwt.verify(token, tokenSecret, function (err, decode) {
+            // token未过期时，重新更新token存活时间
+            // if (!err) {
+            //     const filterList = ['iat', 'exp']
+            //     const data = {}
+            //     for (let i in decode) {
+            //         !filterList.includes(i) && (data[i] = decode[i])
+            //     }
+            //     console.log(222, data, tokenSurvive)
+            //     generateToken(data, tokenSurvive)
+            // }
             resolve(decode)
         })
     })
