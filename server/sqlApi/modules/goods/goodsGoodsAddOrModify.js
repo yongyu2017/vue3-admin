@@ -26,6 +26,10 @@ module.exports = {
             form.uploadDir = filePath
             //保留上传文件的后缀名字
             form.keepExtensions = true
+            /** 判断文件夹是否存在，不存在则创建文件夹 **/
+            const fsExistsCb = fs.existsSync(filePath)
+            !fsExistsCb && fs.mkdirSync(filePath, { recursive: true })
+            /** 判断文件夹是否存在，不存在则创建文件夹 **/
             //解析客户端传递过来的formData对象
             form.parse(req, async (err, fields, files) => {
                 if (err) {
