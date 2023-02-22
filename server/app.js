@@ -3,6 +3,7 @@ let app = express();
 let bodyParser = require('body-parser');
 const api = require('./api/index.js')
 const path = require('path')
+const { port } = require('./utils/setting.js')
 
 //设置跨域访问
 app.all('*', function (req, res, next) {
@@ -32,6 +33,6 @@ for (let i in api) {
 }
 
 //配置服务端口
-app.listen(8000, () => {
+app.listen(port, () => {
     console.log('node接口服务正常运行')
 })
