@@ -55,7 +55,6 @@
       "parser": "@babel/eslint-parser"
     },
     "rules": {
-      "no-useless-escape": "off"
     }
   },
   "browserslist": [

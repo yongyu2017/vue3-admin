@@ -21,7 +21,6 @@ export function goodsGoodsAddOrModify (data) {
     })
 }
 
-
 // 获取商品信息
 export function goodsGoodsDetail (data) {
     return request({

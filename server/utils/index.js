@@ -1,11 +1,9 @@
 const fs = require('fs')
-// promisify 异步处理
-const { promisify } = require('util')
+const { promisify } = require('util') // promisify 异步处理
 const path = require('path')
-const { tokenSecret } = require('./setting.js')
+const { tokenSecret, port } = require('./setting.js')
 const jwt = require('jsonwebtoken')
 const os = require('os')
-
 const readFile = promisify(fs.readFile)
 const writeFile = promisify(fs.writeFile)
 
@@ -188,7 +186,7 @@ function getIpAddress() {
 }
 // 设置完整的文件地址
 function setCompleteAddress (url) {
-    return 'http://' + getIpAddress() + ':8000' + url
+    return 'http://' + getIpAddress() + ':' + port + '' + url
 }
 
 module.exports = {
