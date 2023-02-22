@@ -100,3 +100,9 @@ export function codeToLabel (val, list){
     }
     return str || val
 }
+
+// 获取文件后缀数据
+export function getSuffix (str) {
+    // eslint-disable-next-line
+    return str.match(/\.([0-9a-z]+)(?:[\?#]|$)/i)
+}

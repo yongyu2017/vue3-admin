@@ -16,10 +16,11 @@ const fileList = getJsonFiles(dir).map((value) => {
 })
 fileList.forEach((value) => {
     const requireObject = require(value.fileUrl)
-    exportObject[value.fileName] = {
-        path: requireObject.path,
-        component: requireObject.fn
+    let fileObject = {}
+    for (let i in requireObject) {
+        fileObject[i] = requireObject[i]
     }
+    exportObject[value.fileName] = fileObject
 })
 
 module.exports = exportObject

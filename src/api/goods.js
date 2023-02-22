@@ -14,6 +14,9 @@ export function goodsGoodsAddOrModify (data) {
     return request({
         url: '/goods/goods/addOrModify',
         method: 'post',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+        },
         data: data
     })
 }

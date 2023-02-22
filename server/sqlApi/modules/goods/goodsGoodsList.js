@@ -1,4 +1,4 @@
-const { getFileData, setFileData, findParentNode, findChildNode, getMax, generateToken, verifyToken } = require('#root/utils/index.js')
+const { getFileData, setFileData, findParentNode, findChildNode, getMax, generateToken, verifyToken, setCompleteAddress } = require('#root/utils/index.js')
 const statusCodeMap = require('#root/utils/statusCodeMap.js')
 const db = require('#root/db/index.js')
 
@@ -19,6 +19,9 @@ module.exports = {
                 res.send(statusCodeMap['-1'])
                 return
             }
+            menuFileData.res.forEach((value) => {
+                value.img = setCompleteAddress(value.img)
+            })
             res.send({
                 code: 200,
                 data: {

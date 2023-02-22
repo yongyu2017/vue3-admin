@@ -4,6 +4,7 @@ const { promisify } = require('util')
 const path = require('path')
 const { tokenSecret } = require('./setting.js')
 const jwt = require('jsonwebtoken')
+const os = require('os')
 
 const readFile = promisify(fs.readFile)
 const writeFile = promisify(fs.writeFile)
@@ -148,7 +149,6 @@ function verifyToken (token) {
         })
     })
 }
-
 // 获取文件列表
 function getJsonFiles (jsonPath) {
     let jsonFiles = []
@@ -169,6 +169,27 @@ function getJsonFiles (jsonPath) {
 
     return jsonFiles
 }
+// 获取文件后缀数据
+function getSuffix (str) {
+    return str.match(/\.([0-9a-z]+)(?:[\?#]|$)/i)
+}
+// 获取当前服务ip
+function getIpAddress() {
+    let ifaces = os.networkInterfaces()
+    for (let dev in ifaces) {
+        let iface = ifaces[dev]
+        for (let i = 0; i < iface.length; i++) {
+            let { family, address, internal } = iface[i]
+            if (family === 'IPv4' && address !== '127.0.0.1' && !internal) {
+                return address
+            }
+        }
+    }
+}
+// 设置完整的文件地址
+function setCompleteAddress (url) {
+    return 'http://' + getIpAddress() + ':8000' + url
+}
 
 module.exports = {
     getFileData,
@@ -181,6 +202,9 @@ module.exports = {
     generateToken,
     verifyToken,
     getJsonFiles,
+    getSuffix,
+    getIpAddress,
+    setCompleteAddress,
 }
 
 
