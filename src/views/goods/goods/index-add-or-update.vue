@@ -60,7 +60,6 @@
 import { ref, reactive, defineEmits, nextTick, defineExpose } from 'vue'
 import { ElLoading, ElMessage } from 'element-plus'
 import { goodsGoodsAddOrModify, goodsGoodsDetail, goodsCategoryList } from '@/api/goods'
-import { commonUpload } from '@/api/common'
 import { getSuffix } from '@/utils/index'
 
 const dataFormRef = ref();
@@ -137,14 +136,6 @@ const fileChange = (e) => {
         dataFormRef.value.validateField('img')
     }
     reader.readAsDataURL(e.target.files[0])
-    // const formData = new FormData()
-    // formData.append('fileName', '余')
-    // formData.append('file', e.target.files[0])
-    // console.log('formData', formData)
-    //
-    // commonUpload(formData).then((res) => {
-    //     console.log(res)
-    // })
 }
 // 删除图片
 const delImgFun = () => {

@@ -20,7 +20,7 @@
         <el-table-column prop="img" label="图片">
             <template #default="scope">
                 <el-image
-                        style="width: 100px; height: 100px"
+                        style="width: 56px; height: 56px"
                         :src="scope.row.img"
                         :preview-src-list="[scope.row.img]"
                         preview-teleported
