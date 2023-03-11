@@ -26,7 +26,7 @@ module.exports = {
                 return Number(value)
             })
 
-            const menuFileData = (await db.connect(`SELECT * FROM menu WHERE state=1`, []))[0]
+            const menuFileData = (await db.connect(`SELECT * FROM menu WHERE state=1 ORDER BY orderNum ASC`, []))[0]
             if (menuFileData.err) {
                 res.send(statusCodeMap['-1'])
                 return

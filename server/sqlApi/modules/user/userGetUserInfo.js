@@ -15,8 +15,8 @@ module.exports = {
                 res.send(statusCodeMap['-1'])
                 return
             }
-            const { id, account, email } = userFileData.res[0]
-            const roleFileData = (await db.connect('SELECT * FROM role WHERE state=1 and id=?', [id]))[0]
+            const { id, account, email, role } = userFileData.res[0]
+            const roleFileData = (await db.connect('SELECT * FROM role WHERE state=1 and id=?', [role]))[0]
             if (roleFileData.err) {
                 res.send(statusCodeMap['-1'] || roleFileData.res.length == 0)
                 return

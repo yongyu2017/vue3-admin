@@ -8,7 +8,6 @@ export function goodsGoodsList (data) {
         data: data
     })
 }
-
 // 新增或者修改商品信息
 export function goodsGoodsAddOrModify (data) {
     return request({
@@ -20,7 +19,6 @@ export function goodsGoodsAddOrModify (data) {
         data: data
     })
 }
-
 // 获取商品信息
 export function goodsGoodsDetail (data) {
     return request({
@@ -29,7 +27,6 @@ export function goodsGoodsDetail (data) {
         data: data
     })
 }
-
 // 删除商品
 export function goodsGoodsDelete (data) {
     return request({
@@ -38,7 +35,6 @@ export function goodsGoodsDelete (data) {
         data: data
     })
 }
-
 // 获取商品分类
 export function goodsCategoryList (data) {
     return request({
@@ -47,7 +43,6 @@ export function goodsCategoryList (data) {
         data: data
     })
 }
-
 // 新增或者修改商品分类
 export function goodsCategoryAddOrModify (data) {
     return request({
@@ -56,7 +51,6 @@ export function goodsCategoryAddOrModify (data) {
         data: data
     })
 }
-
 // 获取商品分类详情
 export function goodsCategoryDetail (data) {
     return request({
@@ -65,7 +59,6 @@ export function goodsCategoryDetail (data) {
         data: data
     })
 }
-
 // 删除商品分类
 export function goodsCategoryDelete (data) {
     return request({
@@ -74,4 +67,35 @@ export function goodsCategoryDelete (data) {
         data: data
     })
 }
-
+// 获取商品入库列表
+export function goodsWarehousingList (data) {
+    return request({
+        url: '/goods/goodsWarehousing/list',
+        method: 'post',
+        data: data
+    })
+}
+// 新增或者修改商品入库信息
+export function goodsWarehousingAddOrModify (data) {
+    return request({
+        url: '/goods/goodsWarehousing/addOrModify',
+        method: 'post',
+        data: data
+    })
+}
+// 获取商品入库信息
+export function goodsWarehousingDetail (data) {
+    return request({
+        url: '/goods/goodsWarehousing/detail',
+        method: 'post',
+        data: data
+    })
+}
+// 删除商品入库信息
+export function goodsWarehousingDelete (data) {
+    return request({
+        url: '/goods/goodsWarehousing/delete',
+        method: 'post',
+        data: data
+    })
+}

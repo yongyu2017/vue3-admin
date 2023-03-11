@@ -1,7 +1,17 @@
 <template>
-    <el-form :inline="true" :model="formData" @submit.prevent>
+    <el-form :inline="true" :model="dataForm" @submit.prevent>
         <el-form-item>
-            <el-input v-model="formData.name" placeholder="请输入商品名称" clearable class="inp-dom" />
+            <el-input v-model="dataForm.name" placeholder="请输入商品名称" clearable class="inp-dom" />
+        </el-form-item>
+        <el-form-item>
+            <el-select v-model="dataForm.parentId" placeholder="请选择" filterable clearable class="inp-dom">
+                <el-option
+                        v-for="item in parentIdList"
+                        :key="item.id"
+                        :label="item.name"
+                        :value="item.id">
+                </el-option>
+            </el-select>
         </el-form-item>
         <el-form-item>
             <el-button type="primary" @click="searchFun">查询</el-button>
@@ -11,24 +21,13 @@
 
     <el-table :data="dataList" border v-loading="dataListLoading" style="width: 100%">
         <el-table-column prop="id" header-align="center" align="center" label="ID" width="70"></el-table-column>
+        <el-table-column prop="code" label="商品编码"></el-table-column>
         <el-table-column prop="name" label="商品名称"></el-table-column>
-        <el-table-column prop="category" label="商品类型">
+        <el-table-column prop="parentId" label="所属商品">
             <template #default="scope">
-                {{ codeToLabelComputed(scope.row.category, categoryList) }}
+                {{ codeToLabelComputed(scope.row.parentId, parentIdList) }}
             </template>
         </el-table-column>
-        <el-table-column prop="img" label="图片">
-            <template #default="scope">
-                <el-image
-                        style="width: 56px; height: 56px"
-                        :src="scope.row.img"
-                        :preview-src-list="[scope.row.img]"
-                        preview-teleported
-                        fit="cover"></el-image>
-            </template>
-        </el-table-column>
-        <el-table-column prop="des" label="描述"></el-table-column>
-        <el-table-column prop="count" label="库存"></el-table-column>
         <el-table-column prop="createTime" label="创建时间"></el-table-column>
         <el-table-column prop="updateTime" label="修改时间"></el-table-column>
         <el-table-column label="操作">
@@ -57,51 +56,50 @@
 <script setup>
 import { onMounted, ref, reactive, nextTick } from 'vue'
 import indexAddOrUpdate from './index-add-or-update.vue'
-import a from './a.vue'
-import b from './b.vue'
-import { goodsGoodsList, goodsGoodsDelete, goodsCategoryList } from '@/api/goods'
+import { goodsWarehousingList, goodsWarehousingDelete, goodsGoodsList } from '@/api/goods'
 import { ElLoading, ElMessage, ElMessageBox } from 'element-plus'
-const dayjs = require('dayjs')
 import { commonMixin } from '@/mixins/common'
 
+const dayjs = require('dayjs')
+
 const { codeToLabelComputed } = commonMixin()
-let formData = reactive({
+let dataForm = reactive({
     name: '',
+    parentId: '',
 })
-let pageIndex = ref(1);
-let pageSize = ref(10);
-let totalPage = ref(0);
-let dataList = ref([]);
-let dataListLoading = ref(false);
-const indexAddOrUpdateRef = ref(null);
-let indexAddOrUpdateVisible = ref(false);
-let categoryList = ref([])
+let pageIndex = ref(1)
+let pageSize = ref(10)
+let totalPage = ref(0)
+let dataList = ref([])
+let dataListLoading = ref(false)
+const indexAddOrUpdateRef = ref(null)
+let indexAddOrUpdateVisible = ref(false)
+const parentIdList = ref([])
 
 onMounted(() => {
-    goodsCategoryListFun()
+    goodsGoodsListFun()
     queryList()
 })
 
-// 获取商品分类
-const goodsCategoryListFun = () => {
-    goodsCategoryList({
+// 获取商品列表
+const goodsGoodsListFun = () => {
+    goodsGoodsList({
         name: '',
         pageIndex: '',
         pageSize: '',
     }).then(({ data }) => {
         data.list.forEach((value) => {
             value['value'] = value.id
-            value['label'] = value.name
         })
-        categoryList.value = data.list.slice()
+        parentIdList.value = data.list.slice()
     })
 }
-
 // 获取员工列表
 const queryList = () => {
     dataListLoading.value = true;
-    goodsGoodsList({
-        name: formData.name,
+    goodsWarehousingList({
+        name: dataForm.name,
+        parentId: dataForm.parentId,
         pageIndex: pageIndex.value,
         pageSize: pageSize.value
     }).then(({ data }) => {
@@ -155,7 +153,7 @@ const delFun = (id) => {
             lock: true,
         })
 
-        goodsGoodsDelete({
+        goodsWarehousingDelete({
             id,
         }).then(() => {
             loading.close()

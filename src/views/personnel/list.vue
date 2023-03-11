@@ -16,7 +16,7 @@
         <el-table-column prop="name" header-align="center" align="center" label="姓名"></el-table-column>
         <el-table-column prop="sex" header-align="center" align="center" label="性别">
             <template #default="scope">
-                {{ sexComputed(scope.row.sex) }}
+                {{ codeToLabelComputed(scope.row.sex, sexList) }}
             </template>
         </el-table-column>
         <el-table-column prop="age" header-align="center" align="center" label="年龄"></el-table-column>
@@ -46,13 +46,14 @@
 </template>
 
 <script setup>
-import { onMounted, ref, reactive, nextTick, computed } from 'vue'
+import { onMounted, ref, reactive, nextTick } from 'vue'
 import { personnelPeopleList, personnelDeletePeople } from '@/api/personnel'
 import listAddOrUpdate from './list-add-or-update.vue'
 import { ElLoading, ElMessage, ElMessageBox } from 'element-plus'
-import { codeToLabel } from '@/utils/index.js'
+import { commonMixin } from '@/mixins/common'
 const dayjs = require('dayjs')
 
+const { codeToLabelComputed } = commonMixin()
 let formData = reactive({
     name: '',
 })
@@ -68,12 +69,6 @@ const sexList = [
     { value: 1, label: '男' },
     { value: 2, label: '女' },
 ]
-
-const sexComputed = computed(() => {
-    return (val) => {
-        return codeToLabel(val, sexList)
-    }
-})
 
 onMounted(() => {
     queryList()

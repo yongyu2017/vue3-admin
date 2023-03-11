@@ -90,14 +90,12 @@ export const Fullscreen = {
 
 // code转label名称
 export function codeToLabel (val, list){
-    let str= ''
-    if(list){
-        list.forEach((value)=> {
-            if(value.value === val){
-                str= value.label
-            }
-        })
-    }
+    let str = ''
+    list && list.forEach((value)=> {
+        if(value.value === val){
+            str = value.label || value.name
+        }
+    })
     return str || val
 }
 

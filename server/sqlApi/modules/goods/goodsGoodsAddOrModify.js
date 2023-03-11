@@ -67,8 +67,17 @@ module.exports = {
                     })
                 } else {
                     const menuFileData = (await db.connect('insert into goods (name, category, img, des, state, createTime, updateTime) values (?,?,?,?,?,?,?)', [name, category, renameImg, des, 1, currentTime, currentTime]))[0]
-
                     if (menuFileData.err) {
+                        res.send(statusCodeMap['-1'])
+                        return
+                    }
+                    const goodsIdSql = (await db.connect('select max(id) as id from goods WHERE state=1', []))[0]
+                    if (goodsIdSql.err) {
+                        res.send(statusCodeMap['-1'])
+                        return
+                    }
+                    const goodsStockSql = (await db.connect('insert into goods_stock (goodsId, count, state, createTime, updateTime) values (?,0,1,?,?)', [goodsIdSql.res[0].id, currentTime, currentTime]))[0]
+                    if (goodsStockSql.err) {
                         res.send(statusCodeMap['-1'])
                         return
                     }
