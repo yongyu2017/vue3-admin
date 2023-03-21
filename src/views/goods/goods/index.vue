@@ -57,8 +57,6 @@
 <script setup>
 import { onMounted, ref, reactive, nextTick } from 'vue'
 import indexAddOrUpdate from './index-add-or-update.vue'
-import a from './a.vue'
-import b from './b.vue'
 import { goodsGoodsList, goodsGoodsDelete, goodsCategoryList } from '@/api/goods'
 import { ElLoading, ElMessage, ElMessageBox } from 'element-plus'
 const dayjs = require('dayjs')
