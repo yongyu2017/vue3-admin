@@ -10,6 +10,13 @@ module.exports = defineConfig({
         open: false,
         host: '0.0.0.0' || require('ip').address(), // 允许外部ip访问
         port: 8002,
+        /** ffmpeg WebAssembly 版本在网页运行的工具，发现使用到了 SharedArrayBuffer，涉及到跨域隔离的问题，需要设置两个 HTTP 消息头启用跨域隔离：
+        **Cross-Origin-Opener-Policy 设置为 same-origin（保护源站免受攻击）
+        **Cross-Origin-Embedder-Policy 设置为 require-corp（保护源站免受侵害） **/
+        headers: {
+            "Cross-Origin-Opener-Policy": "same-origin",
+            "Cross-Origin-Embedder-Policy": "require-corp",
+        },
         proxy: {
             '/dev-api': {
                 target: `http://192.168.1.22:8000`,

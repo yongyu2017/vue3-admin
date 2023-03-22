@@ -233,6 +233,19 @@
       "status": 1,
       "createTime": 1673849861466,
       "modifiedTime": 1675298470216
+    },
+    {
+      "id": 19,
+      "menuName": "FFmpeg",
+      "parentId": 0,
+      "jumpUrl": "ffmpeg/index",
+      "roleUrl": "",
+      "type": 1,
+      "icon": "Timer",
+      "orderNum": 0,
+      "status": 1,
+      "createTime": 1679445478261,
+      "modifiedTime": 1679445495332
     }
   ]
 }

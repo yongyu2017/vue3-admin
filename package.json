@@ -9,6 +9,8 @@
     "mock": "nodemon ./server/app.js"
   },
   "dependencies": {
+    "@ffmpeg/core": "^0.10.0",
+    "@ffmpeg/ffmpeg": "^0.10.1",
     "axios": "^1.1.3",
     "core-js": "^3.8.3",
     "dayjs": "^1.11.6",
@@ -54,8 +56,7 @@
     "parserOptions": {
       "parser": "@babel/eslint-parser"
     },
-    "rules": {
-    }
+    "rules": {}
   },
   "browserslist": [
     "> 1%",

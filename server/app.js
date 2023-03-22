@@ -7,11 +7,17 @@ const { port } = require('./utils/setting.js')
 
 //设置跨域访问
 app.all('*', function (req, res, next) {
-    res.header('Access-Control-Allow-Origin', '*');
+    // res.header('Access-Control-Allow-Origin', 'http://192.168.1.22:1188')
+    res.header('Access-Control-Allow-Origin', '*');  // express的cros开启需要具体到对应的白名单地址
+    res.header('Access-Control-Allow-Headers', 'Content-Type,Content-Length,Authorization,Accept,X-Requested-With,token') //字段设置允许前端请求时请求头带有的字段值
     res.header('Access-Control-Allow-Credentials', true);
-    res.header('Access-Control-Allow-Headers', 'Content-Type,Content-Length, Authorization, Accept,X-Requested-With')
     res.header('Access-Control-Allow-Methods', 'PUT,POST,GET,DELETE,OPTIONS');
     // res.header('Content-Type', 'application/json;charset=utf-8');
+    /** ffmpeg WebAssembly 版本在网页运行的工具，发现使用到了 SharedArrayBuffer，涉及到跨域隔离的问题，需要设置两个 HTTP 消息头启用跨域隔离：
+     **Cross-Origin-Opener-Policy 设置为 same-origin（保护源站免受攻击）
+     **Cross-Origin-Embedder-Policy 设置为 require-corp（保护源站免受侵害） **/
+    res.header("Cross-Origin-Opener-Policy", "same-origin");
+    res.header("Cross-Origin-Embedder-Policy", "require-corp");
     next()
 })
 app.use(express.static(path.join(__dirname, 'upload')))  // 开放upload静态文件

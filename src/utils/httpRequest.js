@@ -6,7 +6,7 @@ import { storeToRefs } from 'pinia'
 import { useStorePinia } from "@/store"
 
 const http = axios.create({
-    baseURL: process.env.NODE_ENV == 'development'? process.env.VUE_APP_BASE_API: '',
+    baseURL: process.env.NODE_ENV == 'development'? process.env.VUE_APP_BASE_API: 'http://192.168.1.22:8000',
     timeout: 1000 * 10,
     withCredentials: true,
     headers: {
