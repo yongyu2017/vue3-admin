@@ -1,6 +1,8 @@
 import { useStorePinia } from '@/store'
 import router from '@/router'
 
+export const API_HOST = process.env.NODE_ENV == 'development'? process.env.VUE_APP_BASE_API: process.env.VUE_APP_BASE_URL
+
 //深拷贝
 export function deepCopy(obj) {
     var result = Array.isArray(obj) ? [] : {};

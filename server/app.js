@@ -4,6 +4,9 @@ let bodyParser = require('body-parser');
 const api = require('./api/index.js')
 const path = require('path')
 const { port } = require('./utils/setting.js')
+const os = require('os')
+require('console-color-mr')
+const ip = getIPAdress();
 
 //设置跨域访问
 app.all('*', function (req, res, next) {
@@ -41,4 +44,19 @@ for (let i in api) {
 //配置服务端口
 app.listen(port, () => {
     console.log('node接口服务正常运行')
+    console.log('Listening at ' + 'http://localhost:'.green + port.green + '\n'.green + 'or at ' + 'http://'.green + ip.green + ':'.green + port.green)
 })
+
+// 获取本机ip
+function getIPAdress() {
+    var interfaces = os.networkInterfaces();
+    for (var devName in interfaces) {
+        var iface = interfaces[devName];
+        for (var i = 0; i < iface.length; i++) {
+            var alias = iface[i];
+            if (alias.family === 'IPv4' && alias.address !== '127.0.0.1' && !alias.internal) {
+                return alias.address;
+            }
+        }
+    }
+}

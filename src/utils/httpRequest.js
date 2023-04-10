@@ -4,9 +4,10 @@ import router from '@/router'
 import { clearLoginInfo } from '@/utils'
 import { storeToRefs } from 'pinia'
 import { useStorePinia } from "@/store"
+import { API_HOST } from '@/utils/index.js'
 
 const http = axios.create({
-    baseURL: process.env.NODE_ENV == 'development'? process.env.VUE_APP_BASE_API: 'http://192.168.1.22:8000',
+    baseURL: API_HOST,
     timeout: 1000 * 10,
     withCredentials: true,
     headers: {

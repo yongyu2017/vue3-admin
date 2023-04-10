@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build",
+    "build:prod": "vue-cli-service build --mode production",
+    "build:testing": "vue-cli-service build --mode testing", //测试环境打包命令不能使用test关键字
     "lint": "vue-cli-service lint",
     "mock": "nodemon ./server/app.js"
   },
@@ -33,6 +34,7 @@
     "@vue/cli-service": "~5.0.0",
     "babel-plugin-dynamic-import-node": "^2.3.3",
     "body-parser": "^1.20.1",
+    "console-color-mr": "^2.0.2",
     "eslint": "^7.32.0",
     "eslint-plugin-vue": "^8.0.3",
     "express": "^4.18.2",
@@ -41,6 +43,7 @@
     "node-polyfill-webpack-plugin": "^2.0.1",
     "node-sass": "^6.0.1",
     "nodemon": "^2.0.20",
+    "os": "^0.1.2",
     "sass-loader": "^13.2.0",
     "svg-sprite-loader": "^6.0.11"
   },

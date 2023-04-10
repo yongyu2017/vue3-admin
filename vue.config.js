@@ -4,6 +4,9 @@ const path = require("path");
 const resolve = (dir) => path.join(__dirname, dir);
 
 module.exports = defineConfig({
+    publicPath: process.env.NODE_ENV === 'production' ? './' : '',
+    productionSourceMap: process.env.NODE_ENV === 'production' ? false : true,
+    outputDir: 'dist',
     lintOnSave: true,
     transpileDependencies: true,
     devServer: {
