@@ -7,7 +7,7 @@
             <el-input v-model="dataForm.email" class="inp-dom"></el-input>
         </el-form-item>
         <el-form-item>
-            <el-button type="primary" @click="submitFun">修改</el-button>
+            <el-button type="primary" @click="submitFun">确定</el-button>
             <el-button type="danger" @click="modifyPwdFun">修改密码</el-button>
         </el-form-item>
     </el-form>
