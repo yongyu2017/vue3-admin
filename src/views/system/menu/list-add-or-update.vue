@@ -34,7 +34,7 @@
             </el-form-item>
             <el-form-item label="菜单图标：" prop="icon" v-if="dataForm.type != 2">
                 <el-popover
-                    placement="right"
+                    placement="top-end"
                     title=""
                     :width="600"
                     trigger="click"
@@ -48,7 +48,7 @@
                         </div>
                     </div>
                     <template #reference>
-                        <el-input v-model="dataForm.icon" placeholder="请选择" readonly clearable class="inp-dom"></el-input>
+                        <el-input v-model="dataForm.icon" placeholder="请选择" clearable class="inp-dom"></el-input>
                     </template>
                 </el-popover>
             </el-form-item>

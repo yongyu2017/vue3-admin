@@ -1,31 +1,24 @@
 <template>
     <el-form :inline="true" :model="formData" @submit.prevent>
         <el-form-item>
-            <el-input v-model="formData.name" placeholder="请输入姓名" clearable class="inp-dom" />
+            <el-input v-model="formData.name" placeholder="请输入角色名称" clearable class="inp-dom" />
         </el-form-item>
         <el-form-item>
             <el-button type="primary" @click="searchFun">查询</el-button>
             <el-button @click="addOrUpdateFun()">新增</el-button>
-            <el-button type="danger" @click="delFun()" v-hasPermission="['people:goods:delete']">删除</el-button>
         </el-form-item>
     </el-form>
 
-    <el-table :data="dataList" border v-loading="dataListLoading" @selection-change="handleSelectionChange" style="width: 100%">
-        <el-table-column type="selection" header-align="center" align="center" width="55"></el-table-column>
-        <el-table-column prop="id" header-align="center" align="center" label="ID"></el-table-column>
-        <el-table-column prop="name" header-align="center" align="center" label="姓名"></el-table-column>
-        <el-table-column prop="sex" header-align="center" align="center" label="性别">
-            <template #default="scope">
-                {{ codeToLabelComputed(scope.row.sex, sexList) }}
-            </template>
-        </el-table-column>
-        <el-table-column prop="age" header-align="center" align="center" label="年龄"></el-table-column>
-        <el-table-column prop="createTime" header-align="center" align="center" label="创建时间"></el-table-column>
-        <el-table-column prop="updateTime" header-align="center" align="center" label="修改时间"></el-table-column>
-        <el-table-column header-align="center" align="center" label="操作">
+    <el-table :data="dataList" border v-loading="dataListLoading" style="width: 100%">
+        <el-table-column prop="id" label="ID"></el-table-column>
+        <el-table-column prop="name" label="角色名称"></el-table-column>
+        <el-table-column prop="des" label="角色描述"></el-table-column>
+        <el-table-column prop="createTime" label="创建时间"></el-table-column>
+        <el-table-column prop="updateTime" label="修改时间"></el-table-column>
+        <el-table-column label="操作">
             <template #default="scope">
                 <el-button type="primary" link @click="addOrUpdateFun(scope.row)">编辑</el-button>
-                <el-button type="primary" link @click="delFun(scope.row.id)" v-hasPermission="['people:goods:delete']">删除</el-button>
+                <el-button type="primary" link @click="delFun(scope.row.id)" v-if="scope.row.id !== 1">删除</el-button>
             </template>
         </el-table-column>
     </el-table>
@@ -47,13 +40,11 @@
 
 <script setup>
 import { onMounted, ref, nextTick } from 'vue'
-import { personnelPeopleList, personnelDeletePeople } from '@/api/personnel'
+import { userRole, userDeleteRole } from '@/api/user'
 import listAddOrUpdate from './list-add-or-update.vue'
 import { ElLoading, ElMessage, ElMessageBox } from 'element-plus'
-import { commonMixin } from '@/mixins/common'
 const dayjs = require('dayjs')
 
-const { codeToLabelComputed } = commonMixin()
 let formData = ref({
     name: '',
 })
@@ -61,14 +52,9 @@ let pageIndex = ref(1);
 let pageSize = ref(10);
 let totalPage = ref(0);
 let dataList = ref([]);
-let idList = ref([]);
 let dataListLoading = ref(false);
 const listAddOrUpdateRef = ref(null);
 let listAddOrUpdateVisible = ref(false);
-const sexList = [
-    { value: 1, label: '男' },
-    { value: 2, label: '女' },
-]
 
 onMounted(() => {
     queryList()
@@ -77,7 +63,7 @@ onMounted(() => {
 // 获取员工列表
 const queryList = () => {
     dataListLoading.value = true;
-    personnelPeopleList({
+    userRole({
         name: formData.value.name,
         pageIndex: pageIndex.value,
         pageSize: pageSize.value
@@ -109,10 +95,6 @@ const currentChangeHandle = (val) => {
     pageIndex.value = val
     queryList()
 }
-//selection-change
-const handleSelectionChange = (val) => {
-    idList.value = val.map(value => value.id)
-}
 //新增或者修改
 const addOrUpdateFun = (item) => {
     listAddOrUpdateVisible.value = true;
@@ -122,13 +104,8 @@ const addOrUpdateFun = (item) => {
 }
 //删除
 const delFun = (id) => {
-    const ids = id || idList.value.join(',');
-    if (!ids) {
-        ElMessage.warning('请选择需要删除的数据！')
-        return
-    }
     ElMessageBox.confirm(
-        `确定要删除ID为${ ids }的数据吗?`,
+        `确定要删除ID为${ id }的数据吗?`,
         '提示',
         {
             confirmButtonText: '确定',
@@ -141,8 +118,8 @@ const delFun = (id) => {
             lock: true,
         })
 
-        personnelDeletePeople({
-            id: ids,
+        userDeleteRole({
+            id,
         }).then(() => {
             loading.close()
             queryList()

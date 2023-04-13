@@ -17,40 +17,40 @@
       "id": 2,
       "menuName": "菜单管理",
       "parentId": 1,
-      "jumpUrl": "menu/list",
+      "jumpUrl": "system/menu/list",
       "roleUrl": "",
       "type": 1,
-      "icon": "Menu",
+      "icon": "",
       "orderNum": 10,
       "status": 1,
       "createTime": 1670295045783,
-      "modifiedTime": 1670296432518
+      "modifiedTime": 1681384716460
     },
     {
       "id": 3,
       "menuName": "角色管理",
       "parentId": 1,
-      "jumpUrl": "role/list",
+      "jumpUrl": "system/role/list",
       "roleUrl": "",
       "type": 1,
-      "icon": "Orange",
+      "icon": "",
       "orderNum": 20,
       "status": 1,
       "createTime": 1670296357880,
-      "modifiedTime": 1670296357880
+      "modifiedTime": 1681384722252
     },
     {
       "id": 4,
       "menuName": "用户管理",
       "parentId": 1,
-      "jumpUrl": "user/list",
+      "jumpUrl": "system/user/list",
       "roleUrl": "",
       "type": 1,
-      "icon": "Notification",
+      "icon": "",
       "orderNum": 30,
       "status": 1,
       "createTime": 1670306672730,
-      "modifiedTime": 1670306672730
+      "modifiedTime": 1681384730365
     },
     {
       "id": 5,
@@ -69,14 +69,14 @@
       "id": 6,
       "menuName": "员工管理",
       "parentId": 5,
-      "jumpUrl": "personnel/list",
+      "jumpUrl": "personnelManagement/personnel/list",
       "roleUrl": "",
       "type": 1,
-      "icon": "Document",
+      "icon": "",
       "orderNum": 10,
       "status": 1,
       "createTime": 1670294747365,
-      "modifiedTime": 1670478420491
+      "modifiedTime": 1681384739193
     },
     {
       "id": 7,
@@ -85,24 +85,24 @@
       "jumpUrl": "",
       "roleUrl": "",
       "type": 0,
-      "icon": "Goods",
+      "icon": "",
       "orderNum": 20,
       "status": 1,
       "createTime": 1670294817578,
-      "modifiedTime": 1670478428565
+      "modifiedTime": 1681385029944
     },
     {
       "id": 8,
       "menuName": "考勤列表",
       "parentId": 7,
-      "jumpUrl": "attendance/list",
+      "jumpUrl": "personnelManagement/attendance/list",
       "roleUrl": "",
       "type": 1,
-      "icon": "Collection",
+      "icon": "",
       "orderNum": 10,
       "status": 1,
       "createTime": 1670294861432,
-      "modifiedTime": 1670478441891
+      "modifiedTime": 1681384745343
     },
     {
       "id": 9,
@@ -121,14 +121,14 @@
       "id": 10,
       "menuName": "商户列表",
       "parentId": 9,
-      "jumpUrl": "merchants/list",
+      "jumpUrl": "businessManagement/merchants/list",
       "roleUrl": "",
       "type": 1,
-      "icon": "CopyDocument",
+      "icon": "",
       "orderNum": 10,
       "status": 1,
       "createTime": 1670294957483,
-      "modifiedTime": 1670478450822
+      "modifiedTime": 1681384755899
     },
     {
       "id": 11,
@@ -141,7 +141,7 @@
       "orderNum": 40,
       "status": 1,
       "createTime": 1670294992545,
-      "modifiedTime": 1670480499396
+      "modifiedTime": 1681384853245
     },
     {
       "id": 12,
@@ -150,11 +150,11 @@
       "jumpUrl": "https://2x.antdv.com/components/overview-cn/",
       "roleUrl": "",
       "type": 1,
-      "icon": "Search",
+      "icon": "Discount",
       "orderNum": 50,
       "status": 1,
       "createTime": 1670469789951,
-      "modifiedTime": 1670469998443
+      "modifiedTime": 1681384870328
     },
     {
       "id": 13,
@@ -198,54 +198,67 @@
     {
       "id": 16,
       "menuName": "摄像头拍照",
-      "parentId": 0,
-      "jumpUrl": "camera/index",
+      "parentId": 20,
+      "jumpUrl": "tool/camera/index",
       "roleUrl": "",
       "type": 1,
-      "icon": "CameraFilled",
+      "icon": "",
       "orderNum": 50,
       "status": 1,
       "createTime": 1670574019333,
-      "modifiedTime": 1670574019333
+      "modifiedTime": 1681384875687
     },
     {
       "id": 17,
       "menuName": "图片裁剪",
-      "parentId": 0,
-      "jumpUrl": "cropper/index",
+      "parentId": 20,
+      "jumpUrl": "tool/cropper/index",
       "roleUrl": "",
       "type": 1,
-      "icon": "Scissor",
+      "icon": "",
       "orderNum": 60,
       "status": 1,
       "createTime": 1670580027973,
-      "modifiedTime": 1670580027973
+      "modifiedTime": 1681384891942
     },
     {
       "id": 18,
       "menuName": "videojs播放器",
-      "parentId": 0,
-      "jumpUrl": "video/index",
+      "parentId": 20,
+      "jumpUrl": "tool/video/index",
       "roleUrl": "",
       "type": 1,
-      "icon": "VideoPlay",
+      "icon": "",
       "orderNum": 70,
       "status": 1,
       "createTime": 1673849861466,
-      "modifiedTime": 1675298470216
+      "modifiedTime": 1681384896983
     },
     {
       "id": 19,
       "menuName": "FFmpeg",
-      "parentId": 0,
-      "jumpUrl": "ffmpeg/index",
+      "parentId": 20,
+      "jumpUrl": "tool/ffmpeg/index",
       "roleUrl": "",
       "type": 1,
-      "icon": "Timer",
+      "icon": "",
       "orderNum": 0,
       "status": 1,
       "createTime": 1679445478261,
-      "modifiedTime": 1679445495332
+      "modifiedTime": 1681384901876
+    },
+    {
+      "id": 20,
+      "menuName": "工具",
+      "parentId": 0,
+      "jumpUrl": "",
+      "roleUrl": "",
+      "type": 0,
+      "icon": "Cpu",
+      "orderNum": 0,
+      "status": 1,
+      "createTime": 1681384489710,
+      "modifiedTime": 1681384489710
     }
   ]
 }

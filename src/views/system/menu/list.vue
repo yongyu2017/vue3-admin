@@ -7,24 +7,24 @@
 
     <el-table :data="dataList" border row-key="id" v-loading="dataListLoading" style="width: 100%">
         <el-table-column prop="menuName" header-align="left" align="left" label="名称"></el-table-column>
-        <el-table-column prop="icon" header-align="center" align="center" label="图标">
+        <el-table-column prop="icon" label="图标">
             <template #default="scope">
                 <el-icon v-if="scope.row.icon">
                     <component :is="scope.row.icon" />
                 </el-icon>
             </template>
         </el-table-column>
-        <el-table-column prop="type" header-align="center" align="center" label="类型">
+        <el-table-column prop="type" label="类型">
             <template #default="scope">
                 <el-button type="primary" plain v-if="scope.row.type === 0">目录</el-button>
                 <el-button type="success" plain v-else-if="scope.row.type === 1">菜单</el-button>
                 <el-button type="info" plain v-else>按钮</el-button>
             </template>
         </el-table-column>
-        <el-table-column prop="orderNum" header-align="center" align="center" label="排序"></el-table-column>
-        <el-table-column prop="jumpUrl" header-align="center" align="center" label="菜单URL"></el-table-column>
-        <el-table-column prop="roleUrl" header-align="center" align="center" label="授权标识"></el-table-column>
-        <el-table-column header-align="center" align="center" label="操作">
+        <el-table-column prop="orderNum" label="排序"></el-table-column>
+        <el-table-column prop="jumpUrl" label="菜单URL"></el-table-column>
+        <el-table-column prop="roleUrl" label="授权标识"></el-table-column>
+        <el-table-column label="操作">
             <template #default="scope">
                 <el-button type="primary" link @click="addOrUpdateFun(scope.row)">编辑</el-button>
                 <el-button type="primary" link @click="delFun(scope.row.id)" v-hasPermission="['user:menu:delete']">删除</el-button>

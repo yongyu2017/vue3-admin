@@ -10,7 +10,7 @@
     </el-form>
 
     <el-table :data="dataList" border v-loading="dataListLoading" style="width: 100%">
-        <el-table-column prop="id" header-align="center" align="center" label="ID" width="70"></el-table-column>
+        <el-table-column prop="id" label="ID" width="70"></el-table-column>
         <el-table-column prop="name" label="分类名称"></el-table-column>
         <el-table-column prop="des" label="描述"></el-table-column>
         <el-table-column prop="createTime" label="创建时间"></el-table-column>

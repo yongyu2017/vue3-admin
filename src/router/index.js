@@ -114,11 +114,14 @@ function fnAddDynamicMenuRoutes (menuList = []) {
             if (list[i].children && list[i].children.length >= 1) {
                 computedMenuRoutes(list[i].children)
             } else {
-                list[i].url = list[i].url.replace(/^\//, '')
+                // list[i].url = list[i].url.replace(/^\//, '')
+                const componentName = list[i].url.split('/').map((value) => {
+                    return value.substr(0, 1).toUpperCase() + value.substr(1)
+                }).join('')
                 let item = {
-                    path: list[i].url.replace('/', '-'),
+                    path: '/' + list[i].url,
                     component: null,
-                    name: list[i].url.replace('/', '-'),
+                    name: componentName,
                     meta: {
                         menuId: list[i].menuId,
                         title: list[i].name,
