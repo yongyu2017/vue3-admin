@@ -29,7 +29,7 @@
 </template>
 
 <script setup>
-import { ref, reactive, defineEmits, nextTick, defineExpose } from 'vue'
+import { ref, defineEmits, nextTick, defineExpose } from 'vue'
 import { ElLoading, ElMessage } from 'element-plus'
 import { personnelAddOrModifyPeople, personnelGetPeople } from '@/api/personnel'
 
@@ -41,7 +41,7 @@ let dataForm = ref({
     sex: '',
     age: '',
 })
-const dataRule = reactive({
+const dataRule = ref({
     name: [
         { required: true, message: '请输入姓名', trigger: 'blur' },
     ],

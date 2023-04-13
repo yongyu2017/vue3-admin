@@ -17,7 +17,7 @@
 </template>
 
 <script setup>
-import { reactive, onMounted, ref, nextTick } from 'vue'
+import { onMounted, ref, nextTick } from 'vue'
 import { useStorePinia } from "@/store"
 import { ElLoading, ElMessage } from 'element-plus'
 import { userSetUserInfo } from '@/api/user'
@@ -44,7 +44,7 @@ let dataForm = ref({
     account: '',
     email: '',
 })
-const dataRule = reactive({
+const dataRule = ref({
     email: [
         { required: true, validator: emailValidator, trigger: 'blur' },
     ]

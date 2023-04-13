@@ -35,7 +35,7 @@
 </template>
 
 <script setup>
-import { ref, reactive, defineEmits, nextTick, defineExpose } from 'vue'
+import { ref, defineEmits, nextTick, defineExpose } from 'vue'
 import { ElLoading, ElMessage } from 'element-plus'
 import { userGetRole, userAddOrModifyRole, userNav } from '@/api/user'
 import { menuToTreeMenu } from '@/utils'
@@ -48,7 +48,7 @@ let dataForm = ref({
     des: '',
     permission: [],
 })
-const dataRule = reactive({
+const dataRule = ref({
     name: [
         { required: true, message: '请输入', trigger: 'blur' },
     ],

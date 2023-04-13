@@ -35,7 +35,7 @@
 </template>
 
 <script setup>
-import { ref, reactive, defineEmits, nextTick, defineExpose } from 'vue'
+import { ref, defineEmits, nextTick, defineExpose } from 'vue'
 import { ElLoading, ElMessage } from 'element-plus'
 import { userGetUser, userAddOrModifyUser, userRole } from '@/api/user'
 import { checkEamil }  from '@/utils'
@@ -63,7 +63,7 @@ let dataForm = ref({
     email: '',
     des: '',
 })
-const dataRule = reactive({
+const dataRule = ref({
     account: [
         { required: true, message: '请输入', trigger: 'blur' },
     ],

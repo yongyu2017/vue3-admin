@@ -54,7 +54,7 @@
 </template>
 
 <script setup>
-import { onMounted, ref, reactive, nextTick } from 'vue'
+import { onMounted, ref, nextTick } from 'vue'
 import indexAddOrUpdate from './index-add-or-update.vue'
 import { goodsWarehousingList, goodsWarehousingDelete, goodsGoodsList } from '@/api/goods'
 import { ElLoading, ElMessage, ElMessageBox } from 'element-plus'
@@ -63,7 +63,7 @@ import { commonMixin } from '@/mixins/common'
 const dayjs = require('dayjs')
 
 const { codeToLabelComputed } = commonMixin()
-let dataForm = reactive({
+let dataForm = ref({
     name: '',
     parentId: '',
 })
@@ -98,8 +98,8 @@ const goodsGoodsListFun = () => {
 const queryList = () => {
     dataListLoading.value = true;
     goodsWarehousingList({
-        name: dataForm.name,
-        parentId: dataForm.parentId,
+        name: dataForm.value.name,
+        parentId: dataForm.value.parentId,
         pageIndex: pageIndex.value,
         pageSize: pageSize.value
     }).then(({ data }) => {

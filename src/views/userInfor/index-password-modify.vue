@@ -23,7 +23,7 @@
 </template>
 
 <script setup>
-import { ref, reactive, defineEmits, nextTick, defineExpose } from 'vue'
+import { ref, defineEmits, nextTick, defineExpose } from 'vue'
 import { ElLoading, ElMessage } from 'element-plus'
 import { userModifyPwd } from '@/api/user'
 
@@ -46,7 +46,7 @@ let dataForm = ref({
     pwd: '',
     pwd2: '',
 })
-const dataRule = reactive({
+const dataRule = ref({
     oldPwd: [
         { required: true, message: '请输入', trigger: 'blur' },
     ],

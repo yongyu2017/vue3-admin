@@ -37,14 +37,13 @@
 </template>
 
 <script setup>
-import { onMounted, ref, reactive, nextTick } from 'vue'
+import { onMounted, ref, nextTick } from 'vue'
 import { userNav, userDeleteNav } from '@/api/user'
 import listAddOrUpdate from './list-add-or-update.vue'
 import { menuToTreeMenu } from '@/utils'
 import { ElLoading, ElMessage, ElMessageBox } from 'element-plus'
 
-let formData = reactive({
-    name: '',
+let formData = ref({
 })
 let dataList = ref([]);
 let dataListLoading = ref(false);

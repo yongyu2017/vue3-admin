@@ -55,7 +55,7 @@
 </template>
 
 <script setup>
-import { onMounted, ref, reactive, nextTick } from 'vue'
+import { onMounted, ref, nextTick } from 'vue'
 import indexAddOrUpdate from './index-add-or-update.vue'
 import { goodsGoodsList, goodsGoodsDelete, goodsCategoryList } from '@/api/goods'
 import { ElLoading, ElMessage, ElMessageBox } from 'element-plus'
@@ -63,7 +63,7 @@ const dayjs = require('dayjs')
 import { commonMixin } from '@/mixins/common'
 
 const { codeToLabelComputed } = commonMixin()
-let formData = reactive({
+let formData = ref({
     name: '',
 })
 let pageIndex = ref(1);
@@ -99,7 +99,7 @@ const goodsCategoryListFun = () => {
 const queryList = () => {
     dataListLoading.value = true;
     goodsGoodsList({
-        name: formData.name,
+        name: formData.value.name,
         pageIndex: pageIndex.value,
         pageSize: pageSize.value
     }).then(({ data }) => {

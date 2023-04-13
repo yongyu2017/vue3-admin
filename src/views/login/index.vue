@@ -22,7 +22,7 @@
 </template>
 
 <script setup>
-import { ref, reactive, onMounted } from 'vue'
+import { ref, onMounted } from 'vue'
 import { useRoute, useRouter } from "vue-router"
 import { ElLoading } from 'element-plus'
 import { userLogin } from '@/api/user'
@@ -33,12 +33,12 @@ const route = useRoute()
 const router = useRouter()
 const store = useStorePinia();
 const { setToken } = store;
-const dataForm = reactive({
+const dataForm = ref({
     name: '',
     pwd: '',
     remember: true,
 })
-const dataRule = reactive({
+const dataRule = ref({
     name: [
         { required: true, message: '请输入帐号', trigger: 'blur' }
     ],
@@ -50,8 +50,8 @@ const dataFormRef = ref(null);
 
 onMounted(() => {
     if(localStorage.getItem('name')){
-        dataForm.name = Base64.decode(localStorage.getItem('name'));
-        dataForm.pwd = Base64.decode(localStorage.getItem('pwd'));
+        dataForm.value.name = Base64.decode(localStorage.getItem('name'));
+        dataForm.value.pwd = Base64.decode(localStorage.getItem('pwd'));
     }
 })
 
@@ -65,13 +65,13 @@ const loginFun = () => {
             })
 
             userLogin({
-                name: dataForm.name,
-                pwd: dataForm.pwd,
+                name: dataForm.value.name,
+                pwd: dataForm.value.pwd,
             }).then(({ data }) => {
                 loading.close()
-                if(dataForm.remember){
-                    localStorage.setItem('name', Base64.encode(dataForm.name))
-                    localStorage.setItem('pwd', Base64.encode(dataForm.pwd))
+                if(dataForm.value.remember){
+                    localStorage.setItem('name', Base64.encode(dataForm.value.name))
+                    localStorage.setItem('pwd', Base64.encode(dataForm.value.pwd))
                 }else{
                     localStorage.removeItem('name')
                     localStorage.removeItem('pwd')

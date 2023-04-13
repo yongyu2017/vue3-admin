@@ -46,7 +46,7 @@
 </template>
 
 <script setup>
-import { onMounted, ref, reactive, nextTick } from 'vue'
+import { onMounted, ref, nextTick } from 'vue'
 import { personnelPeopleList, personnelDeletePeople } from '@/api/personnel'
 import listAddOrUpdate from './list-add-or-update.vue'
 import { ElLoading, ElMessage, ElMessageBox } from 'element-plus'
@@ -54,7 +54,7 @@ import { commonMixin } from '@/mixins/common'
 const dayjs = require('dayjs')
 
 const { codeToLabelComputed } = commonMixin()
-let formData = reactive({
+let formData = ref({
     name: '',
 })
 let pageIndex = ref(1);
@@ -78,7 +78,7 @@ onMounted(() => {
 const queryList = () => {
     dataListLoading.value = true;
     personnelPeopleList({
-        name: formData.name,
+        name: formData.value.name,
         pageIndex: pageIndex.value,
         pageSize: pageSize.value
     }).then(({ data }) => {

@@ -64,7 +64,7 @@
 </template>
 
 <script setup>
-import { ref, reactive, defineEmits, nextTick, defineExpose, computed } from 'vue'
+import { ref, defineEmits, nextTick, defineExpose, computed } from 'vue'
 import { ElLoading, ElMessage } from 'element-plus'
 import { userNav, userGetNav, userAddOrModifyNav } from '@/api/user'
 import { menuToTreeMenu } from '@/utils'
@@ -82,7 +82,7 @@ let dataForm = ref({
     icon: '',
     orderNum: 0,
 })
-const dataRule = reactive({
+const dataRule = ref({
     menuName: [
         { required: true, message: '请输入', trigger: 'blur' },
     ],

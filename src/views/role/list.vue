@@ -39,13 +39,13 @@
 </template>
 
 <script setup>
-import { onMounted, ref, reactive, nextTick } from 'vue'
+import { onMounted, ref, nextTick } from 'vue'
 import { userRole, userDeleteRole } from '@/api/user'
 import listAddOrUpdate from './list-add-or-update.vue'
 import { ElLoading, ElMessage, ElMessageBox } from 'element-plus'
 const dayjs = require('dayjs')
 
-let formData = reactive({
+let formData = ref({
     name: '',
 })
 let pageIndex = ref(1);
@@ -64,7 +64,7 @@ onMounted(() => {
 const queryList = () => {
     dataListLoading.value = true;
     userRole({
-        name: formData.name,
+        name: formData.value.name,
         pageIndex: pageIndex.value,
         pageSize: pageSize.value
     }).then(({ data }) => {
