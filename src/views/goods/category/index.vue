@@ -5,6 +5,7 @@
         </el-form-item>
         <el-form-item>
             <el-button type="primary" @click="searchFun">查询</el-button>
+            <el-button @click="resetSearch">重置</el-button>
             <el-button @click="addOrUpdateFun()">新增</el-button>
         </el-form-item>
     </el-form>
@@ -43,14 +44,16 @@ import { onMounted, ref, nextTick } from 'vue'
 import indexAddOrUpdate from './index-add-or-update.vue'
 import { goodsCategoryList, goodsCategoryDelete } from '@/api/goods'
 import { ElLoading, ElMessage, ElMessageBox } from 'element-plus'
+import { deepCopy } from '@/utils/index'
 const dayjs = require('dayjs')
 
-let formData = ref({
+let defaultDataForm = {
     name: '',
     pageIndex: 1,
     pageSize: 10,
     totalPage: 0,
-})
+}
+let formData = ref(deepCopy(defaultDataForm))
 let dataList = ref([]);
 let dataListLoading = ref(false);
 const indexAddOrUpdateRef = ref(null);
@@ -78,6 +81,12 @@ const queryList = () => {
     }).catch(() => {
         dataListLoading.value = false;
     })
+}
+// 重置
+const resetSearch = () => {
+    formData.value = deepCopy(defaultDataForm)
+
+    searchFun()
 }
 // 搜索
 const searchFun = () => {

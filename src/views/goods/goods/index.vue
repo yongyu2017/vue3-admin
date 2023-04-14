@@ -5,6 +5,7 @@
         </el-form-item>
         <el-form-item>
             <el-button type="primary" @click="searchFun">查询</el-button>
+            <el-button @click="resetSearch">重置</el-button>
             <el-button @click="addOrUpdateFun()">新增</el-button>
         </el-form-item>
     </el-form>
@@ -59,16 +60,18 @@ import { onMounted, ref, nextTick } from 'vue'
 import indexAddOrUpdate from './index-add-or-update.vue'
 import { goodsGoodsList, goodsGoodsDelete, goodsCategoryList } from '@/api/goods'
 import { ElLoading, ElMessage, ElMessageBox } from 'element-plus'
-const dayjs = require('dayjs')
+import { deepCopy } from '@/utils/index'
 import { commonMixin } from '@/mixins/common'
+const dayjs = require('dayjs')
 
 const { codeToLabelComputed } = commonMixin()
-let formData = ref({
+let defaultDataForm = {
     name: '',
     pageIndex: 1,
     pageSize: 10,
     totalPage: 0,
-})
+}
+let formData = ref(deepCopy(defaultDataForm))
 let dataList = ref([]);
 let dataListLoading = ref(false);
 const indexAddOrUpdateRef = ref(null);
@@ -94,7 +97,6 @@ const goodsCategoryListFun = () => {
         categoryList.value = data.list.slice()
     })
 }
-
 // 获取员工列表
 const queryList = () => {
     dataListLoading.value = true;
@@ -113,6 +115,12 @@ const queryList = () => {
     }).catch(() => {
         dataListLoading.value = false;
     })
+}
+// 重置
+const resetSearch = () => {
+    formData.value = deepCopy(defaultDataForm)
+
+    searchFun()
 }
 // 搜索
 const searchFun = () => {

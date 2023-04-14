@@ -5,6 +5,7 @@
         </el-form-item>
         <el-form-item>
             <el-button type="primary" @click="searchFun">查询</el-button>
+            <el-button @click="resetSearch">重置</el-button>
             <el-button @click="addOrUpdateFun()">新增</el-button>
             <el-button type="danger" @click="delFun()" v-hasPermission="['people:goods:delete']">删除</el-button>
         </el-form-item>
@@ -51,15 +52,17 @@ import { personnelPeopleList, personnelDeletePeople } from '@/api/personnel'
 import listAddOrUpdate from './list-add-or-update.vue'
 import { ElLoading, ElMessage, ElMessageBox } from 'element-plus'
 import { commonMixin } from '@/mixins/common'
+import { deepCopy } from '@/utils/index'
 const dayjs = require('dayjs')
 
 const { codeToLabelComputed } = commonMixin()
-let formData = ref({
+let defaultDataForm = {
     name: '',
     pageIndex: 1,
     pageSize: 10,
     totalPage: 0,
-})
+}
+let formData = ref(deepCopy(defaultDataForm))
 let dataList = ref([]);
 let idList = ref([]);
 let dataListLoading = ref(false);
@@ -92,6 +95,12 @@ const queryList = () => {
     }).catch(() => {
         dataListLoading.value = false;
     })
+}
+// 重置
+const resetSearch = () => {
+    formData.value = deepCopy(defaultDataForm)
+
+    searchFun()
 }
 // 搜索
 const searchFun = () => {

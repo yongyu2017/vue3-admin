@@ -475,7 +475,7 @@ async function userUserList (req, res) {
                 if(name == ''){
                     return true
                 }else{
-                    if(value.name.indexOf(name.toLocaleLowerCase()) != -1){
+                    if(value.account.indexOf(name.toLocaleLowerCase()) != -1){
                         return true
                     }
                 }
