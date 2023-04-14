@@ -21,7 +21,10 @@
                         <!--<keep-alive>-->
                             <!--<component :is="Component" v-if="item.name === mainTabsActiveName"></component>-->
                         <!--</keep-alive>-->
-                        <component :is="Component" v-if="item.name === mainTabsActiveName"></component>
+                        <keep-alive v-if="item.keepAlive">
+                            <component :is="Component" v-if="item.name === mainTabsActiveName"></component>
+                        </keep-alive>
+                        <component :is="Component" v-else-if="!item.keepAlive && item.name === mainTabsActiveName"></component>
                     </router-view>
                 </el-card>
             </el-tab-pane>
@@ -85,6 +88,7 @@ const routeHandle = function (route) {
                 title: route.meta.title,
                 type: isURL(route.meta.iframeUrl) ? 'iframe' : 'module',
                 iframeUrl: route.meta.iframeUrl || '',
+                keepAlive: route.meta.keepAlive,
                 params: route.params,
                 query: route.query
             }

@@ -127,7 +127,8 @@ function fnAddDynamicMenuRoutes (menuList = []) {
                         title: list[i].name,
                         isDynamic: true,
                         isTab: true,
-                        iframeUrl: ''
+                        iframeUrl: '',
+                        keepAlive: list[i].keepAlive || false,
                     }
                 }
                 // url以http[s]://开头, 通过iframe展示
