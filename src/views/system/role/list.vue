@@ -27,10 +27,10 @@
         class="el-pagination"
         @size-change="sizeChangeHandle"
         @current-change="currentChangeHandle"
-        :current-page="pageIndex"
+        :current-page="formData.pageIndex"
         :page-sizes="[10, 20, 50, 100]"
-        :page-size="pageSize"
-        :total="totalPage"
+        :page-size="formData.pageSize"
+        :total="formData.totalPage"
         layout="total, sizes, prev, pager, next, jumper">
     </el-pagination>
 
@@ -47,10 +47,10 @@ const dayjs = require('dayjs')
 
 let formData = ref({
     name: '',
+    pageIndex: 1,
+    pageSize: 10,
+    totalPage: 0,
 })
-let pageIndex = ref(1);
-let pageSize = ref(10);
-let totalPage = ref(0);
 let dataList = ref([]);
 let dataListLoading = ref(false);
 const listAddOrUpdateRef = ref(null);
@@ -65,8 +65,8 @@ const queryList = () => {
     dataListLoading.value = true;
     userRole({
         name: formData.value.name,
-        pageIndex: pageIndex.value,
-        pageSize: pageSize.value
+        pageIndex: formData.value.pageIndex,
+        pageSize: formData.value.pageSize
     }).then(({ data }) => {
         dataListLoading.value = false;
         data.list.forEach((value) => {
@@ -74,25 +74,25 @@ const queryList = () => {
             value['updateTime'] = dayjs(value.updateTime).format('YYYY-MM-DD HH:mm:ss')
         })
         dataList.value = data.list.slice();
-        totalPage.value = data.sum;
+        formData.value.totalPage = data.sum;
     }).catch(() => {
         dataListLoading.value = false;
     })
 }
 // 搜索
 const searchFun = () => {
-    pageIndex.value = 1;
+    formData.value.pageIndex = 1;
     queryList()
 }
 // 每页数
 const sizeChangeHandle = (val) => {
-    pageSize.value = val
-    pageIndex.value = 1;
+    formData.value.pageSize = val
+    formData.value.pageIndex = 1;
     queryList()
 }
 // 当前页
 const currentChangeHandle = (val) => {
-    pageIndex.value = val
+    formData.value.pageIndex = val
     queryList()
 }
 //新增或者修改

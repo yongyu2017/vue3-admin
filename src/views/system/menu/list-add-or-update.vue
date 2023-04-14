@@ -4,7 +4,7 @@
         :title="!dataForm.id ? '新增' : '修改'"
         :close-on-click-modal="false"
         v-model="visible">
-        <el-form ref="dataFormRef" :model="dataForm" :rules="dataRule" @keyup.enter="dataFormSubmit()" label-width="100px">
+        <el-form ref="dataFormRef" :model="dataForm" :rules="dataRule" label-width="100px">
             <el-form-item label="类型：">
                 <el-radio-group v-model="dataForm.type">
                     <el-radio :label="item.value" v-for="(item, index) in typeList" :key="index">{{ item.name }}</el-radio>

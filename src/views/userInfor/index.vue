@@ -1,5 +1,5 @@
 <template>
-    <el-form ref="dataFormRef" :model="dataForm" :rules="dataRule" label-width="80px" @keyup.enter="loginFun()" @submit.prevent class="login-form">
+    <el-form ref="dataFormRef" :model="dataForm" :rules="dataRule" label-width="80px">
         <el-form-item label="账号：" prop="account">
             <el-input v-model="dataForm.account" disabled class="inp-dom"></el-input>
         </el-form-item>

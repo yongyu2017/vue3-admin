@@ -1,10 +1,10 @@
 <template>
-    <el-form :inline="true" :model="dataForm" @submit.prevent>
+    <el-form :inline="true" :model="formData" @submit.prevent>
         <el-form-item>
-            <el-input v-model="dataForm.name" placeholder="请输入商品名称" clearable class="inp-dom" />
+            <el-input v-model="formData.name" placeholder="请输入商品名称" clearable class="inp-dom" />
         </el-form-item>
         <el-form-item>
-            <el-select v-model="dataForm.parentId" placeholder="请选择" filterable clearable class="inp-dom">
+            <el-select v-model="formData.parentId" placeholder="请选择" filterable clearable class="inp-dom">
                 <el-option
                         v-for="item in parentIdList"
                         :key="item.id"
@@ -42,10 +42,10 @@
         class="el-pagination"
         @size-change="sizeChangeHandle"
         @current-change="currentChangeHandle"
-        :current-page="pageIndex"
+        :current-page="formData.pageIndex"
         :page-sizes="[10, 20, 50, 100]"
-        :page-size="pageSize"
-        :total="totalPage"
+        :page-size="formData.pageSize"
+        :total="formData.totalPage"
         layout="total, sizes, prev, pager, next, jumper">
     </el-pagination>
 
@@ -63,13 +63,13 @@ import { commonMixin } from '@/mixins/common'
 const dayjs = require('dayjs')
 
 const { codeToLabelComputed } = commonMixin()
-let dataForm = ref({
+let formData = ref({
     name: '',
     parentId: '',
+    pageIndex: 1,
+    pageSize: 10,
+    totalPage: 0,
 })
-let pageIndex = ref(1)
-let pageSize = ref(10)
-let totalPage = ref(0)
 let dataList = ref([])
 let dataListLoading = ref(false)
 const indexAddOrUpdateRef = ref(null)
@@ -98,10 +98,10 @@ const goodsGoodsListFun = () => {
 const queryList = () => {
     dataListLoading.value = true;
     goodsWarehousingList({
-        name: dataForm.value.name,
-        parentId: dataForm.value.parentId,
-        pageIndex: pageIndex.value,
-        pageSize: pageSize.value
+        name: formData.value.name,
+        parentId: formData.value.parentId,
+        pageIndex: formData.value.pageIndex,
+        pageSize: formData.value.pageSize
     }).then(({ data }) => {
         dataListLoading.value = false;
         data.list.forEach((value) => {
@@ -109,25 +109,25 @@ const queryList = () => {
             value['updateTime'] = dayjs(value.updateTime).format('YYYY-MM-DD HH:mm:ss')
         })
         dataList.value = data.list.slice();
-        totalPage.value = data.sum;
+        formData.value.totalPage = data.sum;
     }).catch(() => {
         dataListLoading.value = false;
     })
 }
 // 搜索
 const searchFun = () => {
-    pageIndex.value = 1;
+    formData.value.pageIndex = 1;
     queryList()
 }
 // 每页数
 const sizeChangeHandle = (val) => {
-    pageSize.value = val
-    pageIndex.value = 1;
+    formData.value.pageSize = val
+    formData.value.pageIndex = 1;
     queryList()
 }
 // 当前页
 const currentChangeHandle = (val) => {
-    pageIndex.value = val
+    formData.value.pageIndex = val
     queryList()
 }
 //新增或者修改

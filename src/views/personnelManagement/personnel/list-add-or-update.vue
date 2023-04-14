@@ -4,7 +4,7 @@
         :title="!dataForm.id ? '新增' : '修改'"
         :close-on-click-modal="false"
         v-model="visible">
-        <el-form ref="dataFormRef" :model="dataForm" :rules="dataRule" @keyup.enter="dataFormSubmit()" label-width="100px">
+        <el-form ref="dataFormRef" :model="dataForm" :rules="dataRule" label-width="100px">
             <el-form-item label="姓名：" prop="name">
                 <el-input v-model="dataForm.name" placeholder="请输入" class="inp-dom"></el-input>
             </el-form-item>

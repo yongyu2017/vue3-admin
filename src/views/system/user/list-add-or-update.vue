@@ -1,7 +1,6 @@
 <template>
     <el-dialog @close="closeFun" :title="!dataForm.id ? '新增' : '修改'" :close-on-click-modal="false" v-model="visible">
-        <el-form ref="dataFormRef" :model="dataForm" :rules="dataRule" @keyup.enter="dataFormSubmit()"
-            label-width="100px">
+        <el-form ref="dataFormRef" :model="dataForm" :rules="dataRule" label-width="100px">
             <el-form-item label="账号：" prop="account">
                 <el-input v-model="dataForm.account" placeholder="请输入" :disabled="dataForm.id != ''" class="inp-dom"></el-input>
             </el-form-item>
