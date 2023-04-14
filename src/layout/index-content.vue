@@ -21,7 +21,7 @@
                         <!--<keep-alive>-->
                             <!--<component :is="Component" v-if="item.name === mainTabsActiveName"></component>-->
                         <!--</keep-alive>-->
-                        <component :is="Component"></component>
+                        <component :is="Component" v-if="item.name === mainTabsActiveName"></component>
                     </router-view>
                 </el-card>
             </el-tab-pane>
