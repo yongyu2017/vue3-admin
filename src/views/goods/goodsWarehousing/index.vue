@@ -64,18 +64,18 @@ import { deepCopy } from '@/utils/index'
 const dayjs = require('dayjs')
 
 const { codeToLabelComputed } = commonMixin()
-let defaultDataForm = {
+const defaultDataForm = {
     name: '',
     parentId: '',
     pageIndex: 1,
     pageSize: 10,
     totalPage: 0,
 }
-let formData = ref(deepCopy(defaultDataForm))
-let dataList = ref([])
-let dataListLoading = ref(false)
+const formData = ref(deepCopy(defaultDataForm))
+const dataList = ref([])
+const dataListLoading = ref(false)
 const indexAddOrUpdateRef = ref(null)
-let indexAddOrUpdateVisible = ref(false)
+const indexAddOrUpdateVisible = ref(false)
 const parentIdList = ref([])
 
 onMounted(() => {

@@ -113,7 +113,7 @@ const options = ref({
     enlarge: enlarge.value,  //图片根据截图框输出比例倍数
 })
 const cropper = ref(null)
-let scale = ref(0);
+const scale = ref(0);
 const visible = ref(false)
 const emit = defineEmits(['refreshDataList', 'close'])
 
@@ -159,7 +159,7 @@ const rotateFun = (direction) => {
 }
 // 表单提交
 const dataFormSubmit = async () => {
-    let data = outputDataType.value == 'blob' ? await getCropBlob() : await getCropData()
+    const data = outputDataType.value == 'blob' ? await getCropBlob() : await getCropData()
     visible.value = false;
     emit('refreshDataList', data)
 }

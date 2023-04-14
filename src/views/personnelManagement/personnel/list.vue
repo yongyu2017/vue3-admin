@@ -56,18 +56,18 @@ import { deepCopy } from '@/utils/index'
 const dayjs = require('dayjs')
 
 const { codeToLabelComputed } = commonMixin()
-let defaultDataForm = {
+const defaultDataForm = {
     name: '',
     pageIndex: 1,
     pageSize: 10,
     totalPage: 0,
 }
-let formData = ref(deepCopy(defaultDataForm))
-let dataList = ref([]);
-let idList = ref([]);
-let dataListLoading = ref(false);
+const formData = ref(deepCopy(defaultDataForm))
+const dataList = ref([]);
+const idList = ref([]);
+const dataListLoading = ref(false);
 const listAddOrUpdateRef = ref(null);
-let listAddOrUpdateVisible = ref(false);
+const listAddOrUpdateVisible = ref(false);
 const sexList = [
     { value: 1, label: '男' },
     { value: 2, label: '女' },

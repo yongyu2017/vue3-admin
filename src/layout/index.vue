@@ -24,9 +24,9 @@ import indexSidebar from './index-sidebar'
 
 const store = useStorePinia()
 const { getUserInfo } = store;
-let { documentClientHeight, isExpand } = storeToRefs(store)
-let loading = ref(true);
-let isRefresh = ref(false); //main-content是否刷新
+const { documentClientHeight, isExpand } = storeToRefs(store)
+const loading = ref(true);
+const isRefresh = ref(false); //main-content是否刷新
 
 provide('refresh', () => {
     console.log('refresh')

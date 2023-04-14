@@ -21,7 +21,7 @@ import { useStorePinia } from '@/store'
 import { useRouter } from 'vue-router'
 
 const store = useStorePinia()
-let { menuList, menuActiveName, isExpand } = storeToRefs(store)
+const { menuList, menuActiveName, isExpand } = storeToRefs(store)
 const router = useRouter()
 </script>
 

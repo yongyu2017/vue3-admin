@@ -39,8 +39,8 @@ const pwd2Validator = (rule, value, callback) => {
     }
 }
 const dataFormRef = ref();
-let visible = ref(false);
-let dataForm = ref({
+const visible = ref(false);
+const dataForm = ref({
     oldPwd: '',
     pwd: '',
     pwd2: '',

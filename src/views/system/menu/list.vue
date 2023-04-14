@@ -43,12 +43,12 @@ import listAddOrUpdate from './list-add-or-update.vue'
 import { menuToTreeMenu } from '@/utils'
 import { ElLoading, ElMessage, ElMessageBox } from 'element-plus'
 
-let formData = ref({
+const formData = ref({
 })
-let dataList = ref([]);
-let dataListLoading = ref(false);
+const dataList = ref([]);
+const dataListLoading = ref(false);
 const listAddOrUpdateRef = ref(null);
-let listAddOrUpdateVisible = ref(false);
+const listAddOrUpdateVisible = ref(false);
 
 onMounted(() => {
     queryList()

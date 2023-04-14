@@ -52,8 +52,8 @@ const emailValidator = (rule, value, callback) => {
     }
 }
 const dataFormRef = ref();
-let visible = ref(false);
-let dataForm = ref({
+const visible = ref(false);
+const dataForm = ref({
     id: '',  //修改时填写
     account: '',
     pwd: '',

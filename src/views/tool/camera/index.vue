@@ -22,7 +22,7 @@
 import { ref, onDeactivated } from 'vue'
 import cameraTakePhoto from '@/components/cameraTakePhoto'
 
-let img = ref('')
+const img = ref('')
 const cameraTakePhotoRef = ref(null)
 
 onDeactivated(() => {
@@ -38,11 +38,11 @@ const openMedia = () => {
     cameraTakePhotoRef.value.openMedia()
 }
 // 拍照
-let takePhoto = () => {
+const takePhoto = () => {
     cameraTakePhotoRef.value.takePhoto()
 }
 // 关闭摄像头
-let closeMedia = () => {
+const closeMedia = () => {
     cameraTakePhotoRef.value.closeMedia()
 }
 </script>

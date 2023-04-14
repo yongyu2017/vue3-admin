@@ -71,8 +71,8 @@ import { menuToTreeMenu } from '@/utils'
 import * as ElementPlusIconsVue from '@element-plus/icons-vue'
 
 const dataFormRef = ref();
-let visible = ref(false);
-let dataForm = ref({
+const visible = ref(false);
+const dataForm = ref({
     id: '',  //修改时填写
     menuName: '',
     type: 0,
@@ -98,7 +98,7 @@ const typeList = ref([
     { value: 1, name: '菜单'},
     { value: 2, name: '按钮'},
 ])
-let parentIdList = ref([]);
+const parentIdList = ref([]);
 const iconList = Object.entries(ElementPlusIconsVue).map((value) => {
     return value[0]
 })

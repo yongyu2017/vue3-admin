@@ -51,18 +51,18 @@ import { ElLoading, ElMessage, ElMessageBox } from 'element-plus'
 import { deepCopy } from '@/utils/index'
 const dayjs = require('dayjs')
 
-let defaultDataForm = {
+const defaultDataForm = {
     name: '',
     pageIndex: 1,
     pageSize: 10,
     totalPage: 0,
 }
-let formData = ref(deepCopy(defaultDataForm))
-let dataList = ref([]);
-let dataListLoading = ref(false);
+const formData = ref(deepCopy(defaultDataForm))
+const dataList = ref([]);
+const dataListLoading = ref(false);
 const roleList = ref([]);
 const listAddOrUpdateRef = ref(null);
-let listAddOrUpdateVisible = ref(false);
+const listAddOrUpdateVisible = ref(false);
 
 const roleStr = computed(() => {
     return (val) => {

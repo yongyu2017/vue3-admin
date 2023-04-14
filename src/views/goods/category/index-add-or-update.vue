@@ -24,8 +24,8 @@ import { ElLoading, ElMessage } from 'element-plus'
 import { goodsCategoryAddOrModify, goodsCategoryDetail } from '@/api/goods'
 
 const dataFormRef = ref();
-let visible = ref(false);
-let dataForm = ref({
+const visible = ref(false);
+const dataForm = ref({
     id: '',  //修改时填写
     name: '',
     des: '',

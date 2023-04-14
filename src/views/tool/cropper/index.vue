@@ -17,8 +17,8 @@ import { ref, nextTick } from 'vue'
 import imageCropper from '@/components/imageCropper'
 
 const imageCropperRef = ref(null)
-let imageCropperVisible = ref(false)
-let img = ref('')
+const imageCropperVisible = ref(false)
+const img = ref('')
 
 // 读取原图
 const uploadFun = (file) => {

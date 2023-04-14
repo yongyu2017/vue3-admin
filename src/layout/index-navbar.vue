@@ -43,7 +43,7 @@ import { Fold, Expand } from '@element-plus/icons-vue'  // eslint-disable-line
 const store = useStorePinia()
 const { userInfo, isExpand } = storeToRefs(store)
 const router = useRouter()
-let isFullscreen = ref(false);
+const isFullscreen = ref(false);
 
 onMounted(() => {
     document.addEventListener('fullscreenchange', () => {

@@ -42,10 +42,10 @@ const emit = defineEmits(['getImg', 'getFile'])
 const { videoWidth, videoHeight } = toRefs(props);
 const videoRef = ref(null)
 const canvasRef = ref(null)
-let mediaStream = ref(null)  // 摄像头视频流
-let iSOnline = ref(false)  // 判断摄像头是否在线
-let devicesList = ref([])  // 摄像头列表
-let selectedDevice = ref(null)  // 已连接的设备信息
+const mediaStream = ref(null)  // 摄像头视频流
+const iSOnline = ref(false)  // 判断摄像头是否在线
+const devicesList = ref([])  // 摄像头列表
+const selectedDevice = ref(null)  // 已连接的设备信息
 
 onBeforeUnmount(() => {
     closeMedia()
@@ -70,7 +70,7 @@ const openMedia = async (device) => {
     }
 }
 // 链接摄像头
-let linkMedia = (device) => {
+const linkMedia = (device) => {
     selectedDevice.value = device
     const constraints = {
         audio: false, // 音频轨道
@@ -92,7 +92,7 @@ let linkMedia = (device) => {
     })
 }
 // 拍照
-let takePhoto = async () => {
+const takePhoto = async () => {
     // mediaStream在摄像头拔出的一瞬间，active会从true变更为false，同时触发oninactive钩子，有了状态监听之后事情就简单了许多。代码经过测试后发现，对用户变更摄像头权限也有效。
     if ((mediaStream.value && !mediaStream.value.active) || !iSOnline.value) {
         mediaStream.value = null
@@ -109,7 +109,7 @@ let takePhoto = async () => {
     emit('getFile', base64ToFile(base64Data, 'filename'))
 }
 // 关闭摄像头
-let closeMedia = () => {
+const closeMedia = () => {
     mediaStream.value && mediaStream.value.getTracks().forEach(track => {
         track.stop()
     })

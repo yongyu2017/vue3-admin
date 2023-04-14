@@ -40,8 +40,8 @@ import { userGetRole, userAddOrModifyRole, userNav } from '@/api/user'
 import { menuToTreeMenu } from '@/utils'
 
 const dataFormRef = ref();
-let visible = ref(false);
-let dataForm = ref({
+const visible = ref(false);
+const dataForm = ref({
     id: '',  //修改时填写
     name: '',
     des: '',

@@ -40,7 +40,7 @@ const emailValidator = (rule, value, callback) => {
 const store = useStorePinia()
 const { getUserInfo } = store;
 const dataFormRef = ref(null);
-let dataForm = ref({
+const dataForm = ref({
     account: '',
     email: '',
 })
@@ -50,7 +50,7 @@ const dataRule = ref({
     ]
 });
 const indexPasswordModifyRef = ref(null)
-let indexPasswordModifyVisible = ref(false);
+const indexPasswordModifyVisible = ref(false);
 
 onMounted(() => {
     userGetUserInfoFun()

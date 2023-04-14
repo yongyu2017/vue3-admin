@@ -65,18 +65,18 @@ import { commonMixin } from '@/mixins/common'
 const dayjs = require('dayjs')
 
 const { codeToLabelComputed } = commonMixin()
-let defaultDataForm = {
+const defaultDataForm = {
     name: '',
     pageIndex: 1,
     pageSize: 10,
     totalPage: 0,
 }
-let formData = ref(deepCopy(defaultDataForm))
-let dataList = ref([]);
-let dataListLoading = ref(false);
+const formData = ref(deepCopy(defaultDataForm))
+const dataList = ref([]);
+const dataListLoading = ref(false);
 const indexAddOrUpdateRef = ref(null);
-let indexAddOrUpdateVisible = ref(false);
-let categoryList = ref([])
+const indexAddOrUpdateVisible = ref(false);
+const categoryList = ref([])
 
 onMounted(() => {
     goodsCategoryListFun()
