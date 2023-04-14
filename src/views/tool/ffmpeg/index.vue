@@ -50,7 +50,7 @@ onUnmounted(() => {
 const upload = async (e) => {
     var { name } = e.target.files[0];
     ffmpeg.FS('writeFile', name, await fetchFile(e.target.files[0]))
-    await ffmpeg.run('-i', name, '-r', '35', '-filter:v', 'setpts=0.25*PTS', 'put.mp4')
+    await ffmpeg.run('-i', name, '-r', '35', '-filter:v', 'setpts=0.25*PTS', '-b:v', '5m', 'put.mp4')
     const data = ffmpeg.FS('readFile', 'put.mp4')
     console.log(data)
     downloadFileUrl.value = URL.createObjectURL(new Blob([data.buffer], {
