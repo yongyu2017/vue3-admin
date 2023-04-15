@@ -19,5 +19,6 @@ app.component('svg-icon', svgIcon)
 app.use(pinia)
 app.use(ElementPlus, {
     locale: zhCn,
+    size:'large'
 })
 app.use(router).mount('#app')

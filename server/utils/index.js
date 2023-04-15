@@ -8,16 +8,28 @@ const readFile = promisify(fs.readFile)
 const writeFile = promisify(fs.writeFile)
 
 // 获取 json 数据
-const getFileData = async (fileName) => {
-    const filePath = path.join(__dirname, `../json/${fileName}.json`)
+const getFileData = async (inputUrl) => {
+    const filePath = path.join(__dirname, `..${inputUrl}`)
     const data = await readFile(filePath, 'utf-8')
     return JSON.parse(data)
 }
 // 修改 json 数据
-const setFileData = async (fileName, data) => {
-    const filePath = path.join(__dirname, `../json/${fileName}.json`)
+const setFileData = async (ouputUrl, data) => {
+    const filePath = path.join(__dirname, `..${ouputUrl}`)
     const datas = JSON.stringify(data, null, '  ')
+    const fileFolder = ouputUrl.split('/').filter((value, index, array) => (index != array.length -1) && value).map((value) => '/' + value).join('')
+    await Folder(fileFolder)
     await writeFile(filePath, datas)
+}
+// 不存在文件夹，直接创建
+const Folder = async (reaPath) => {
+    const absPath = path.resolve(__dirname, '..' + reaPath);
+    try {
+        await fs.promises.stat(absPath);
+    } catch (e) {
+        // {recursive: true} 这个配置项是配置自动创建多层文件夹
+        await fs.promises.mkdir(absPath, { recursive: true });
+    }
 }
 // 查找父节点
 const findParentNode = (ids, list) => {

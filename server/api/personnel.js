@@ -4,7 +4,7 @@ const statusCodeMap = require('../utils/statusCodeMap.js')
 // 获取员工列表
 async function userPeopleList (req, res) {
     const { token } = req.headers
-    const fileData = await getFileData('people');
+    const fileData = await getFileData('/json/people.json');
     const { pageIndex, pageSize, name } = req['body'];
     const userInfo = await verifyToken(token)
 
@@ -46,7 +46,7 @@ async function userAddOrModifyPeople (req, res) {
     const { token } = req.headers
     const { id, name, sex, age } = req['body'];
     const data = { id, name, sex, age };
-    const fileData = await getFileData('people');
+    const fileData = await getFileData('/json/people.json');
     const userInfo = await verifyToken(token)
 
     if(userInfo){
@@ -71,7 +71,7 @@ async function userAddOrModifyPeople (req, res) {
                 updateTime: new Date().getTime(),
             })
         }
-        await setFileData('people', fileData)
+        await setFileData('/json/people.json', fileData)
         res.send({
             code: 200,
             data: {
@@ -90,7 +90,7 @@ async function userDeletePeople (req, res) {
     const { token } = req.headers
     const { id } = req['body'];
     const ids = (id + '').split(',');
-    const fileData = await getFileData('people');
+    const fileData = await getFileData('/json/people.json');
     const userInfo = await verifyToken(token)
 
     if(userInfo){
@@ -99,7 +99,7 @@ async function userDeletePeople (req, res) {
                 value.state = 0;
             }
         })
-        await setFileData('people', fileData)
+        await setFileData('/json/people.json', fileData)
         res.send({
             code: 200,
             data: {
@@ -117,7 +117,7 @@ async function userDeletePeople (req, res) {
 async function userGetPeople (req, res) {
     const { token } = req.headers
     const { id } = req['body'];
-    const fileData = await getFileData('people');
+    const fileData = await getFileData('/json/people.json');
     const userInfo = await verifyToken(token)
 
     if(userInfo){

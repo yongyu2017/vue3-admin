@@ -1,13 +1,15 @@
 <template>
-    <video
-        ref="videoDom"
-        class="video-js"
-        controls
-        preload="auto"
-        width="100%"
-        height="100%"
-    >
-    </video>
+    <div style="width: 500px; height: 360px">
+        <video
+            ref="videoDom"
+            class="video-js"
+            controls
+            preload="auto"
+            width="100%"
+            height="100%"
+        >
+        </video>
+    </div>
 </template>
 
 <script setup>

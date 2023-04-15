@@ -6,9 +6,9 @@ async function userLogin (req, res) {
     const { name, pwd } = req['body'];
 
     if(name && pwd){
-        const userFileData = await getFileData('user');
-        const roleFileData = await getFileData('role');
-        const menuFileData = await getFileData('menu');
+        const userFileData = await getFileData('/json/user.json');
+        const roleFileData = await getFileData('/json/role.json');
+        const menuFileData = await getFileData('/json/menu.json');
         let data = {};
         let userRole = '';
         let roleIds = [];
@@ -61,9 +61,9 @@ async function userGetUserInfo (req, res) {
     const userInfo = await verifyToken(token)
 
     if(userInfo){
-        const userFileData = await getFileData('user');
-        const roleFileData = await getFileData('role');
-        const menuFileData = await getFileData('menu');
+        const userFileData = await getFileData('/json/user.json');
+        const roleFileData = await getFileData('/json/role.json');
+        const menuFileData = await getFileData('/json/menu.json');
         let data = {};
         let userRole = '';
         let roleIds = [];
@@ -104,7 +104,7 @@ async function userSetUserInfo (req, res) {
     const data = { email };
 
     if(userInfo){
-        const fileData = await getFileData('user');
+        const fileData = await getFileData('/json/user.json');
         fileData.list.forEach((value) => {
             if (value.id == userInfo.id) {
                 for (let i in data) {
@@ -112,7 +112,7 @@ async function userSetUserInfo (req, res) {
                 }
             }
         })
-        await setFileData('user', fileData)
+        await setFileData('/json/user.json', fileData)
         res.send({
             code: 200,
             data: '',
@@ -132,7 +132,7 @@ async function userModifyPwd (req, res) {
     const { oldPwd, pwd } = req['body'];
 
     if(userInfo){
-        const fileData = await getFileData('user');
+        const fileData = await getFileData('/json/user.json');
         let valid = false;
         fileData.list.forEach((value) => {
             if (value.id == userInfo.id) {
@@ -144,7 +144,7 @@ async function userModifyPwd (req, res) {
                 }
             }
         })
-        await setFileData('user', fileData)
+        await setFileData('/json/user.json', fileData)
         res.send({
             code: valid ? 200 : 400,
             data: '',
@@ -163,9 +163,9 @@ async function userMenuList (req, res) {
     const userInfo = await verifyToken(token)
 
     if(userInfo){
-        const userFileData = await getFileData('user');
-        const roleFileData = await getFileData('role');
-        const menuFileData = await getFileData('menu');
+        const userFileData = await getFileData('/json/user.json');
+        const roleFileData = await getFileData('/json/role.json');
+        const menuFileData = await getFileData('/json/menu.json');
         let userRole = '';
         let roleIds = [];
         userFileData.list.forEach((value) => {
@@ -207,7 +207,7 @@ async function userNav (req, res) {
     const userInfo = await verifyToken(token)
 
     if(userInfo){
-        const fileData = await getFileData('menu');
+        const fileData = await getFileData('/json/menu.json');
 
         fileData.menuList = fileData.menuList.filter((value) => {
             return value.status == 1
@@ -229,7 +229,7 @@ async function userAddOrModifyNav (req, res) {
     const { token } = req.headers
     const { id, menuName, parentId, jumpUrl, roleUrl, type, icon, orderNum } = req['body'];
     const data = { id, menuName, parentId, jumpUrl, roleUrl, type, icon, orderNum };
-    const fileData = await getFileData('menu');
+    const fileData = await getFileData('/json/menu.json');
     const userInfo = await verifyToken(token)
 
     if(userInfo){
@@ -252,7 +252,7 @@ async function userAddOrModifyNav (req, res) {
                 modifiedTime: new Date().getTime(),
             })
         }
-        await setFileData('menu', fileData)
+        await setFileData('/json/menu.json', fileData)
         res.send({
             code: 200,
             data: {
@@ -270,7 +270,7 @@ async function userAddOrModifyNav (req, res) {
 async function userDeleteNav (req, res) {
     const { token } = req.headers
     const { id } = req['body'];
-    const fileData = await getFileData('menu');
+    const fileData = await getFileData('/json/menu.json');
     const userInfo = await verifyToken(token)
 
     if(userInfo){
@@ -281,7 +281,7 @@ async function userDeleteNav (req, res) {
                 value.status = 0;
             }
         })
-        await setFileData('menu', fileData)
+        await setFileData('/json/menu.json', fileData)
         res.send({
             code: 200,
             data: {
@@ -299,7 +299,7 @@ async function userDeleteNav (req, res) {
 async function userGetNav (req, res) {
     const { token } = req.headers
     const { id } = req['body'];
-    const fileData = await getFileData('menu');
+    const fileData = await getFileData('/json/menu.json');
     const userInfo = await verifyToken(token)
 
     if(userInfo){
@@ -324,7 +324,7 @@ async function userGetNav (req, res) {
 // 获取角色列表
 async function userRole (req, res) {
     const { token } = req.headers
-    const fileData = await getFileData('role');
+    const fileData = await getFileData('/json/role.json');
     const { pageIndex, pageSize, name } = req['body'];
     const userInfo = await verifyToken(token)
 
@@ -366,7 +366,7 @@ async function userAddOrModifyRole (req, res) {
     const { token } = req.headers
     const { id, name, des, permission } = req['body'];
     const data = { id, name, des, permission };
-    const fileData = await getFileData('role');
+    const fileData = await getFileData('/json/role.json');
     const userInfo = await verifyToken(token)
 
     if(userInfo){
@@ -391,7 +391,7 @@ async function userAddOrModifyRole (req, res) {
                 updateTime: new Date().getTime(),
             })
         }
-        await setFileData('role', fileData)
+        await setFileData('/json/role.json', fileData)
         res.send({
             code: 200,
             data: {
@@ -409,7 +409,7 @@ async function userAddOrModifyRole (req, res) {
 async function userDeleteRole (req, res) {
     const { token } = req.headers
     const { id } = req['body'];
-    const fileData = await getFileData('role');
+    const fileData = await getFileData('/json/role.json');
     const userInfo = await verifyToken(token)
 
     if(userInfo){
@@ -418,7 +418,7 @@ async function userDeleteRole (req, res) {
                 value.state = 0;
             }
         })
-        await setFileData('role', fileData)
+        await setFileData('/json/role.json', fileData)
         res.send({
             code: 200,
             data: {
@@ -436,7 +436,7 @@ async function userDeleteRole (req, res) {
 async function userGetRole (req, res) {
     const { token } = req.headers
     const { id } = req['body'];
-    const fileData = await getFileData('role');
+    const fileData = await getFileData('/json/role.json');
     const userInfo = await verifyToken(token)
 
     if(userInfo){
@@ -461,7 +461,7 @@ async function userGetRole (req, res) {
 // 获取用户列表
 async function userUserList (req, res) {
     const { token } = req.headers
-    const fileData = await getFileData('user');
+    const fileData = await getFileData('/json/user.json');
     const { pageIndex, pageSize, name } = req['body'];
     const userInfo = await verifyToken(token)
 
@@ -503,7 +503,7 @@ async function userAddOrModifyUser (req, res) {
     const { token } = req.headers
     const { id, account, des, role, email, pwd, username } = req['body'];
     const data = { id, account, des, role, email, pwd, username };
-    const fileData = await getFileData('user');
+    const fileData = await getFileData('/json/user.json');
     const userInfo = await verifyToken(token)
 
     if(userInfo){
@@ -531,7 +531,7 @@ async function userAddOrModifyUser (req, res) {
                 updateTime: new Date().getTime(),
             })
         }
-        await setFileData('user', fileData)
+        await setFileData('/json/user.json', fileData)
         res.send({
             code: 200,
             data: {
@@ -549,7 +549,7 @@ async function userAddOrModifyUser (req, res) {
 async function userDeleteUser (req, res) {
     const { token } = req.headers
     const { id } = req['body'];
-    const fileData = await getFileData('user');
+    const fileData = await getFileData('/json/user.json');
     const userInfo = await verifyToken(token)
 
     if(userInfo){
@@ -558,7 +558,7 @@ async function userDeleteUser (req, res) {
                 value.state = 0;
             }
         })
-        await setFileData('user', fileData)
+        await setFileData('/json/user.json', fileData)
         res.send({
             code: 200,
             data: {
@@ -576,7 +576,7 @@ async function userDeleteUser (req, res) {
 async function userGetUser (req, res) {
     const { token } = req.headers
     const { id } = req['body'];
-    const fileData = await getFileData('user');
+    const fileData = await getFileData('/json/user.json');
     const userInfo = await verifyToken(token)
 
     if(userInfo){

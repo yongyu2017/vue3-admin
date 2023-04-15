@@ -15,14 +15,14 @@
     {
       "id": 2,
       "account": "test",
-      "username": "test1",
+      "username": "test123456",
       "des": "dsfds",
       "role": 2,
       "email": "562224@W.com",
       "pwd": "123456",
       "state": 1,
       "createTime": 1670309609814,
-      "updateTime": 1675298484104
+      "updateTime": 1681541563119
     }
   ]
 }
