@@ -1,15 +1,9 @@
 <template>
-    <ul class="step-list">
-        <li class="end">第一步：填写报名信息</li>
-        <li class="active">第二步：上传报名资料</li>
-        <li>第三步：确认报名</li>
-    </ul>
-
     <div style="margin-bottom: 20px">
         <el-button @click="openMedia">开启摄像头</el-button>
         <el-button @click="closeMedia">关闭摄像头</el-button>
         <el-button @click="takePhoto">拍照</el-button>
-        <el-button type="info" link>备注：电脑没有摄像头，可以安装e2eSoft VCam虚拟摄像头测试；</el-button>
+        <el-button type="info" link>备注：电脑没有摄像头，可以安装e2eSoft VCam虚拟摄像头测试；摄像头调用需要https或者本地localhost运行环境；</el-button>
     </div>
     
     <cameraTakePhoto ref="cameraTakePhotoRef" @getImg="getPhoto"></cameraTakePhoto>
