@@ -4,7 +4,13 @@ const statusCodeMap = require('../utils/statusCodeMap.js')
 // 模版生成
 async function templateGenerate (req, res) {
     const { token } = req.headers
-    const fileData = await getFileData('/json/jsonToTemplate.json');
+    const fileData = await getFileData('/json/jsonToTemplate.json')
+    try {
+        const templateData = await getFileData('/json/template.vue', true)
+        console.log(templateData.template)
+    } catch (e) {
+        console.log(e)
+    }
     const userInfo = await verifyToken(token)
 
     if(userInfo){
@@ -20,8 +26,9 @@ async function templateGenerate (req, res) {
             scriptHtml += '</script>'
             styleHtml += '</style>'
             allHtml = templateHtml + scriptHtml + styleHtml
-            console.log(allHtml.replace())
-            setFileData('/template/jsonToTemplate.vue', allHtml)
+            // console.log('allHtml', templateData)
+            setFileData('/template/jsonToTemplate.vue', fileData)
+
             res.send({
                 code: 200,
                 data: fileData,

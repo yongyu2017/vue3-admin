@@ -272,6 +272,19 @@
       "status": 1,
       "createTime": 1681529104673,
       "modifiedTime": 1681530642862
+    },
+    {
+      "id": 22,
+      "menuName": "图片预览",
+      "parentId": 20,
+      "jumpUrl": "tool/imagePreview/index",
+      "roleUrl": "",
+      "type": 1,
+      "icon": "",
+      "orderNum": 0,
+      "status": 1,
+      "createTime": 1681975525912,
+      "modifiedTime": 1681975604980
     }
   ]
 }

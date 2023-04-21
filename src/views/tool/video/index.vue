@@ -43,9 +43,9 @@ onMounted(async () => {
         },
     })
     // 注：flv视频文件，有部分文件可能无法播放
-    videoPlayer.src({ src: 'http://sf1-cdn-tos.huoshanstatic.com/obj/media-fe/xgplayer_doc_video/flv/xgplayer-demo-360p.flv', type: 'video/x-flv' })
+    // videoPlayer.src({ src: 'http://sf1-cdn-tos.huoshanstatic.com/obj/media-fe/xgplayer_doc_video/flv/xgplayer-demo-360p.flv', type: 'video/x-flv' })
     // videoPlayer.src({ src: 'http://192.168.1.15/file/xdygxfile/video/2023/1608259900327190529/e2977d44-659b-4b46-b5a1-5f5229b898f3.flv', type: 'video/x-flv' })
-    // videoPlayer.src({ src: 'https://www.runoob.com/try/demo_source/movie.mp4', type: 'video/mp4' })
+    videoPlayer.src({ src: 'https://www.runoob.com/try/demo_source/movie.mp4', type: 'video/mp4' })
 })
 onDeactivated(() => {
     console.log('onDeactivated')

@@ -8,10 +8,10 @@ const readFile = promisify(fs.readFile)
 const writeFile = promisify(fs.writeFile)
 
 // 获取 json 数据
-const getFileData = async (inputUrl) => {
+const getFileData = async (inputUrl, isParse) => {
     const filePath = path.join(__dirname, `..${inputUrl}`)
     const data = await readFile(filePath, 'utf-8')
-    return JSON.parse(data)
+    return !isParse ? JSON.parse(data) : data
 }
 // 修改 json 数据
 const setFileData = async (ouputUrl, data) => {
@@ -19,7 +19,7 @@ const setFileData = async (ouputUrl, data) => {
     const datas = JSON.stringify(data, null, '  ')
     const fileFolder = ouputUrl.split('/').filter((value, index, array) => (index != array.length -1) && value).map((value) => '/' + value).join('')
     await Folder(fileFolder)
-    await writeFile(filePath, datas)
+    await writeFile(filePath, datas, 'utf8')
 }
 // 不存在文件夹，直接创建
 const Folder = async (reaPath) => {

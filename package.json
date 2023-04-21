@@ -24,7 +24,8 @@
     "videojs-flvjs-es6": "^1.0.1",
     "vue": "^3.2.13",
     "vue-cropper": "^0.5.8",
-    "vue-router": "^4.1.6"
+    "vue-router": "^4.1.6",
+    "xgplayer": "^3.0.1"
   },
   "devDependencies": {
     "@babel/core": "^7.12.16",
