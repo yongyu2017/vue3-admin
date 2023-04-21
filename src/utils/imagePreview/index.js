@@ -118,7 +118,7 @@
         // 绑定事件
         bindEvent: function () {
             const that = this
-            window.addEventListener('resize', that.getWindowWH)
+            window.addEventListener('resize', that.getWindowWH.bind(that))
             // 鼠标按下
             that.imagePreviewContent.querySelector('.imagePreview__canvas').addEventListener('mousedown', function(event) {
                 that.mousedown(event)
