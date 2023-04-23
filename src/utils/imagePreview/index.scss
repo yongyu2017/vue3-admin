@@ -1,4 +1,4 @@
-.imagePreview_wraper {
+.imagePreview__wraper {
   position: fixed;
   z-index: 10000;
   top: 0;
@@ -12,12 +12,19 @@
     vertical-align: middle;
     cursor: pointer;
 
-    &.icon-rorateRight {
-      width: 20px;
-      height: 20px;
-      background: url('~@/assets/img/icon_rotate_right.png') no-repeat;
+    &.icon-loading {
+      width: 64px;
+      height: 64px;
+      background: url('~@/assets/img/icon_loading.png') no-repeat;
       background-size: 100% 100%;
     }
+
+    &.icon-rorateRight {
+       width: 20px;
+       height: 20px;
+       background: url('~@/assets/img/icon_rotate_right.png') no-repeat;
+       background-size: 100% 100%;
+     }
 
     &.icon-rorateLeft {
       width: 20px;
@@ -125,6 +132,23 @@
     left: auto;
   }
 
+  .imagePreview__loading {
+    position: absolute;
+    z-index: 20;
+    top: 50%;
+    left: 50%;
+    margin-top: -38px;
+    margin-left: -38px;
+    display: none;
+    width: 64px;
+    height: 64px;
+    line-height: 64px;
+    text-align: center;
+    opacity: 0.8;
+    font-size: 0;
+    animation: loadingAnimate 1.2s linear infinite;
+  }
+
   .imagePreview__actions {
     position: absolute;
     z-index: 10;
@@ -145,5 +169,14 @@
       text-align: center;
       font-size: 0;
     }
+  }
+}
+
+@keyframes loadingAnimate {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
   }
 }

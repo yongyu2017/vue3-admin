@@ -20,12 +20,13 @@
             maxScale: 4, //最大放大倍数
             minScale: 0.2, //最小缩放倍数
             control: ['zoomOut', 'zoomIn', 'reset', 'rorateLeft', 'rorateRight'],
+            slideChange: null
         }, options)
         this.currentScale = this.defaultOptions.scale
         this.translateX = 0
         this.translateY = 0
         this.rotate = 0
-        this.Index = document.querySelectorAll('.imagePreview_wraper').length + 1
+        this.Index = document.querySelectorAll('.imagePreview__wraper').length + 1
         this.imagePreviewContent = null
         this.poc = 0
         for (let i = 0; i< this.defaultOptions.urls.length; i++) {
@@ -46,14 +47,15 @@
         createHtml: function () {
             const that = this
             const targetDom = document.createElement('div')
-            targetDom.setAttribute('class', 'imagePreview_wraper')
-            targetDom.setAttribute('id', 'imagePreview_wraper' + that.Index)
+            targetDom.setAttribute('class', 'imagePreview__wraper')
+            targetDom.setAttribute('id', 'imagePreview__wraper' + that.Index)
             document.querySelector('body').appendChild(targetDom)
-            that.imagePreviewContent = document.querySelector('#imagePreview_wraper' + that.Index)
+            that.imagePreviewContent = document.querySelector('#imagePreview__wraper' + that.Index)
             let html = '<div class="imagePreview__mask"></div>'
             html += '<span class="imagePreview__close"><i class="icon icon-close"></i></span>'
             html += '<span class="imagePreview__prev"><i class="icon icon-arrowLeft"></i></span>'
             html += '<span class="imagePreview__next"><i class="icon icon-arrowRight"></i></span>'
+            html += '<span class="imagePreview__loading"><i class="icon icon-loading"></i></span>'
             html += '<div class="imagePreview__actions"><div class="imagePreview__actions__inner">'
             for (let i = 0; i < that.defaultOptions.control.length; i++) {
                 html += '<div class="item"><i class="icon icon-' + that.defaultOptions.control[i] + '" id="event_' + that.defaultOptions.control[i] + '"></i></div>'
@@ -72,7 +74,6 @@
             that.translateX = (that.winWidth - that.imgWidth) / 2
             that.translateY = (that.winHeight - that.imgHeight) / 2
 
-            console.log(that.winWidth, that.winHeight)
             if (that.imgWidth < that.winWidth && that.imgHeight < that.winHeight) {
                 that.currentScale = that.defaultOptions.scale
             } else {
@@ -100,12 +101,17 @@
         // 获取图片宽高
         getImageInfo: function (url) {
             const that = this
+            that.imagePreviewContent.querySelector('.imagePreview__loading').style.display = 'block'
             let img = new Image()
             img.onload = function () {
+                that.imagePreviewContent.querySelector('.imagePreview__loading').style.display = 'none'
                 that.imgWidth = img.width
                 that.imgHeight = img.height
 
                 that.initStyle()
+            }
+            img.onerror = function () {
+                that.imagePreviewContent.querySelector('.imagePreview__loading').style.display = 'none'
             }
             img.src = url
         },
@@ -113,6 +119,9 @@
         initImg: function (url) {
             const that = this
             that.imagePreviewContent.querySelector('.imagePreview__canvas').innerHTML = '<img src="' + url + '" alt="" class="imagePreview__img" style="display: none" />'
+            if (typeof(that.defaultOptions.slideChange) == 'function') {
+                that.defaultOptions.slideChange(that.poc, this)
+            }
             that.getImageInfo(url)
         },
         // 绑定事件
@@ -163,7 +172,7 @@
                     return
                 }
                 that.poc--
-                that.initImg(that.defaultOptions.urls[that.poc])
+                that.setActiveItem(that.poc)
             })
             // 下一页
             that.imagePreviewContent.querySelector('.imagePreview__next').addEventListener('click', function() {
@@ -171,8 +180,14 @@
                     return
                 }
                 that.poc++
-                that.initImg(that.defaultOptions.urls[that.poc])
+                that.setActiveItem(that.poc)
             })
+        },
+        // 设置显示图片
+        setActiveItem: function (Index) {
+            const that = this
+            that.poc = Index
+            that.initImg(that.defaultOptions.urls[Index])
         },
         // 鼠标按下事件(拖拽用)
         mousedown: function(event) {
@@ -252,7 +267,6 @@
                 this.winHeight = document.documentElement.clientHeight
                 this.winWidth = document.documentElement.clientWidth
             }
-            console.log('getWindowWH', this.winWidth, this.winHeight)
         },
         // 销毁
         destroy: function () {
@@ -260,7 +274,7 @@
             that.imagePreviewContent.remove()
             that.imagePreviewContent = null
             window.removeEventListener('resize', that.getWindowWH)
-        }
+        },
     }
     return ImagePreview
 })

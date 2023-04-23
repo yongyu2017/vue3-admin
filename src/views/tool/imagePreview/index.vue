@@ -1,7 +1,7 @@
 <template>
     <el-button type="primary" @click="preveiwFun">预览</el-button>
 
-    <div class="imagePreview_wraper" v-if="false">
+    <div class="imagePreview__wraper" v-if="false">
         <div class="imagePreview__mask"></div>
 
         <span class="imagePreview__close">
@@ -16,8 +16,12 @@
              <i class="icon icon-arrowRight"></i>
         </span>
 
+        <span class="imagePreview__loading">
+             <i class="icon icon-loading"></i>
+        </span>
+
         <div class="imagePreview__canvas">
-            <img :src="imgUrl" alt="" class="imagePreview__img" />
+            <img :src="imgUrl[0]" alt="" class="imagePreview__img" />
         </div>
 
         <div class="imagePreview__actions">
@@ -40,6 +44,7 @@
             </div>
         </div>
     </div>
+
 </template>
 
 <script setup>
@@ -50,6 +55,7 @@ const imgUrl = [
     require('@/assets/img/img1.jpg'),
     require('@/assets/img/img2.jpg'),
     require('@/assets/img/img3.jpg'),
+    '/static/测试文件.pdf',
     require('@/assets/img/img4.jpg'),
 ]
 onMounted(() => {
@@ -60,7 +66,18 @@ const preveiwFun = () => {
     new ImagePreview({
         urls: imgUrl,
         current: imgUrl[0],
+        slideChange: function (index, that) {
+            if (index == 3) {
+                that.imagePreviewContent.querySelector('.imagePreview__canvas').innerHTML = '<iframe src="/static/测试文档pdf.pdf" style="width: 100%; height: 100%"></iframe>'
+                that.imagePreviewContent.querySelector('.imagePreview__actions').style.display = 'none'
+            } else {
+                that.imagePreviewContent.querySelector('.imagePreview__actions').style.display = 'block'
+            }
+        }
     })
+    // setTimeout(() => {
+    //     ImagePreviewDom.setActiveItem(1)
+    // }, 1000)
 }
 </script>
 
