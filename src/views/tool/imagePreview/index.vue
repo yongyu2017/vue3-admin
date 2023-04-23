@@ -68,7 +68,7 @@ const preveiwFun = () => {
         current: imgUrl[0],
         slideChange: function (index, that) {
             if (index == 3) {
-                that.imagePreviewContent.querySelector('.imagePreview__canvas').innerHTML = '<iframe src="/static/测试文档pdf.pdf" style="width: 100%; height: 100%"></iframe>'
+                that.imagePreviewContent.querySelector('.imagePreview__canvas').innerHTML = '<iframe src="' + imgUrl[index] + '" style="width: 100%; height: 100%"></iframe>'
                 that.imagePreviewContent.querySelector('.imagePreview__actions').style.display = 'none'
             } else {
                 that.imagePreviewContent.querySelector('.imagePreview__actions').style.display = 'block'
@@ -76,7 +76,7 @@ const preveiwFun = () => {
         }
     })
     // setTimeout(() => {
-    //     ImagePreviewDom.setActiveItem(1)
+    //     ImagePreviewDom.destroy()
     // }, 1000)
 }
 </script>
