@@ -58,6 +58,7 @@ const imgUrl = [
     '/static/测试文件.pdf',
     require('@/assets/img/img4.jpg'),
 ]
+
 onMounted(() => {
 })
 

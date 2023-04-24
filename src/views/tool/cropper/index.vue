@@ -10,28 +10,17 @@
 
     <!-- 图片裁剪 -->
     <imageCropper ref="imageCropperRef" :autoCropWidth="172" :autoCropHeight="241" :enlarge="1.715" @refreshDataList="getImageCropper" @close="imageCropperVisible= false" v-if="imageCropperVisible"></imageCropper>
-
-    <div ref="video" id="video-js" class="video-dom"></div>
 </template>
 
 <script setup>
 import { ref, nextTick, onMounted } from 'vue'
 import imageCropper from '@/components/imageCropper'
-import Player from 'xgplayer'
-import 'xgplayer/dist/index.min.css'
 
 const imageCropperRef = ref(null)
 const imageCropperVisible = ref(false)
 const img = ref('')
 
 onMounted(() => {
-    let player = new Player({
-        id: 'video-js',
-        url: 'https://www.runoob.com/try/demo_source/movie.mp4',
-        width: '375px',
-        height: '200px',
-    })
-    console.log(player)
 })
 
 // 读取原图

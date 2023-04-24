@@ -25,7 +25,9 @@
     "vue": "^3.2.13",
     "vue-cropper": "^0.5.8",
     "vue-router": "^4.1.6",
-    "xgplayer": "^3.0.1"
+    "xgplayer": "^2.31.2",
+    "xgplayer-flv.js": "^2.1.2",
+    "xgplayer-hls.js": "^2.2.2"
   },
   "devDependencies": {
     "@babel/core": "^7.12.16",
