@@ -64,7 +64,7 @@ const initVideo = (url) => {
                 initVideoForHls(url)
                 break
         }
-    }, 300)
+    }, 0)
 }
 // 渲染mp4播放器
 const initVideoForMp4 = (url) => {
