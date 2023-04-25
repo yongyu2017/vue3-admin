@@ -48,7 +48,7 @@ var init = () => {
 const initVideo = (url) => {
     const fileType = getSuffix(url)[1]
     if (player.value) {
-        player.value.destroy(false)
+        player.value.destroy(true)
         player.value = null
     }
 
