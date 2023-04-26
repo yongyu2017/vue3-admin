@@ -1,7 +1,5 @@
 <template>
     <div class="home">
-        <h2>视频前端压缩</h2>
-        <video id="video" controls v-if="downloadFileUrl"></video><br />
         <input type="file" id="upload" ACCEPT="video/*" @change="upload">
         <p id="text">{{ msg }}</p>
         <div>开始时间：{{ startTime }}</div>
@@ -10,12 +8,14 @@
         <div>
             <a :href="downloadFileUrl" download="put.mp4">下载</a>
         </div>
+        <video id="video" controls v-if="downloadFileUrl"></video><br />
     </div>
 </template>
 
 <script setup>
 import { ref, onMounted, onUnmounted, computed, nextTick } from 'vue'
 import { createFFmpeg, fetchFile } from '@ffmpeg/ffmpeg'
+import { loadJS } from '@/utils/index'
 const dayjs = require('dayjs')
 
 let ffmpeg = null
@@ -37,8 +37,10 @@ const zoneTime = computed(() => {
     return dayjs(endTime.value).diff(dayjs(startTime.value), 'second')
 })
 const downloadFileUrl = ref('')
+let mediainfo = null
 
 onMounted(async () => {
+    loadJSFun()
     if (!ffmpeg.isLoaded()) {
         await ffmpeg.load()
     }
@@ -47,12 +49,55 @@ onUnmounted(() => {
     ffmpeg = null
 })
 
-const upload = async (e) => {
-    var { name } = e.target.files[0];
-    ffmpeg.FS('writeFile', name, await fetchFile(e.target.files[0]))
+const loadJSFun = () => {
+    loadJS('./static/mediainfo/mediainfo.js', () => {
+        // eslint-disable-next-line
+        MediaInfo(
+            {
+                format: 'object', // object|JSON|XML|HTML|text
+                locateFile: (path, prefix) => prefix + path, // Make sure WASM file is loaded from CDN location
+            },
+            (res) => {
+                mediainfo = res
+            }
+        )
+    })
+}
+const upload = (e) => {
+    const file = e.target.files[0]
+
+    getVideoInfo(file)
+    FFmpegToTranscoding(file)
+}
+const getVideoInfo = (file) => {
+    const getSize = () => file.size
+    const readChunk = (chunkSize, offset) =>
+        new Promise((resolve, reject) => {
+            const reader = new FileReader()
+            reader.onload = (event) => {
+                if (event.target.error) {
+                    reject(event.target.error)
+                }
+                resolve(new Uint8Array(event.target.result))
+            }
+            reader.readAsArrayBuffer(file.slice(offset, offset + chunkSize))
+        })
+
+    mediainfo
+        .analyzeData(getSize, readChunk)
+        .then((result) => {
+            console.log(result)
+        })
+        .catch((error) => {
+            console.log(error)
+        })
+}
+const FFmpegToTranscoding = async (file) => {
+    const { name } = file
+
+    ffmpeg.FS('writeFile', name, await fetchFile(file))
     await ffmpeg.run('-i', name, '-r', '35', '-filter:v', 'setpts=0.25*PTS', '-b:v', '5m', 'put.mp4')
     const data = ffmpeg.FS('readFile', 'put.mp4')
-    console.log(data)
     downloadFileUrl.value = URL.createObjectURL(new Blob([data.buffer], {
         type: 'video/mp4'
     }))
@@ -60,27 +105,6 @@ const upload = async (e) => {
         const video = document.getElementById('video')
         video.src =  downloadFileUrl.value
     })
-
-    // const ffmpeg = createFFmpeg({
-    //     log: true,
-    //     progress: ({ratio}) => {
-    //         msg.value = `完成率: ${(ratio * 100.0).toFixed(2)}%`;
-    //     },
-    // });
-    // await ffmpeg.load()
-    // var {name} = e.target.files[0];
-    // console.log(name)
-    // msg.value = '正在加载 ffmpeg-core.js'
-    // await ffmpeg.load();
-    // msg.value = "开始压缩"
-    // ffmpeg.FS('writeFile', name, await fetchFile(e.target.files[0]));
-    // await ffmpeg.run('-i', name, '-b', '2000000', 'put.mp4');
-    // msg.value = '压缩完成'
-    // const data = ffmpeg.FS('readFile', 'put.mp4');
-    // const video = document.getElementById('video');
-    // video.src = URL.createObjectURL(new Blob([data.buffer], {
-    //     type: 'video/mp4'
-    // }))
 }
 </script>
 

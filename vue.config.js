@@ -38,7 +38,9 @@ module.exports = defineConfig({
                 assets: resolve("src/assets"),
             },
         },
-        plugins: [new NodePolyfillPlugin()],
+        plugins: [
+            new NodePolyfillPlugin(),
+        ],
     },
     chainWebpack: config => {
         config.module.rules.delete("svg"); //重点:删除默认配置中处理svg,
