@@ -20,10 +20,10 @@ const dayjs = require('dayjs')
 
 let ffmpeg = null
 const msg = ref(null)
-const startTime = ref(dayjs().format('YYYY-MM-DD HH:mm:ss'))
-const endTime = ref(dayjs().format('YYYY-MM-DD HH:mm:ss'))
+const startTime = ref('')
+const endTime = ref('')
 const zoneTime = computed(() => {
-    return dayjs(endTime.value).diff(dayjs(startTime.value), 'second')
+    return startTime.value ? dayjs(endTime.value).diff(dayjs(startTime.value), 'second') : 0
 })
 const downloadFileUrl = ref('')
 let mediainfo = null
@@ -108,7 +108,7 @@ const FFmpegToTranscoding = async (file) => {
     if (!ffmpeg.isLoaded()) {
         await ffmpeg.load()
     }
-
+    startTime.value = dayjs().format('YYYY-MM-DD HH:mm:ss')
     ffmpeg.FS('writeFile', name, await fetchFile(file))
     await ffmpeg.run('-i', name, '-r', '35', '-filter:v', 'setpts=0.25*PTS', '-b:v', '5m', 'put.mp4')
     const data = ffmpeg.FS('readFile', 'put.mp4')
