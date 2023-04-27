@@ -358,8 +358,8 @@ const downloadFun = () => {
 }
 // 设置常用分辨率
 const setVideoResolution = (data) => {
-    dataForm.value.width = data.split('x')[0]
-    dataForm.value.height = data.split('x')[1]
+    dataForm.value.width = Number(data.split('x')[0])
+    dataForm.value.height = Number(data.split('x')[1])
 }
 </script>
 
