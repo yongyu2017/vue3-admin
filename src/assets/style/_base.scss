@@ -134,6 +134,7 @@ ol, ul {
 /** 主体内容 **/
 .site-content__wrapper{
     position: relative;
+    z-index: 0;
     padding-top: 50px;
     margin-left: 230px;
     min-height: 100%;
@@ -163,6 +164,10 @@ ol, ul {
                 content: '';
                 height: 0;
                 border-bottom: 0;
+            }
+
+            &+ .el-tabs__content {
+                z-index: 0;
             }
         }
     }

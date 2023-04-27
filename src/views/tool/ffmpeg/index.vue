@@ -279,6 +279,7 @@ const initFFmpeg = async () => {
             corePath: './static/ffmpeg/core/ffmpeg-core.js',
             log: true,
             progress: ({ ratio }) => {
+                console.log('ratio', ratio)
                 progress.value = ` ${(ratio * 100).toFixed(2)}`
                 if (ratio == 1) {
                     clearInterValFun()
