@@ -130,3 +130,22 @@ export function loadJS (url, callback) {
     script.src = url
     document.getElementsByTagName('head')[0].appendChild(script)
 }
+
+// 补零
+export function zeroFill (val) {
+    return val < 10 ? '0' + val : val
+}
+
+// 秒转时分秒
+export function secondToTime (time) {
+    const h = Math.floor(time / 60 / 60)
+    const m = Math.floor(time / 60 % 60)
+    const s = time % 60
+
+    return {
+        h: zeroFill(h),
+        m: zeroFill(m),
+        s: zeroFill(s),
+        date: zeroFill(h) + ':'+ zeroFill(m) + ':' + zeroFill(s)
+    }
+}

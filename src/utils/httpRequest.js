@@ -77,6 +77,7 @@ http.interceptors.response.use(response => {
         return Promise.reject(data)
     }
 }, error => {
+    ElMessage.error(error.message || '程序异常')
     return Promise.reject(error)
 })
 

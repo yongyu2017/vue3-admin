@@ -5,7 +5,7 @@
     } else if (typeof define === 'function' && define.amd) {
         define([], factory)
     } else {
-        root.MediaInfo = factory()
+        global.MediaInfo = factory()
     }
     // typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
     // typeof define === 'function' && define.amd ? define(factory) :

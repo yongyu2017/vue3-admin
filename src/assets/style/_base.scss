@@ -212,9 +212,6 @@ ol, ul {
         margin-right: 8px;
     }
 }
-body .inp-dom{
-    width: 200px;
-}
 
 .info-txt {
     color: #909399;
@@ -230,4 +227,28 @@ body .inp-dom{
 
 .danger-txt {
     color: #FF2222;
+}
+
+body {
+    .inp-dom, .el-date-editor.inp-dom{
+        width: 200px;
+    }
+
+    .inp-number-dom {
+        &.el-input-number .el-input__inner {
+            text-align: left;
+        }
+    }
+}
+
+.custom-table {
+    td {
+        padding: 12px;
+        border: 1px solid #ebeef5;
+    }
+
+    .label-td {
+        text-align: right;
+        background-color: #F9F9FA;
+    }
 }
