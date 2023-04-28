@@ -275,23 +275,31 @@ const getVideoInfo = (file) => {
 const initFFmpeg = async () => {
     if (!ffmpeg) {
         ffmpeg = createFFmpeg({
-            // corePath: 'https://unpkg.com/@ffmpeg/core@0.10.0/dist/ffmpeg-core.js',
-            corePath: './static/ffmpeg/core/ffmpeg-core.js',
-            log: true,
+            // corePath: 'https://unpkg.com/@ffmpeg/core/dist/ffmpeg-core.js',
+            corePath: location.origin + '/static/ffmpeg/core@0.11.0/ffmpeg-core.js',
+            log: false,
             progress: ({ ratio }) => {
-                console.log('ratio', ratio)
                 progress.value = ` ${(ratio * 100).toFixed(2)}`
                 if (ratio == 1) {
                     clearInterValFun()
                 }
             },
         })
+
+        console.log(ffmpeg)
+        ffmpeg.setLogger((log) => {
+            console.log(log)
+            if (log.message.indexOf('error') != -1) {
+                ElMessage.error(log.message)
+                ffmpeg.exit()
+            }
+        })
     }
 }
 // FFmpeg业务处理
 const FFmpegToTranscoding = (file) => {
     // eslint-disable-next-line
-    return new Promise(async (resolve, reject) => {
+    return new Promise(async (resolve) => {
         try {
             const { name } = file
             const outputName = 'put.' + dataForm.value.fileType
@@ -302,7 +310,6 @@ const FFmpegToTranscoding = (file) => {
             ffmpeg.FS('writeFile', name, await fetchFile(file))
             await ffmpeg.run('-i', name, '-r', dataForm.value.frameRate + '', '-ss', dataForm.value.rangeStart, '-to', dataForm.value.rangeEnd, '-s', dataForm.value.width + '*' + dataForm.value.height, outputName)
             // await ffmpeg.run('-i', name, '-r', '35', '-filter:v', 'setpts=0.25*PTS', '-b:v', '5m', 'put.mp4')
-            // const data = ffmpeg.FS('readFile', 'put.mp4')
 
             resolve({
                 code: 200,
@@ -312,9 +319,9 @@ const FFmpegToTranscoding = (file) => {
                 },
             })
         } catch (e) {
-            reject({
+            resolve({
                 code: -1,
-                message: e,
+                message: e.message,
             })
         }
     })
@@ -340,7 +347,6 @@ const dataFormSubmit = async () => {
     }, 1000)
     ajaxLoading.value = true
     FFmpegResult = await FFmpegToTranscoding(dataForm.value.file)
-    console.log(FFmpegResult)
     ajaxLoading.value = false
     if (FFmpegResult.code == 200) {
         downloadFileUrl.value = URL.createObjectURL(new Blob([FFmpegResult.data.ArrayBuffer]))
@@ -350,7 +356,9 @@ const dataFormSubmit = async () => {
             video.src =  downloadFileUrl.value
         })
     } else {
+        ElMessage.error(FFmpegResult.message)
         downloadFileUrl.value = ''
+        clearInterValFun()
     }
 }
 // 文件下载
