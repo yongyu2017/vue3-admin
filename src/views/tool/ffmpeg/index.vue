@@ -286,7 +286,6 @@ const initFFmpeg = async () => {
             },
         })
 
-        console.log(ffmpeg)
         ffmpeg.setLogger((log) => {
             console.log(log)
             if (log.message.indexOf('error') != -1) {
