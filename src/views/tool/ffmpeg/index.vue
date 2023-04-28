@@ -308,7 +308,15 @@ const FFmpegToTranscoding = (file) => {
                 await ffmpeg.load()
             }
             ffmpeg.FS('writeFile', name, await fetchFile(file))
-            await ffmpeg.run('-i', name, '-r', dataForm.value.frameRate + '', '-ss', dataForm.value.rangeStart, '-to', dataForm.value.rangeEnd, '-s', dataForm.value.width + '*' + dataForm.value.height, outputName)
+            await ffmpeg.run(
+                '-i', name,
+                '-r', dataForm.value.frameRate + '',
+                '-ss', dataForm.value.rangeStart,
+                '-to', dataForm.value.rangeEnd,
+                '-s', dataForm.value.width + '*' + dataForm.value.height,
+                // '-vf', 'setpts=0.25*PTS',
+                // '-b:v', '5m',
+                outputName)
             // await ffmpeg.run('-i', name, '-r', '35', '-filter:v', 'setpts=0.25*PTS', '-b:v', '5m', 'put.mp4')
 
             resolve({
