@@ -11,6 +11,7 @@ const ip = getIPAdress();
 //设置跨域访问
 app.all('*', function (req, res, next) {
     // res.header('Access-Control-Allow-Origin', 'http://192.168.1.22:1188')
+    res.header('Content-Type','text/html; charset=utf-8')
     res.header('Access-Control-Allow-Origin', '*');  // express的cros开启需要具体到对应的白名单地址
     res.header('Access-Control-Allow-Headers', 'Content-Type,Content-Length,Authorization,Accept,X-Requested-With,token') //字段设置允许前端请求时请求头带有的字段值
     res.header('Access-Control-Allow-Credentials', true);

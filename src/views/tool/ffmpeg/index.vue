@@ -107,6 +107,7 @@
             </el-form-item>
             <el-form-item>
                 <el-button type="primary" v-loading="ajaxLoading" @click="dataFormSubmit">开始转换</el-button>
+                <el-button type="primary" v-loading="ajaxLoading" @click="ffmpegTranscodingFun">服务端ffmpeg</el-button>
             </el-form-item>
         </el-form>
 
@@ -149,6 +150,7 @@
 
 <script setup>
 import { ref, onMounted, onUnmounted, computed, nextTick } from 'vue'
+import { ffmpegTranscoding } from '@/api/tool'
 import { Download } from '@element-plus/icons-vue'
 import { ElMessage } from 'element-plus'
 import { createFFmpeg, fetchFile } from '@ffmpeg/ffmpeg'
@@ -376,6 +378,17 @@ const downloadFun = () => {
 const setVideoResolution = (data) => {
     dataForm.value.width = Number(data.split('x')[0])
     dataForm.value.height = Number(data.split('x')[1])
+}
+// ffmpeg视频转码
+const ffmpegTranscodingFun = () => {
+    ajaxLoading.value = true
+    ffmpegTranscoding().then((res) => {
+        ajaxLoading.value = false
+        console.log('res', res)
+    }).catch((err) => {
+        ajaxLoading.value = false
+        console.log('err', err)
+    })
 }
 </script>
 

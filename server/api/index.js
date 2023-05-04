@@ -1,6 +1,7 @@
 const { userLogin, userGetUserInfo, userSetUserInfo, userModifyPwd, userMenuList, userNav, userAddOrModifyNav, userDeleteNav, userGetNav, userRole, userAddOrModifyRole, userDeleteRole, userGetRole, userUserList, userAddOrModifyUser, userDeleteUser, userGetUser, } = require('./user.js')
 const { userPeopleList, userAddOrModifyPeople, userDeletePeople, userGetPeople } = require('./personnel.js')
 const { templateGenerate } = require('./generate.js')
+const { ffmpegTranscoding } = require('./ffmpeg.js')
 
 module.exports = {
     userLogin: { path: '/user/login', fn: userLogin },
@@ -25,4 +26,5 @@ module.exports = {
     userDeleteUser: { path: '/user/deleteUser', fn: userDeleteUser },
     userGetUser: { path: '/user/getUser', fn: userGetUser },
     templateGenerate: { path: '/template/generate', fn: templateGenerate },
+    ffmpegTranscoding: { path: '/ffmpeg/transcoding', fn: ffmpegTranscoding }
 }
