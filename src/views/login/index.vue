@@ -28,6 +28,7 @@ import { ElLoading } from 'element-plus'
 import { userLogin } from '@/api/user'
 import { useStorePinia } from '@/store'
 import { Base64 } from 'js-base64'
+import { parseQueryString } from '@/utils/index'
 
 const route = useRoute()
 const router = useRouter()
@@ -77,9 +78,17 @@ const loginFun = () => {
                     localStorage.removeItem('pwd')
                 }
                 setToken(data.token)
-                router.replace({
-                    path: route.query.url ? decodeURIComponent(route.query.url) : '/home'
-                })
+                if (route.query.url) {
+                    const query = parseQueryString(decodeURIComponent(route.query.url))
+                    router.replace({
+                        path: decodeURIComponent(route.query.url),
+                        query,
+                    })
+                } else {
+                    router.replace({
+                        path: '/home',
+                    })
+                }
             }).catch(() => {
                 loading.close()
             })

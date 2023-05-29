@@ -163,3 +163,20 @@ export function downloadForBlob (file, filename) {
     document.body.removeChild(downloadElement);            //下载完成移除元素
     window.URL.revokeObjectURL(href);                      //释放掉blob对象
 }
+
+// URL的参数解析成一个对象
+export function parseQueryString (url) {
+    var index = url.indexOf("?");
+    if (index == -1) {
+        return {}
+    }
+    var str = url.slice(index + 1);
+    var arr = str.split("&");
+    var obj = {};
+
+    for (var i = 0; i < arr.length; i++) {
+        var arr2 = arr[i].split('=');
+        obj[arr2[0]] = arr2[1];
+    }
+    return obj
+}
