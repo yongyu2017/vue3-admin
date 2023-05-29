@@ -1,0 +1,14 @@
+{
+  "list": [
+    {
+      "id": 1,
+      "name": "系统状态",
+      "type": "common_status",
+      "status": "1",
+      "remark": "系统状态",
+      "state": 1,
+      "createTime": 1685354991603,
+      "updateTime": 1685355475334
+    }
+  ]
+}

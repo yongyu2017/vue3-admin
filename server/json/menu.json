@@ -285,6 +285,19 @@
       "status": 1,
       "createTime": 1681975525912,
       "modifiedTime": 1681975604980
+    },
+    {
+      "id": 23,
+      "menuName": "字典管理",
+      "parentId": 1,
+      "jumpUrl": "system/dict/index",
+      "roleUrl": "",
+      "type": 1,
+      "icon": "",
+      "orderNum": 0,
+      "status": 1,
+      "createTime": 1685354410244,
+      "modifiedTime": 1685354410244
     }
   ]
 }

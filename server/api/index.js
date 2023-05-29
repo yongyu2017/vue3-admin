@@ -2,6 +2,7 @@ const { userLogin, userGetUserInfo, userSetUserInfo, userModifyPwd, userMenuList
 const { userPeopleList, userAddOrModifyPeople, userDeletePeople, userGetPeople } = require('./personnel.js')
 const { templateGenerate } = require('./generate.js')
 const { ffmpegTranscoding } = require('./ffmpeg.js')
+const { dictTypePage, dictTypeGet, dictTypeDelete, dictTypeUpdate, dictDataPage, dictDataGet, dictDataDelete, dictDataUpdate, } = require('./dict.js')
 
 module.exports = {
     userLogin: { path: '/user/login', fn: userLogin },
@@ -26,5 +27,13 @@ module.exports = {
     userDeleteUser: { path: '/user/deleteUser', fn: userDeleteUser },
     userGetUser: { path: '/user/getUser', fn: userGetUser },
     templateGenerate: { path: '/template/generate', fn: templateGenerate },
-    ffmpegTranscoding: { path: '/ffmpeg/transcoding', fn: ffmpegTranscoding }
+    ffmpegTranscoding: { path: '/ffmpeg/transcoding', fn: ffmpegTranscoding },
+    dictTypePage: { path: '/system/dict-type/page', fn: dictTypePage },
+    dictTypeGet: { path: '/system/dict-type/get', fn: dictTypeGet },
+    dictTypeDelete: { path: '/system/dict-type/delete', fn: dictTypeDelete },
+    dictTypeUpdate: { path: '/system/dict-type/update', fn: dictTypeUpdate },
+    dictDataPage: { path: '/system/dict-data/page', fn: dictDataPage },
+    dictDataGet: { path: '/system/dict-data/get', fn: dictDataGet },
+    dictDataDelete: { path: '/system/dict-data/delete', fn: dictDataDelete },
+    dictDataUpdate: { path: '/system/dict-data/update', fn: dictDataUpdate },
 }
