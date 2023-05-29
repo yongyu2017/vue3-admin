@@ -23,7 +23,7 @@ Vue3 + Pinia + Vue-router + Axios + Element-plus
 ```
 npm install
 
-npm run serve（开发）
+npm run serve（当前项目使用了express搭建的接口服务，vue.config.js开启了代理服务，使用时请修改代理地址）
 
 npm run mock（本地接口服务，需安装express、nodemon）
 
