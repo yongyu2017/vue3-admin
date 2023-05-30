@@ -47,6 +47,90 @@
       "state": 1,
       "createTime": 1685415996981,
       "updateTime": 1685417271325
+    },
+    {
+      "id": 5,
+      "dictType": 3,
+      "label": "待审核",
+      "value": "0",
+      "sort": 0,
+      "status": "1",
+      "remark": "",
+      "state": 1,
+      "createTime": 1685418432902,
+      "updateTime": 1685418432902
+    },
+    {
+      "id": 6,
+      "dictType": 3,
+      "label": "招标中",
+      "value": "1",
+      "sort": 0,
+      "status": "1",
+      "remark": "",
+      "state": 1,
+      "createTime": 1685418438783,
+      "updateTime": 1685418468051
+    },
+    {
+      "id": 7,
+      "dictType": 3,
+      "label": "未中标",
+      "value": "2",
+      "sort": 0,
+      "status": "1",
+      "remark": "",
+      "state": 1,
+      "createTime": 1685418473639,
+      "updateTime": 1685418473639
+    },
+    {
+      "id": 8,
+      "dictType": 3,
+      "label": "施工中",
+      "value": "3",
+      "sort": 0,
+      "status": "1",
+      "remark": "",
+      "state": 1,
+      "createTime": 1685418478461,
+      "updateTime": 1685418478461
+    },
+    {
+      "id": 9,
+      "dictType": 3,
+      "label": "已竣工",
+      "value": "4",
+      "sort": 0,
+      "status": "1",
+      "remark": "",
+      "state": 1,
+      "createTime": 1685418484973,
+      "updateTime": 1685418484973
+    },
+    {
+      "id": 10,
+      "dictType": 3,
+      "label": "已竣工",
+      "value": "5",
+      "sort": 0,
+      "status": "1",
+      "remark": "",
+      "state": 1,
+      "createTime": 1685418490911,
+      "updateTime": 1685418490911
+    },
+    {
+      "id": 11,
+      "dictType": 3,
+      "label": "审核不通过",
+      "value": "6",
+      "sort": 0,
+      "status": "1",
+      "remark": "",
+      "state": 1,
+      "createTime": 1685418495951,
+      "updateTime": 1685418495951
     }
   ]
 }
