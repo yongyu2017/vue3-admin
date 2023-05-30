@@ -29,10 +29,10 @@
             </template>
         </el-table-column>
         <el-table-column prop="createTime" label="创建时间"></el-table-column>
-        <el-table-column label="操作" width="200" fixed="right">
+        <el-table-column label="操作" fixed="right">
             <template #default="scope">
                 <el-button type="primary" link @click="addOrUpdateFun(scope.row.id)">编辑</el-button>
-                <el-button type="primary" link @click="lisDataFun(scope.row.type)">字典数据</el-button>
+                <el-button type="primary" link @click="lisDataFun(scope.row.id)">字典数据</el-button>
                 <el-button type="primary" link @click="delFun(scope.row)">删除</el-button>
             </template>
         </el-table-column>
@@ -122,10 +122,10 @@ const addOrUpdateFun = (id) => {
     })
 }
 // 数据字段
-const lisDataFun = (type) => {
+const lisDataFun = (id) => {
     indexDataVisible.value = true;
     nextTick(() => {
-        indexDataRef.value.init(type)
+        indexDataRef.value.init(id)
     })
 }
 //删除

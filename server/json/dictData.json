@@ -2,7 +2,7 @@
   "list": [
     {
       "id": 1,
-      "dictType": "common_status",
+      "dictType": "1",
       "label": "开启",
       "value": "1",
       "sort": 0,
@@ -10,11 +10,11 @@
       "remark": "开启",
       "state": 1,
       "createTime": 1685356636282,
-      "updateTime": 1685356636282
+      "updateTime": 1685417284653
     },
     {
       "id": 2,
-      "dictType": "common_status",
+      "dictType": "1",
       "label": "关闭",
       "value": "0",
       "sort": 0,
@@ -22,7 +22,31 @@
       "remark": "",
       "state": 1,
       "createTime": 1685356903389,
-      "updateTime": 1685356903389
+      "updateTime": 1685417278809
+    },
+    {
+      "id": 3,
+      "dictType": "2",
+      "label": "男",
+      "value": "1",
+      "sort": 0,
+      "status": "1",
+      "remark": "",
+      "state": 1,
+      "createTime": 1685415992792,
+      "updateTime": 1685417275301
+    },
+    {
+      "id": 4,
+      "dictType": "2",
+      "label": "女",
+      "value": "2",
+      "sort": 0,
+      "status": "1",
+      "remark": "",
+      "state": 1,
+      "createTime": 1685415996981,
+      "updateTime": 1685417271325
     }
   ]
 }

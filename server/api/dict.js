@@ -29,7 +29,7 @@ async function dictTypePage (req, res) {
         res.send({
             code: 200,
             data: {
-                list: list.slice(start, end),
+                list: pageSize === 0 ? list.slice() : list.slice(start, end),
                 sum: list.length,
             },
             msg: '',
@@ -154,8 +154,14 @@ async function dictDataPage (req, res) {
                 if(label == '' && dictType == ''){
                     return true
                 }else{
-                    if(value.label.indexOf(label.toLocaleLowerCase()) != -1 || value.dictType.indexOf(dictType.toLocaleLowerCase()) != -1){
-                        return true
+                    if (dictType) {
+                        if (value.dictType == dictType) {
+                            return value.label.indexOf(label.toLocaleLowerCase()) != -1
+                        } else {
+                            return false
+                        }
+                    } else {
+                        return value.label.indexOf(label.toLocaleLowerCase()) != -1
                     }
                 }
             }
@@ -165,7 +171,7 @@ async function dictDataPage (req, res) {
         res.send({
             code: 200,
             data: {
-                list: list.slice(start, end),
+                list: pageSize === 0 ? list.slice() : list.slice(start, end),
                 sum: list.length,
             },
             msg: '',

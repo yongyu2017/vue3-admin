@@ -49,6 +49,7 @@ const dataForm = ref({
     sort: 0,
     status: '1',
     remark: '',
+    dictType: '',
 })
 const dataRule = reactive({
     label: [

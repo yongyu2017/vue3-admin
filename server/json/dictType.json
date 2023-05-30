@@ -9,6 +9,16 @@
       "state": 1,
       "createTime": 1685354991603,
       "updateTime": 1685355475334
+    },
+    {
+      "id": 2,
+      "name": "性别",
+      "type": "sex",
+      "status": "1",
+      "remark": "",
+      "state": 1,
+      "createTime": 1685415982431,
+      "updateTime": 1685415982431
     }
   ]
 }

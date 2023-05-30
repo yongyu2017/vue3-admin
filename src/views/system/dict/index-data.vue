@@ -25,7 +25,11 @@
                     <span v-else>关闭</span>
                 </template>
             </el-table-column>
-            <el-table-column prop="dictType" label="字典类型"></el-table-column>
+            <el-table-column prop="dictType" label="字典类型">
+                <template #default="scope">
+                    {{ codeToLabelComputed(scope.row.dictType, dictTypeList) }}
+                </template>
+            </el-table-column>
             <el-table-column label="操作">
                 <template #default="scope">
                     <el-button type="primary" link @click="addOrUpdateFun(scope.row.id)">编辑</el-button>
@@ -53,11 +57,12 @@
 
 <script setup>
 import { ref, nextTick, defineEmits, defineExpose } from 'vue'
-import { dictDataPage, dictDataDelete } from '@/api/system'
+import { dictDataPage, dictDataDelete, dictTypePage } from '@/api/system'
 import { dayjs, ElLoading, ElMessage, ElMessageBox } from 'element-plus'
 import { Plus } from '@element-plus/icons-vue';
 import indexDataAdd from './index-data-add.vue'
 import { deepCopy } from '@/utils/index'
+import { commonMixin } from "@/mixins/common.js";
 
 const visible = ref(false);
 const emit = defineEmits(['close'])
@@ -73,12 +78,15 @@ const dataList = ref([]);
 const dataListLoading = ref(false);
 const indexDataAddRef = ref(null);
 const indexDataAddVisible = ref(false);
+const { codeToLabelComputed } = commonMixin()
+const dictTypeList = ref([])
 
 var init = (dictType) => {
     visible.value = true;
     formData.value.dictType = dictType
 
     nextTick(() => {
+        dictTypePageFun()
         queryList()
     })
 }
@@ -93,6 +101,21 @@ const queryList = () => {
         formData.value.totalPage = data.sum;
     }).catch(() => {
         dataListLoading.value = false;
+    })
+}
+// 获取字典类型列表
+const dictTypePageFun = () => {
+    dictTypePage({
+        name: '',
+        type: '',
+        pageIndex: 1,
+        pageSize: 0,
+    }).then(({ data }) => {
+        data.list.forEach((value) => {
+            value['label'] = value.name
+            value['value'] = value.id
+        })
+        dictTypeList.value = data.list.slice();
     })
 }
 // 搜索
