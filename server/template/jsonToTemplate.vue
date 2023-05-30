@@ -1,1 +1,10 @@
-"<template></template><script setup></script><style lang=scss\" scoped></style>"
+{
+  "template": [
+    {
+      "type": 1,
+      "keyName": "name"
+    }
+  ],
+  "script": [],
+  "style": []
+}
