@@ -17,10 +17,10 @@ module.exports = defineConfig({
         **Cross-Origin-Opener-Policy 设置为 same-origin（保护源站免受攻击）
         **Cross-Origin-Embedder-Policy 设置为 require-corp（保护源站免受侵害）
         **该配置会影响跨域加载静态资源，例如非本站图片、视频等资源**/
-        headers: {
-            "Cross-Origin-Opener-Policy": "same-origin",
-            "Cross-Origin-Embedder-Policy": "require-corp",
-        },
+        // headers: {
+        //     "Cross-Origin-Opener-Policy": "same-origin",
+        //     "Cross-Origin-Embedder-Policy": "require-corp",
+        // },
         proxy: {
             '/dev-api': {
                 target: `http://192.168.1.192:8000`,

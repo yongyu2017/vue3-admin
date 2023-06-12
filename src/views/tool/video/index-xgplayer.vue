@@ -75,9 +75,9 @@ const initVideoForMp4 = (url) => {
         height: '360px',
         ignores: ['fullscreen'],
         cssFullscreen: false,
-        isLive: false,
         playsinline: true,
         autoplay: true,
+        lang: 'zh-cn',
     })
 }
 // 渲染Flv播放器
@@ -89,9 +89,9 @@ const initVideoForFlv = (url) => {
         height: '360px',
         ignores: ['fullscreen'],
         cssFullscreen: false,
-        isLive: false,
         playsinline: true,
         autoplay: true,
+        lang: 'zh-cn',
     })
 }
 // 渲染hls播放器
@@ -105,6 +105,7 @@ const initVideoForHls = (url) => {
         cssFullscreen: false,
         playsinline: true,
         autoplay: true,
+        lang: 'zh-cn',
     })
 }
 //关闭

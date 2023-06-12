@@ -88,7 +88,7 @@
         // 样式计算
         styleComputed: function (translateX, translateY, scale, rotate, duration) {
             const that = this
-            let style = {
+            const style = {
                 'display': 'block',
                 'transform': 'translate(' + translateX + 'px, ' + translateY + 'px) scale(' + scale + ') rotate(' + rotate + 'deg)',
                 'transition': 'all ' + duration + 's ease 0s',
@@ -98,20 +98,24 @@
                 that.imagePreviewContent.querySelector('.imagePreview__img').style[i] = style[i]
             }
         },
+        loading: function (isShow) {
+            const that = this
+            that.imagePreviewContent.querySelector('.imagePreview__loading').style.display = isShow ? 'block' : 'none'
+        },
         // 获取图片宽高
         getImageInfo: function (url) {
             const that = this
-            that.imagePreviewContent.querySelector('.imagePreview__loading').style.display = 'block'
-            let img = new Image()
+            const img = new Image()
+            that.loading(true)
             img.onload = function () {
-                that.imagePreviewContent.querySelector('.imagePreview__loading').style.display = 'none'
+                that.loading(false)
                 that.imgWidth = img.width
                 that.imgHeight = img.height
 
                 that.initStyle()
             }
             img.onerror = function () {
-                that.imagePreviewContent.querySelector('.imagePreview__loading').style.display = 'none'
+                that.loading(false)
             }
             img.src = url
         },
