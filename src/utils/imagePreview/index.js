@@ -19,7 +19,7 @@
             scale: 1, // 初始化倍数
             maxScale: 4, //最大放大倍数
             minScale: 0.2, //最小缩放倍数
-            control: ['zoomOut', 'zoomIn', 'reset', 'rorateLeft', 'rorateRight'],
+            control: ['zoomOut', 'zoomIn', 'reset', 'rorateLeft', 'rorateRight', 'download'],
             slideChange: null
         }, options)
         this.currentScale = this.defaultOptions.scale
@@ -186,6 +186,10 @@
                 that.poc++
                 that.setActiveItem(that.poc)
             })
+            // 下载
+            that.imagePreviewContent.querySelector('#event_download').addEventListener('click', function() {
+                downloadForUrl(that.defaultOptions.current, '')
+            })
         },
         // 设置显示图片
         setActiveItem: function (Index) {
@@ -194,7 +198,7 @@
             that.initImg(that.defaultOptions.urls[Index])
         },
         // 鼠标按下事件(拖拽用)
-        mousedown: function(event) {
+        mousedown: function (event) {
             event.preventDefault()
             if (event.target.className != 'imagePreview__img') {
                 return
@@ -240,7 +244,7 @@
             that.styleComputed(that.translateX, that.translateY, that.currentScale, that.rotate, 0.3)
         },
         // 滚轮事件
-        mousewheel: function(event) {
+        mousewheel: function (event) {
             const that = this
             const delta = (event.wheelDelta && (event.wheelDelta > 0 ? 1 : -1)) || (event.detail != 0 && (event.detail > 0 ? -1 : 1))
             event.preventDefault()
@@ -254,7 +258,7 @@
             }
         },
         // 获取浏览器宽高
-        getWindowWH: function() {
+        getWindowWH: function () {
             // 获取窗口宽度
             if (window.innerWidth)
                 this.winWidth = window.innerWidth
@@ -280,5 +284,18 @@
             window.removeEventListener('resize', that.getWindowWH)
         },
     }
+
+    // 根据路径下载文件
+    function downloadForUrl (url, fileName) {
+        const fileName2 = fileName || url.split('/')[url.split('/').length - 1]
+        // 创建 href 超链接，点击进行下载
+        const downA = document.createElement("a")
+        downA.href = url
+        downA.download = fileName2
+        downA.click()
+        // 销毁超连接
+        downA?.remove()
+    }
+
     return ImagePreview
 })
