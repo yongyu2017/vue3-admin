@@ -16,7 +16,7 @@
                     controls-position="right"
                 />
             </el-form-item>
-            <el-form-item label="状态:" prop="status">
+            <el-form-item label="状态：" prop="status">
                 <el-select v-model="dataForm.status" placeholder="请选择" class="inp-dom">
                     <el-option v-for="item in statusList" :key="item.value" :label="item.label" :value="item.value" />
                 </el-select>
