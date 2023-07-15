@@ -53,8 +53,12 @@ import listAddOrUpdate from './list-add-or-update.vue'
 import { ElLoading, ElMessage, ElMessageBox } from 'element-plus'
 import { commonMixin } from '@/mixins/common'
 import { deepCopy } from '@/utils/index'
+import { storeToRefs } from 'pinia'
+import { useStorePinia } from "@/store"
 const dayjs = require('dayjs')
 
+const store = useStorePinia()
+const { dictType } = storeToRefs(store)
 const { codeToLabelComputed } = commonMixin()
 const defaultDataForm = {
     name: '',
@@ -68,10 +72,7 @@ const idList = ref([]);
 const dataListLoading = ref(false);
 const listAddOrUpdateRef = ref(null);
 const listAddOrUpdateVisible = ref(false);
-const sexList = [
-    { value: 1, label: '男' },
-    { value: 2, label: '女' },
-]
+const sexList = ref(dictType.value['sex'])
 
 onMounted(() => {
     queryList()

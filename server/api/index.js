@@ -2,7 +2,7 @@ const { userLogin, userGetUserInfo, userSetUserInfo, userModifyPwd, userMenuList
 const { userPeopleList, userAddOrModifyPeople, userDeletePeople, userGetPeople } = require('./personnel.js')
 const { templateGenerate } = require('./generate.js')
 const { ffmpegTranscoding } = require('./ffmpeg.js')
-const { dictTypePage, dictTypeGet, dictTypeDelete, dictTypeUpdate, dictDataPage, dictDataGet, dictDataDelete, dictDataUpdate, } = require('./dict.js')
+const { dictTypePage, dictTypeGet, dictTypeDelete, dictTypeUpdate, dictDataPage, dictDataGet, dictDataDelete, dictDataUpdate, dictDataListAll } = require('./dict.js')
 
 module.exports = {
     userLogin: { path: '/user/login', fn: userLogin },
@@ -36,4 +36,5 @@ module.exports = {
     dictDataGet: { path: '/system/dict-data/get', fn: dictDataGet },
     dictDataDelete: { path: '/system/dict-data/delete', fn: dictDataDelete },
     dictDataUpdate: { path: '/system/dict-data/update', fn: dictDataUpdate },
+    dictDataListAll: { path: '/system/dict-data/listAll', fn: dictDataListAll },
 }

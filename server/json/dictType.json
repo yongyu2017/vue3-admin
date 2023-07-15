@@ -29,6 +29,96 @@
       "state": 1,
       "createTime": 1685418413528,
       "updateTime": 1685418413528
+    },
+    {
+      "id": 4,
+      "name": "课程类型",
+      "type": "courseStyle",
+      "status": "1",
+      "remark": "",
+      "state": 1,
+      "createTime": 1689384026809,
+      "updateTime": 1689384026809
+    },
+    {
+      "id": 5,
+      "name": "是否人脸识别",
+      "type": "examKscheck",
+      "status": "1",
+      "remark": "",
+      "state": 1,
+      "createTime": 1689384099388,
+      "updateTime": 1689384099388
+    },
+    {
+      "id": 6,
+      "name": "考题类型",
+      "type": "questionStyle",
+      "status": "1",
+      "remark": "",
+      "state": 1,
+      "createTime": 1689384137450,
+      "updateTime": 1689384137450
+    },
+    {
+      "id": 7,
+      "name": "缴费方式",
+      "type": "payMode",
+      "status": "1",
+      "remark": "",
+      "state": 1,
+      "createTime": 1689384201753,
+      "updateTime": 1689384201753
+    },
+    {
+      "id": 8,
+      "name": "支付状态",
+      "type": "payStatus",
+      "status": "1",
+      "remark": "",
+      "state": 1,
+      "createTime": 1689384242011,
+      "updateTime": 1689384242011
+    },
+    {
+      "id": 9,
+      "name": "题目状态",
+      "type": "subjectStatus",
+      "status": "1",
+      "remark": "",
+      "state": 1,
+      "createTime": 1689384294561,
+      "updateTime": 1689384294561
+    },
+    {
+      "id": 10,
+      "name": "岗位分类",
+      "type": "positionCategoryName",
+      "status": "1",
+      "remark": "",
+      "state": 1,
+      "createTime": 1689384360194,
+      "updateTime": 1689384360194
+    },
+    {
+      "id": 11,
+      "name": "导入类型",
+      "type": "importType",
+      "status": "1",
+      "remark": "",
+      "state": 1,
+      "createTime": 1689384403738,
+      "updateTime": 1689384403738
+    },
+    {
+      "id": 12,
+      "name": "岗位状态",
+      "type": "positionStatus",
+      "status": "1",
+      "remark": "",
+      "state": 1,
+      "createTime": 1689384439960,
+      "updateTime": 1689384439960
     }
   ]
 }

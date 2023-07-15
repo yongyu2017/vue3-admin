@@ -10,8 +10,7 @@
             </el-form-item>
             <el-form-item label="性别：" prop="sex">
                 <el-select v-model="dataForm.sex" class="inp-dom">
-                    <el-option label="男" :value="1" />
-                    <el-option label="女" :value="2" />
+                    <el-option :label="item.label" :value="item.value" v-for="(item, index) in sexList" :key="index" />
                 </el-select>
             </el-form-item>
             <el-form-item label="年龄：" prop="age">
@@ -32,6 +31,8 @@
 import { ref, defineEmits, nextTick, defineExpose } from 'vue'
 import { ElLoading, ElMessage } from 'element-plus'
 import { personnelAddOrModifyPeople, personnelGetPeople } from '@/api/personnel'
+import { storeToRefs } from 'pinia'
+import { useStorePinia } from "@/store"
 
 const dataFormRef = ref();
 const visible = ref(false);
@@ -53,6 +54,9 @@ const dataRule = ref({
     ],
 })
 const emit = defineEmits(['refreshDataList', 'close'])
+const store = useStorePinia()
+const { dictType } = storeToRefs(store)
+const sexList = ref(dictType.value['sex'])
 
 // eslint-disable-next-line
 var init = (item) => {
@@ -63,6 +67,7 @@ var init = (item) => {
             personnelGetPeople({
                 id: item.id,
             }).then(({ data }) => {
+                data.sex = data.sex + ''
                 dataForm.value = data;
             })
         }

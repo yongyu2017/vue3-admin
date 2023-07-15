@@ -73,3 +73,11 @@ export function dictDataUpdate(data) {
         data: data
     })
 }
+// 获得字典数据所有列表
+export function dictDataListAll(data) {
+    return request({
+        url: '/system/dict-data/listAll',
+        method: 'post',
+        data: data
+    })
+}

@@ -279,6 +279,40 @@ async function dictDataUpdate (req, res) {
         })
     }
 }
+// 获得字典数据所有列表
+async function dictDataListAll (req, res) {
+    const { token } = req.headers
+    const dictTypefileData = await getFileData('/json/dictType.json');
+    const fileData = await getFileData('/json/dictData.json');
+    const userInfo = await verifyToken(token)
+
+    if(userInfo){
+        let dictTypeList = dictTypefileData.list.filter((value) => value.state == 1 && value.status == 1),
+            dictDataList = fileData.list,
+            data = {}
+
+        dictTypeList.forEach((value) => {
+            let arr = []
+            dictDataList.forEach((value2) => {
+                if (value.id == value2.dictType && value2.state == 1 && value2.status == 1) {
+                    arr.push(value2)
+                }
+            })
+            data[value.type] = arr.slice()
+        })
+
+        res.send({
+            code: 200,
+            data,
+            msg: '',
+        })
+    }else{
+        res.send({
+            data: '',
+            ...statusCodeMap['401']
+        })
+    }
+}
 
 module.exports = {
     dictTypePage,
@@ -289,4 +323,5 @@ module.exports = {
     dictDataGet,
     dictDataDelete,
     dictDataUpdate,
+    dictDataListAll,
 }

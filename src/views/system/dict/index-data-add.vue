@@ -5,10 +5,10 @@
             <el-form-item label="数据标签：" prop="label">
                 <el-input v-model="dataForm.label" placeholder="请输入" clearable maxlength="50" class="inp-dom"></el-input>
             </el-form-item>
-            <el-form-item label="数据键值" prop="value">
+            <el-form-item label="数据键值：" prop="value">
                 <el-input v-model="dataForm.value" placeholder="请输入" clearable maxlength="50" class="inp-dom"></el-input>
             </el-form-item>
-            <el-form-item label="显示排序" prop="sort">
+            <el-form-item label="显示排序：" prop="sort">
                 <el-input-number
                     v-model="dataForm.sort"
                     :min="0"

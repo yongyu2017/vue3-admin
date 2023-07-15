@@ -120,11 +120,11 @@
     {
       "id": 14,
       "name": "痕迹",
-      "sex": 2,
+      "sex": "2",
       "age": "34",
       "state": 1,
       "createTime": 1670219532907,
-      "updateTime": 1681463685373
+      "updateTime": 1689390193993
     }
   ]
 }

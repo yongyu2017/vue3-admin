@@ -13,44 +13,49 @@ export const useStorePinia = defineStore('main', {
             mainTabsActiveName: '',  //tab选中值
             documentClientHeight: 0,
             isExpand: true,
+            dictType: localStorage.getItem('dictType') ? JSON.parse(localStorage.getItem('dictType')) : {}, // 数据字典
         };
     },
     getters : {
         //右侧菜单选中值
         menuActiveName () {
-            let str = '';
+            let str = ''
             this.dynamicMenuRoutes.forEach((value) => {
                 if (value.name == this.mainTabsActiveName) {
-                    str = value.meta.menuId + '';
+                    str = value.meta.menuId + ''
                 }
             })
             return str
         },
     },
     actions: {
+        setDictType (val) {
+            this.dictType = val
+            localStorage.setItem('dictType', JSON.stringify(val))
+        },
         setToken (val) {
-            this.token = val;
+            this.token = val
             sessionStorage.setItem('token', val)
         },
         updateCommonStore (name, val) {
-            this[name] = val;
+            this[name] = val
         },
         resetStore () {
-            this.token = '';
             sessionStorage.removeItem('token')
-            this.userInfo = {};
-            this.permission = [];
-            this.menuList = [];
-            this.dynamicMenuRoutes = [];
-            this.mainTabs = [];
-            this.mainTabsActiveName = '';
+            this.token = ''
+            this.userInfo = {}
+            this.permission = []
+            this.menuList = []
+            this.dynamicMenuRoutes = []
+            this.mainTabs = []
+            this.mainTabsActiveName = ''
         },
         async getUserInfo () {
             const { data } = await userGetUserInfo();
             for (let i in data) {
-                this.userInfo[i] = data[i];
+                this.userInfo[i] = data[i]
             }
-            this.permission = data.permission;
+            this.permission = data.permission
 
             return data           
         },

@@ -18,12 +18,13 @@
 import { provide, ref, nextTick, onMounted } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useStorePinia } from "@/store"
+import { dictDataListAll } from '@/api/system.js'
 import indexContent from './index-content'
 import indexNavbar from './index-navbar'
 import indexSidebar from './index-sidebar'
 
 const store = useStorePinia()
-const { getUserInfo } = store;
+const { getUserInfo, setDictType } = store;
 const { documentClientHeight, isExpand } = storeToRefs(store)
 const loading = ref(true);
 const isRefresh = ref(false); //main-content是否刷新
@@ -45,8 +46,16 @@ const updateDocumentClientHeight = function () {
 
 onMounted(async () => {
     await getUserInfo()
+    dictDataListAllFun()
     updateDocumentClientHeight()
     loading.value = false;
 })
-
+// 获取数据字典
+const dictDataListAllFun = () => {
+    dictDataListAll().then((res) => {
+        if (res.code == 200) {
+            setDictType(res.data)
+        }
+    })
+}
 </script>
