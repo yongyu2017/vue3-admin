@@ -298,6 +298,19 @@
       "status": 1,
       "createTime": 1685354410244,
       "modifiedTime": 1685354410244
+    },
+    {
+      "id": 24,
+      "menuName": "QRcode",
+      "parentId": 20,
+      "jumpUrl": "tool/qrcode/index",
+      "roleUrl": "",
+      "type": 1,
+      "icon": "",
+      "orderNum": 0,
+      "status": 1,
+      "createTime": 1690532705719,
+      "modifiedTime": 1690532778853
     }
   ]
 }
