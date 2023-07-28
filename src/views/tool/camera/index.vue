@@ -1,11 +1,15 @@
 <template>
     <div style="margin-bottom: 20px">
+        <div class="info-txt" style="margin-bottom: 12px">
+            备注：<br />
+            1、如果电脑没有摄像头，可以安装e2eSoft VCam虚拟摄像头测试；<br />
+            2、摄像头调用需要https或者本地localhost运行环境；<br />
+            3、或者修改浏览器安全配置， 浏览器地址栏输入“chrome://flags/#unsafely-treat-insecure-origin-as-secure”，开启INSECURE ORIGINS TREATED AS SECURE，在下方输入栏内输入，你访问的地址url，然后将右侧Disabled 改成 Enabled即可，浏览器会提示重启（RELAUNCH），Relaunch即可；</div>
         <el-button @click="openMedia">开启摄像头</el-button>
         <el-button @click="closeMedia">关闭摄像头</el-button>
         <el-button @click="takePhoto">拍照</el-button>
-        <el-button type="info" link>备注：电脑没有摄像头，可以安装e2eSoft VCam虚拟摄像头测试；摄像头调用需要https或者本地localhost运行环境；</el-button>
     </div>
-    
+
     <cameraTakePhoto ref="cameraTakePhotoRef" @getImg="getPhoto"></cameraTakePhoto>
 
     <img :src="img" alt="" style="margin-top: 20px">

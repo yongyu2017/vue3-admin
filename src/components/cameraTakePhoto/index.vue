@@ -1,12 +1,14 @@
 <template>
     <div class="video-tack-photo-wrap" :style="{ width: videoWidth + 'px', height: videoHeight + 'px' }">
         <video ref="videoRef" autoplay="autoplay" :width="videoWidth" :height="videoHeight" class="video-dom"></video>
-
-        <canvas ref="canvasRef" :width="videoWidth" :height="videoHeight" class="canvas-dom"></canvas>
+        <!-- 拍照 -->
+        <video ref="canvasVideoRef" autoplay="autoplay" :width="videoWidth * enlarge" :height="videoHeight * enlarge" class="canvas-video-dom"></video>
+        <canvas ref="canvasRef" :width="videoWidth * enlarge" :height="videoHeight * enlarge" class="canvas-dom"></canvas>
+        <!-- 拍照 -->
 
         <div class="camera-txt-box" v-if="!iSOnline">
             <div class="error-tips-box" v-if="devicesList.length === 0">
-                <div class="p1">未检测到可用摄像设备，如已连接，请拔插后刷新页面.</div>
+                <div class="p1">未检测到可用摄像设备，如已连接，请拔插后重新连接.</div>
                 <div>
                     <el-button @click="openMedia">重新连接</el-button>
                 </div>
@@ -22,10 +24,16 @@
             </div>
         </div>
     </div>
+
+    <!-- 摄像头列表弹窗 -->
+    <!--<index-select-camera ref="indexSelectCameraRef" @refreshDataList="linkMedia" @close="indexSelectCameraVisible = false" v-if="indexSelectCameraVisible"></index-select-camera>-->
+    <!-- 掉线提示 -->
+    <indexReconnection ref="indexReconnectionRef" @reconnection="openMedia" @close="indexReconnectionVisible = false" v-if="indexReconnectionVisible"></indexReconnection>
 </template>
 
 <script setup>
-import { ref, toRefs, defineProps, defineEmits, defineExpose, onBeforeUnmount } from 'vue'
+import { ref, toRefs, defineProps, defineEmits, defineExpose, onBeforeUnmount, provide, nextTick } from 'vue'
+import indexReconnection from './index-reconnection.vue'
 import { ElMessage } from 'element-plus';
 
 const props = defineProps({
@@ -37,21 +45,32 @@ const props = defineProps({
         type: Number,
         default: 300
     },
+    enlarge: {
+        type: Number,
+        default: 1
+    }, // 图片根据截图框输出比例倍数
 })
-const emit = defineEmits(['getImg', 'getFile'])
-const { videoWidth, videoHeight } = toRefs(props);
+const emit = defineEmits(['getImg', 'getFile', 'drop', 'success'])
+const { videoWidth, videoHeight, enlarge } = toRefs(props);
 const videoRef = ref(null)
+const canvasVideoRef = ref(null)
 const canvasRef = ref(null)
 const mediaStream = ref(null)  // 摄像头视频流
 const iSOnline = ref(false)  // 判断摄像头是否在线
 const devicesList = ref([])  // 摄像头列表
 const selectedDevice = ref(null)  // 已连接的设备信息
+const indexReconnectionRef = ref(null) // 摄像头重连弹窗
+const indexReconnectionVisible = ref(false) // 摄像头重连弹窗
+
+provide('getISOnline', () => {
+    return iSOnline.value
+})
 
 onBeforeUnmount(() => {
     closeMedia()
 })
-// 检测摄像头
-const checkMediaDevices = async () => {
+// 获取设备列表
+const getMediaDevices = async () => {
     await navigator.mediaDevices.enumerateDevices().then((devices) => {
         devicesList.value = devices.filter(item => item.kind === 'videoinput')
         console.log('devices', devices)
@@ -61,7 +80,7 @@ const checkMediaDevices = async () => {
 }
 // 开启摄像头
 const openMedia = async (device) => {
-    await checkMediaDevices()
+    await getMediaDevices()
     if (devicesList.value.length === 0) {
         return
     }
@@ -75,8 +94,8 @@ const linkMedia = (device) => {
     const constraints = {
         audio: false, // 音频轨道
         video: {
-            width: videoWidth.value,
-            height: videoHeight.value,
+            width: videoWidth.value * enlarge.value,
+            height: videoHeight.value * enlarge.value,
             deviceId: { exact: device.deviceId || undefined }  // 部分电脑查询不到摄像头的deviceId和label（有可能是电脑驱动问题），需要传undefined进去，才可调用摄像头
         } // 视频轨道
     }
@@ -86,6 +105,12 @@ const linkMedia = (device) => {
         mediaStream.value = stream
         videoRef.value.srcObject = stream
         videoRef.value.play()
+        canvasVideoRef.value.srcObject = stream
+        canvasVideoRef.value.play()
+        // 延迟成功回调，解决画面出画时间慢，导致拍照异常的问题
+        setTimeout(() => {
+            emit('success')
+        }, 1000)
     }).catch((err) => {
         console.log('getUserMedia', err)
         iSOnline.value = false
@@ -98,12 +123,19 @@ const takePhoto = async () => {
         mediaStream.value = null
         selectedDevice.value = null
         iSOnline.value = false
-        await checkMediaDevices()
+        await getMediaDevices()
         ElMessage.warning('摄像头掉线了，请检查！')
+        emit('drop')
+
+        // 掉线提示弹窗
+        indexReconnectionVisible.value = true
+        nextTick(() => {
+            indexReconnectionRef.value.init()
+        })
         return
     }
     const ctx = canvasRef.value.getContext('2d')
-    ctx.drawImage(videoRef.value, 0, 0, videoWidth.value, videoHeight.value)
+    ctx.drawImage(canvasVideoRef.value, 0, 0, videoWidth.value * enlarge.value, videoHeight.value * enlarge.value)
     const base64Data = canvasRef.value.toDataURL('image/jpeg', 1)
     emit('getImg', base64Data, selectedDevice.value)
     emit('getFile', base64ToFile(base64Data, 'filename'))
@@ -145,11 +177,19 @@ defineExpose({
     .video-tack-photo-wrap{
         position: relative;
         z-index: 0;
-        background-color: #dcdcdc;
+        overflow: hidden;
 
         .video-dom{
             position: relative;
             z-index: 1;
+            object-fit: fill;
+        }
+
+        .canvas-video-dom {
+            position: absolute;
+            z-index: 1;
+            top: 0;
+            right: 110%;
             object-fit: fill;
         }
 
