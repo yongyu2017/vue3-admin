@@ -15,7 +15,7 @@
     "axios": "^1.1.3",
     "core-js": "^3.8.3",
     "dayjs": "^1.11.6",
-    "element-plus": "^2.3.3",
+    "element-plus": "^2.3.8",
     "flv.js": "^1.6.2",
     "js-base64": "^3.7.3",
     "pinia": "^2.0.26",
