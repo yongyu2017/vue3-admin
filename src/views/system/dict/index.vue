@@ -125,7 +125,7 @@ const addOrUpdateFun = (id) => {
 const lisDataFun = (id) => {
     indexDataVisible.value = true;
     nextTick(() => {
-        indexDataRef.value.init(id)
+        indexDataRef.value.init(id || '')
     })
 }
 //删除
