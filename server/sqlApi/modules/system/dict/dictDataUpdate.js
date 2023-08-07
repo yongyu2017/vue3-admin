@@ -13,7 +13,7 @@ module.exports = {
 
         if(tokenInfo){
             const currentTime = moment(Date.now()).format('YYYY-MM-DD HH:mm:ss')
-            const countData = (await db.connect('SELECT COUNT(*) as total FROM dict_data WHERE value=?', [value]))[0]
+            const countData = (await db.connect('SELECT COUNT(*) as total FROM dict_data WHERE value=? AND dictType=?', [value, dictType]))[0]
             if (countData.res[0].total > 0) {
                 res.send({
                     code: -1,
