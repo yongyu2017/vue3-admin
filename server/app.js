@@ -1,11 +1,12 @@
-let express = require('express');
-let app = express();
-let bodyParser = require('body-parser');
-const api = require('./api/index.js')
-const path = require('path')
-const { port } = require('./utils/setting.js')
-const os = require('os')
 require('console-color-mr')
+const express = require('express');
+const app = express();
+const bodyParser = require('body-parser');
+const path = require('path')
+const os = require('os')
+const api = require('./api/index.js') // 接口模块
+// const api = require('./sqlApi/index.js') // 接口模块
+const { port } = require('./utils/setting.js')
 const ip = getIPAdress();
 
 //设置跨域访问

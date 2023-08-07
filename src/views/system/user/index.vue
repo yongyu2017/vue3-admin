@@ -9,7 +9,7 @@
             <el-button @click="addOrUpdateFun()">新增</el-button>
         </el-form-item>
     </el-form>
-    
+
     <el-table :data="dataList" border v-loading="dataListLoading" style="width: 100%">
         <el-table-column prop="id" label="ID"></el-table-column>
         <el-table-column prop="account" label="账号"></el-table-column>
@@ -40,13 +40,13 @@
     </el-pagination>
 
      <!-- 员工信息弹窗 -->
-     <listAddOrUpdate ref="listAddOrUpdateRef" @refreshDataList="searchFun" @close="listAddOrUpdateVisible= false" v-if="listAddOrUpdateVisible"></listAddOrUpdate>
+     <indexAddOrUpdate ref="indexAddOrUpdateRef" @refreshDataList="searchFun" @close="indexAddOrUpdateVisible= false" v-if="indexAddOrUpdateVisible"></indexAddOrUpdate>
 </template>
 
 <script setup>
 import { onMounted, ref, nextTick, computed } from 'vue'
 import { userUserList, userDeleteUser, userRole } from '@/api/user'
-import listAddOrUpdate from './list-add-or-update.vue'
+import indexAddOrUpdate from './index-add-or-update.vue'
 import { ElLoading, ElMessage, ElMessageBox } from 'element-plus'
 import { deepCopy } from '@/utils/index'
 const dayjs = require('dayjs')
@@ -61,8 +61,8 @@ const formData = ref(deepCopy(defaultDataForm))
 const dataList = ref([]);
 const dataListLoading = ref(false);
 const roleList = ref([]);
-const listAddOrUpdateRef = ref(null);
-const listAddOrUpdateVisible = ref(false);
+const indexAddOrUpdateRef = ref(null);
+const indexAddOrUpdateVisible = ref(false);
 
 const roleStr = computed(() => {
     return (val) => {
@@ -134,9 +134,9 @@ const currentChangeHandle = (val) => {
 }
 //新增或者修改
 const addOrUpdateFun = (item) => {
-    listAddOrUpdateVisible.value = true;
+    indexAddOrUpdateVisible.value = true;
     nextTick(() => {
-        listAddOrUpdateRef.value.init(item || '')
+        indexAddOrUpdateRef.value.init(item || '')
     })
 }
 //删除
@@ -166,7 +166,7 @@ const delFun = (id) => {
             loading.close()
         })
 
-    }) 
+    })
 }
 </script>
 

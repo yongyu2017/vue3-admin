@@ -53,7 +53,7 @@ export function menuToTreeMenu (source) {
             }
         }
     }
-    
+
     let result = []
     for (let i = 0; i < source.length; i++) {
         if (source[i].parentId == 0) {
@@ -194,4 +194,52 @@ export function parseQueryString (url) {
         obj[arr2[0]] = arr2[1];
     }
     return obj
+}
+
+// 查找 省份/地区 名称
+export function findAreaName(projectArea, projectAreaList) {
+    let areaObject = {
+        province: '',
+        city: '',
+        county: '',
+        provinceLabel: '',
+        cityLabel: '',
+        countyLabel: '',
+        name: '',
+    }
+    if (!projectArea) {
+        return areaObject
+    }
+    const areaCodeList = projectArea.split(',')
+    let areaList = []
+
+    areaCodeList.forEach((value) => {
+        reserveFun(projectAreaList, value)
+    })
+    function reserveFun(list, val) {
+        list.forEach((value) => {
+            if (value.code == val) {
+                areaList.push({
+                    code: value.code,
+                    value: value.value,
+                })
+            } else {
+                if (value.children && value.children.length > 0) {
+                    reserveFun(value.children, val)
+                }
+            }
+        })
+    }
+
+    const province = areaList[0] ? areaList[0] : ''
+    const city = areaList[1] ? areaList[1] : ''
+    const county = areaList[2] ? areaList[2] : ''
+    areaObject.province = province ? province.code : ''
+    areaObject.provinceLabel = province ? province.value : ''
+    areaObject.city = city ? city.code : ''
+    areaObject.cityLabel = city ? city.value : ''
+    areaObject.county = county ? county.code : ''
+    areaObject.countyLabel = county ? county.value : ''
+    areaObject.name = areaObject.provinceLabel + '' + areaObject.cityLabel + '' + areaObject.countyLabel
+    return areaObject
 }

@@ -33,13 +33,13 @@
     </el-table>
 
      <!-- 员工信息弹窗 -->
-     <listAddOrUpdate ref="listAddOrUpdateRef" @refreshDataList="queryList" @close="listAddOrUpdateVisible= false" v-if="listAddOrUpdateVisible"></listAddOrUpdate>
+     <indexAddOrUpdate ref="indexAddOrUpdateRef" @refreshDataList="queryList" @close="indexAddOrUpdateVisible= false" v-if="indexAddOrUpdateVisible"></indexAddOrUpdate>
 </template>
 
 <script setup>
 import { onMounted, ref, nextTick } from 'vue'
 import { userNav, userDeleteNav } from '@/api/user'
-import listAddOrUpdate from './list-add-or-update.vue'
+import indexAddOrUpdate from './index-add-or-update.vue'
 import { menuToTreeMenu } from '@/utils'
 import { ElLoading, ElMessage, ElMessageBox } from 'element-plus'
 
@@ -47,8 +47,8 @@ const formData = ref({
 })
 const dataList = ref([]);
 const dataListLoading = ref(false);
-const listAddOrUpdateRef = ref(null);
-const listAddOrUpdateVisible = ref(false);
+const indexAddOrUpdateRef = ref(null);
+const indexAddOrUpdateVisible = ref(false);
 
 onMounted(() => {
     queryList()
@@ -66,9 +66,9 @@ const queryList = () => {
 }
 //新增或者修改
 const addOrUpdateFun = (item) => {
-    listAddOrUpdateVisible.value = true;
+    indexAddOrUpdateVisible.value = true;
     nextTick(() => {
-        listAddOrUpdateRef.value.init(item || '')
+        indexAddOrUpdateRef.value.init(item || '')
     })
 }
 //删除
@@ -98,7 +98,7 @@ const delFun = (id) => {
             loading.close()
         })
 
-    }) 
+    })
 }
 </script>
 

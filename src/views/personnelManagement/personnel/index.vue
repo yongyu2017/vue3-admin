@@ -43,13 +43,13 @@
     </el-pagination>
 
      <!-- 员工信息弹窗 -->
-     <listAddOrUpdate ref="listAddOrUpdateRef" @refreshDataList="searchFun" @close="listAddOrUpdateVisible= false" v-if="listAddOrUpdateVisible"></listAddOrUpdate>
+     <indexAddOrUpdate ref="indexAddOrUpdateRef" @refreshDataList="searchFun" @close="indexAddOrUpdateVisible= false" v-if="indexAddOrUpdateVisible"></indexAddOrUpdate>
 </template>
 
 <script setup>
 import { onMounted, ref, nextTick } from 'vue'
 import { personnelPeopleList, personnelDeletePeople } from '@/api/personnel'
-import listAddOrUpdate from './list-add-or-update.vue'
+import indexAddOrUpdate from './index-add-or-update.vue'
 import { ElLoading, ElMessage, ElMessageBox } from 'element-plus'
 import { commonMixin } from '@/mixins/common'
 import { deepCopy } from '@/utils/index'
@@ -70,8 +70,8 @@ const formData = ref(deepCopy(defaultDataForm))
 const dataList = ref([]);
 const idList = ref([]);
 const dataListLoading = ref(false);
-const listAddOrUpdateRef = ref(null);
-const listAddOrUpdateVisible = ref(false);
+const indexAddOrUpdateRef = ref(null);
+const indexAddOrUpdateVisible = ref(false);
 const sexList = ref(dictType.value['sex'])
 
 onMounted(() => {
@@ -125,9 +125,9 @@ const handleSelectionChange = (val) => {
 }
 //新增或者修改
 const addOrUpdateFun = (item) => {
-    listAddOrUpdateVisible.value = true;
+    indexAddOrUpdateVisible.value = true;
     nextTick(() => {
-        listAddOrUpdateRef.value.init(item || '')
+        indexAddOrUpdateRef.value.init(item || '')
     })
 }
 //删除
@@ -162,7 +162,7 @@ const delFun = (id) => {
             loading.close()
         })
 
-    }) 
+    })
 }
 </script>
 
