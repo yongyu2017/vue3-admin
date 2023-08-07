@@ -3,7 +3,7 @@ const statusCodeMap = require('#root/utils/statusCodeMap.js')
 const db = require('#root/db/index.js')
 const moment = require('moment')
 
-// 新增或修改菜单
+// 修改字典类型
 module.exports = {
     path: '/system/dict-type/update',
     fn: async function (req, res) {

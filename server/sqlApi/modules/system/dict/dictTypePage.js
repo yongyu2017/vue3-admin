@@ -2,7 +2,7 @@ const { getFileData, setFileData, findParentNode, findChildNode, getMax, generat
 const statusCodeMap = require('#root/utils/statusCodeMap.js')
 const db = require('#root/db/index.js')
 
-// 获取用户列表
+// 获得字典类型的分页列表
 module.exports = {
     path: '/system/dict-type/page',
     fn: async function (req, res) {

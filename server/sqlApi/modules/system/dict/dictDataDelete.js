@@ -2,7 +2,7 @@ const { getFileData, setFileData, findParentNode, findChildNode, getMax, generat
 const statusCodeMap = require('#root/utils/statusCodeMap.js')
 const db = require('#root/db/index.js')
 
-// 删除用户信息
+// 删除字典数据
 module.exports = {
     path: '/system/dict-data/delete',
     fn: async function (req, res) {
