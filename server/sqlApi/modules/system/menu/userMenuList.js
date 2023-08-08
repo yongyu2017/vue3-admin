@@ -1,4 +1,4 @@
-const { getFileData, setFileData, findParentNode, findChildNode, getMax, generateToken, verifyToken } = require('#root/utils/index.js')
+const { getFileData, setFileData, findParentNode, findChildNode, getMax, generateToken, verifyToken, menuToTreeMenu } = require('#root/utils/index.js')
 const statusCodeMap = require('#root/utils/statusCodeMap.js')
 const db = require('#root/db/index.js')
 
@@ -24,7 +24,7 @@ module.exports = {
             const roleInfo = roleFileData.res[0]
             let roleIds = (roleInfo.permission ? roleInfo.permission.split(',') : []).map((value) => {
                 return Number(value)
-            })
+            }) // 用户所拥有的权限
 
             const menuFileData = (await db.connect(`SELECT * FROM menu WHERE state=1 ORDER BY orderNum ASC`, []))[0]
             if (menuFileData.err) {
@@ -32,13 +32,19 @@ module.exports = {
                 return
             }
             let menuList = menuFileData.res
-            const parentIds = findParentNode(roleIds, menuList)
-            roleIds.push(...parentIds)
+            const menuTree = menuToTreeMenu(menuList)
+            let statusFalseChildIdsList = []
+            const statusFalseList = menuList.filter((value) => {
+                return value.status == 0
+            })  // 菜单状态值关闭列表
+            statusFalseList.forEach((value) => {
+                statusFalseChildIdsList = [value.id, ...findChildNode(value.id, menuTree)]
+            })
             menuList = menuList.filter((value) => {
                 value['menuId'] = value.id;
                 value['name'] = value.menuName;
                 value['url'] = value.jumpUrl;
-                return value.type != 2 && roleIds.includes(value.id)
+                return value.type != 2 && roleIds.includes(value.id) && !statusFalseChildIdsList.includes(value.id)
             })
 
             res.send({

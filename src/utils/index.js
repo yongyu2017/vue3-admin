@@ -243,3 +243,24 @@ export function findAreaName(projectArea, projectAreaList) {
     areaObject.name = areaObject.provinceLabel + '' + areaObject.cityLabel + '' + areaObject.countyLabel
     return areaObject
 }
+
+// null或者undefined转空字符串
+export function nullToEmptyString (val) {
+    return (val === null || val === undefined) ? '' : val
+}
+
+// 树状数据过滤
+export function treeNodeRecursive(list) {
+    return list.filter((value) => {
+        if (value.children && value.children.length > 0) {
+            if (value.visible == 1) {
+                value.children = treeNodeRecursive(value.children)
+                return true
+            } else {
+                return false
+            }
+        } else {
+            return value.visible == 1
+        }
+    })
+}

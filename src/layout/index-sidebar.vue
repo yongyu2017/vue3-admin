@@ -8,21 +8,25 @@
                         <span>首页</span>
                     </template>
                 </el-menu-item>
-                <indexSidebarSubMenu :menu="item" v-for="(item, index) in menuList" :key="index"></indexSidebarSubMenu>
+                <indexSidebarSubMenu :menu="item" v-for="(item, index) in menuListFilter" :key="index"></indexSidebarSubMenu>
             </el-menu>
         </div>
     </div>
 </template>
 
 <script setup>
+import { ref } from 'vue'
 import indexSidebarSubMenu from './index-sidebar-sub-menu'
 import { storeToRefs } from "pinia"
 import { useStorePinia } from '@/store'
 import { useRouter } from 'vue-router'
+import { treeNodeRecursive } from '@/utils/index'
+const lodash = require('lodash');
 
 const store = useStorePinia()
 const { menuList, menuActiveName, isExpand } = storeToRefs(store)
 const router = useRouter()
+const menuListFilter = ref(treeNodeRecursive(lodash.cloneDeep(menuList.value)))
 </script>
 
 <style lang="scss" scoped>

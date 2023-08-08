@@ -1,6 +1,6 @@
 const mysql = require('mysql')
 
-module.exports={
+module.exports = {
     config: {
         host : 'localhost',  //连接数据库的地址。（默认：localhost）
         user : 'root',  //mysql的连接用户名

@@ -3,19 +3,19 @@ const statusCodeMap = require('#root/utils/statusCodeMap.js')
 const db = require('#root/db/index.js')
 const moment = require('moment')
 
-// 新增或修改员工信息
+// 新增或修改菜单
 module.exports = {
-    path: '/personnel/addOrModifyPeople',
+    path: '/user/addOrModifyNav',
     fn: async function (req, res) {
         const { token } = req.headers
-        const { id, name, sex, age } = req['body'];
+        const { id, menuName, parentId, jumpUrl, roleUrl, type, icon, orderNum, status, visible, keepAlive } = req['body'];
         const tokenInfo = await verifyToken(token)
 
         if(tokenInfo){
             const currentTime = moment(Date.now()).format('YYYY-MM-DD HH:mm:ss')
 
             if (id) {
-                const menuFileData = (await db.connect('UPDATE people SET name=?,sex=?,age=?,updateTime=? WHERE id=?', [name, sex, age, currentTime, id]))[0]
+                const menuFileData = (await db.connect('UPDATE menu SET menuName=?,parentId=?,jumpUrl=?,roleUrl=?,type=?,icon=?,orderNum=?,status=?,visible=?,keepAlive=?,updateTime=? WHERE id=?', [menuName, parentId, jumpUrl, roleUrl, type, icon, orderNum, status, visible, keepAlive, currentTime, id]))[0]
 
                 if (menuFileData.err) {
                     res.send(statusCodeMap['-1'])
@@ -27,7 +27,7 @@ module.exports = {
                     msg: '操作成功！',
                 })
             } else {
-                const menuFileData = (await db.connect('insert into people (name, sex, age, state, createTime, updateTime) values (?,?,?,?,?,?)', [name, sex, age, 1, currentTime, currentTime]))[0]
+                const menuFileData = (await db.connect('insert into menu (menuName, parentId, jumpUrl, roleUrl, type, icon, orderNum, status, visible, keepAlive, state, createTime, updateTime) values (?,?,?,?,?,?,?,?,?,?,?,?,?)', [menuName, parentId, jumpUrl, roleUrl, type, icon, orderNum, status, visible, keepAlive, 1, currentTime, currentTime]))[0]
 
                 if (menuFileData.err) {
                     res.send(statusCodeMap['-1'])

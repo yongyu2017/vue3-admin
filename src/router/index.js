@@ -58,7 +58,7 @@ router.beforeEach((to, from, next) => {
         userMenuList().then(({ data })=> {
             loading.close()
             const list = menuToTreeMenu(data.menuList)
-            
+
             fnAddDynamicMenuRoutes(list)
             router.options.isAddDynamicMenuRoutes = true;
             updateCommonStore('menuList', list || [])
@@ -128,7 +128,7 @@ function fnAddDynamicMenuRoutes (menuList = []) {
                         isDynamic: true,
                         isTab: true,
                         iframeUrl: '',
-                        keepAlive: list[i].keepAlive || false,
+                        keepAlive: list[i].keepAlive == 1 ? true : false,
                     }
                 }
                 // url以http[s]://开头, 通过iframe展示

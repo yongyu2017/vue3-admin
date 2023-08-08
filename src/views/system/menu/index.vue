@@ -24,6 +24,18 @@
         <el-table-column prop="orderNum" label="排序"></el-table-column>
         <el-table-column prop="jumpUrl" label="菜单URL"></el-table-column>
         <el-table-column prop="roleUrl" label="授权标识"></el-table-column>
+        <el-table-column prop="status" label="菜单状态">
+            <template #default="scope">
+                <el-button type="success" plain v-if="scope.row.status == 1">开启</el-button>
+                <el-button type="info" plain v-else>关闭</el-button>
+            </template>
+        </el-table-column>
+        <el-table-column prop="visible" label="显示状态">
+            <template #default="scope">
+                <el-button type="success" plain v-if="scope.row.visible == 1">开启</el-button>
+                <el-button type="info" plain v-else>关闭</el-button>
+            </template>
+        </el-table-column>
         <el-table-column label="操作">
             <template #default="scope">
                 <el-button type="primary" link @click="addOrUpdateFun(scope.row)">编辑</el-button>

@@ -52,6 +52,21 @@
                     </template>
                 </el-popover>
             </el-form-item>
+            <el-form-item label="菜单状态">
+                <el-radio-group v-model="dataForm.status">
+                    <el-radio :label="item.value" v-for="item in menuStatus" :key="item.value">{{ item.label }}</el-radio>
+                </el-radio-group>
+            </el-form-item>
+            <el-form-item label="显示状态" v-if="dataForm.type != '2'">
+                <el-radio-group v-model="dataForm.visible">
+                    <el-radio :label="item.value" v-for="item in menuStatus" :key="item.value">{{ item.label }}</el-radio>
+                </el-radio-group>
+            </el-form-item>
+            <el-form-item label="是否缓存" v-if="dataForm.type == '1'">
+                <el-radio-group v-model="dataForm.keepAlive">
+                    <el-radio :label="item.value" v-for="item in menuStatus" :key="item.value">{{ item.label }}</el-radio>
+                </el-radio-group>
+            </el-form-item>
         </el-form>
 
         <template #footer>
@@ -67,7 +82,7 @@
 import { ref, defineEmits, nextTick, defineExpose, computed } from 'vue'
 import { ElLoading, ElMessage } from 'element-plus'
 import { userNav, userGetNav, userAddOrModifyNav } from '@/api/user'
-import { menuToTreeMenu } from '@/utils'
+import { menuToTreeMenu, nullToEmptyString } from '@/utils'
 import * as ElementPlusIconsVue from '@element-plus/icons-vue'
 
 const dataFormRef = ref();
@@ -81,6 +96,9 @@ const dataForm = ref({
     roleUrl: '',
     icon: '',
     orderNum: 0,
+    status: '1',
+    visible: '1',
+    keepAlive: '1',
 })
 const dataRule = ref({
     menuName: [
@@ -111,6 +129,10 @@ const menuNameStr = computed(() => {
 
     return str
 })
+const menuStatus = ref([
+    { label: '开启', value: '1' },
+    { label: '关闭', value: '0' },
+])
 
 // eslint-disable-next-line
 var init = (item) => {
@@ -122,7 +144,11 @@ var init = (item) => {
             userGetNav({
                 id: item.id,
             }).then(({ data }) => {
+                data.status = nullToEmptyString(data.status) + ''
+                data.visible = nullToEmptyString(data.visible) + ''
+                data.keepAlive = nullToEmptyString(data.keepAlive) + ''
                 dataForm.value = data;
+                console.log(dataForm.value)
             })
         }
     })
