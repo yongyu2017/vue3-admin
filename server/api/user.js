@@ -187,7 +187,7 @@ async function userMenuList (req, res) {
             value['menuId'] = value.id;
             value['name'] = value.menuName;
             value['url'] = value.jumpUrl;
-            return value.type != 2 && roleIds.includes(value.id) && value.status == 1
+            return value.type != 2 && roleIds.includes(value.id) && value.state == 1
         })
         res.send({
             code: 200,
@@ -210,7 +210,7 @@ async function userNav (req, res) {
         const fileData = await getFileData('/json/menu.json');
 
         fileData.menuList = fileData.menuList.filter((value) => {
-            return value.status == 1
+            return value.state == 1
         })
         res.send({
             code: 200,
@@ -227,8 +227,8 @@ async function userNav (req, res) {
 // 新增或修改菜单
 async function userAddOrModifyNav (req, res) {
     const { token } = req.headers
-    const { id, menuName, parentId, jumpUrl, roleUrl, type, icon, orderNum } = req['body'];
-    const data = { id, menuName, parentId, jumpUrl, roleUrl, type, icon, orderNum };
+    const { id, menuName, parentId, jumpUrl, roleUrl, type, icon, orderNum, status, visible, keepAlive } = req['body'];
+    const data = { id, menuName, parentId, jumpUrl, roleUrl, type, icon, orderNum, status, visible, keepAlive };
     const fileData = await getFileData('/json/menu.json');
     const userInfo = await verifyToken(token)
 
@@ -246,8 +246,8 @@ async function userAddOrModifyNav (req, res) {
             const max = getMax(fileData.menuList);
             fileData.menuList.push({
                 id: max + 1,
-                menuName, parentId, jumpUrl, roleUrl, type, icon, orderNum,
-                status: 1,
+                menuName, parentId, jumpUrl, roleUrl, type, icon, orderNum, status, visible, keepAlive,
+                state: 1,
                 createTime: new Date().getTime(),
                 modifiedTime: new Date().getTime(),
             })
@@ -278,7 +278,7 @@ async function userDeleteNav (req, res) {
         ids.push(...findChildNode(id, fileData.menuList))
         fileData.menuList.forEach((value) => {
             if(ids.includes(value.id)){
-                value.status = 0;
+                value.state = 0;
             }
         })
         await setFileData('/json/menu.json', fileData)

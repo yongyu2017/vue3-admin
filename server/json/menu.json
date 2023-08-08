@@ -10,6 +10,9 @@
       "icon": "Setting",
       "orderNum": 10,
       "status": 1,
+      "state": 1,
+      "visible": 1,
+      "keepAlive": null,
       "createTime": 1670295016989,
       "modifiedTime": 1681453648450
     },
@@ -23,8 +26,11 @@
       "icon": "",
       "orderNum": 10,
       "status": 1,
+      "state": 1,
+      "visible": 1,
+      "keepAlive": null,
       "createTime": 1670295045783,
-      "modifiedTime": 1681384716460
+      "modifiedTime": 1691485403703
     },
     {
       "id": 3,
@@ -36,6 +42,9 @@
       "icon": "",
       "orderNum": 20,
       "status": 1,
+      "state": 1,
+      "visible": 1,
+      "keepAlive": null,
       "createTime": 1670296357880,
       "modifiedTime": 1681384722252
     },
@@ -49,6 +58,9 @@
       "icon": "",
       "orderNum": 30,
       "status": 1,
+      "state": 1,
+      "visible": 1,
+      "keepAlive": null,
       "createTime": 1670306672730,
       "modifiedTime": 1681384730365
     },
@@ -62,6 +74,9 @@
       "icon": "User",
       "orderNum": 20,
       "status": 1,
+      "state": 1,
+      "visible": 1,
+      "keepAlive": null,
       "createTime": 1670293707116,
       "modifiedTime": 1670480489770
     },
@@ -75,6 +90,9 @@
       "icon": "",
       "orderNum": 10,
       "status": 1,
+      "state": 1,
+      "visible": 1,
+      "keepAlive": null,
       "createTime": 1670294747365,
       "modifiedTime": 1681384739193
     },
@@ -88,6 +106,9 @@
       "icon": "",
       "orderNum": 20,
       "status": 1,
+      "state": 1,
+      "visible": 1,
+      "keepAlive": null,
       "createTime": 1670294817578,
       "modifiedTime": 1681385029944
     },
@@ -101,6 +122,9 @@
       "icon": "",
       "orderNum": 10,
       "status": 1,
+      "state": 1,
+      "visible": 1,
+      "keepAlive": null,
       "createTime": 1670294861432,
       "modifiedTime": 1681384745343
     },
@@ -114,6 +138,9 @@
       "icon": "Baseball",
       "orderNum": 30,
       "status": 1,
+      "state": 1,
+      "visible": 1,
+      "keepAlive": null,
       "createTime": 1670294924249,
       "modifiedTime": 1670480494657
     },
@@ -127,6 +154,9 @@
       "icon": "",
       "orderNum": 10,
       "status": 1,
+      "state": 1,
+      "visible": 1,
+      "keepAlive": null,
       "createTime": 1670294957483,
       "modifiedTime": 1681384755899
     },
@@ -140,6 +170,9 @@
       "icon": "Eleme",
       "orderNum": 40,
       "status": 1,
+      "state": 1,
+      "visible": 1,
+      "keepAlive": null,
       "createTime": 1670294992545,
       "modifiedTime": 1681384853245
     },
@@ -153,6 +186,9 @@
       "icon": "Discount",
       "orderNum": 50,
       "status": 1,
+      "state": 1,
+      "visible": 1,
+      "keepAlive": null,
       "createTime": 1670469789951,
       "modifiedTime": 1681384870328
     },
@@ -166,6 +202,9 @@
       "icon": "",
       "orderNum": 0,
       "status": 1,
+      "state": 1,
+      "visible": 1,
+      "keepAlive": null,
       "createTime": 1670478543036,
       "modifiedTime": 1670479897672
     },
@@ -179,6 +218,9 @@
       "icon": "",
       "orderNum": 0,
       "status": 1,
+      "state": 1,
+      "visible": 1,
+      "keepAlive": null,
       "createTime": 1670478563090,
       "modifiedTime": 1670479902457
     },
@@ -192,6 +234,9 @@
       "icon": "",
       "orderNum": 0,
       "status": 1,
+      "state": 1,
+      "visible": 1,
+      "keepAlive": null,
       "createTime": 1670478585233,
       "modifiedTime": 1670479907946
     },
@@ -205,6 +250,9 @@
       "icon": "",
       "orderNum": 50,
       "status": 1,
+      "state": 1,
+      "visible": 1,
+      "keepAlive": null,
       "createTime": 1670574019333,
       "modifiedTime": 1681384875687
     },
@@ -218,6 +266,9 @@
       "icon": "",
       "orderNum": 60,
       "status": 1,
+      "state": 1,
+      "visible": 1,
+      "keepAlive": null,
       "createTime": 1670580027973,
       "modifiedTime": 1681384891942
     },
@@ -231,6 +282,9 @@
       "icon": "",
       "orderNum": 70,
       "status": 1,
+      "state": 1,
+      "visible": 1,
+      "keepAlive": null,
       "createTime": 1673849861466,
       "modifiedTime": 1681384896983
     },
@@ -244,6 +298,9 @@
       "icon": "",
       "orderNum": 0,
       "status": 1,
+      "state": 1,
+      "visible": 1,
+      "keepAlive": null,
       "createTime": 1679445478261,
       "modifiedTime": 1681384901876
     },
@@ -257,6 +314,9 @@
       "icon": "Cpu",
       "orderNum": 60,
       "status": 1,
+      "state": 1,
+      "visible": 1,
+      "keepAlive": null,
       "createTime": 1681384489710,
       "modifiedTime": 1681529114859
     },
@@ -270,6 +330,9 @@
       "icon": "",
       "orderNum": 40,
       "status": 1,
+      "state": 1,
+      "visible": 1,
+      "keepAlive": null,
       "createTime": 1681529104673,
       "modifiedTime": 1681530642862
     },
@@ -283,6 +346,9 @@
       "icon": "",
       "orderNum": 0,
       "status": 1,
+      "state": 1,
+      "visible": 1,
+      "keepAlive": null,
       "createTime": 1681975525912,
       "modifiedTime": 1681975604980
     },
@@ -296,6 +362,9 @@
       "icon": "",
       "orderNum": 0,
       "status": 1,
+      "state": 1,
+      "visible": 1,
+      "keepAlive": null,
       "createTime": 1685354410244,
       "modifiedTime": 1685354410244
     },
@@ -309,6 +378,9 @@
       "icon": "",
       "orderNum": 0,
       "status": 1,
+      "state": 1,
+      "visible": 1,
+      "keepAlive": null,
       "createTime": 1690532705719,
       "modifiedTime": 1690532778853
     }
