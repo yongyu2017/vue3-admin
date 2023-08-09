@@ -6,10 +6,13 @@
         <el-form-item>
             <el-button type="primary" @click="searchFun">查询</el-button>
             <el-button @click="resetFun">重置</el-button>
-            <el-button @click="addOrUpdateFun()">新增</el-button>
-            <el-button type="danger" @click="delFun()" v-hasPermission="['people:goods:delete']">删除</el-button>
         </el-form-item>
     </el-form>
+
+    <div style="margin-bottom: 12px">
+        <el-button type="primary" :icon="Plus" @click="addOrUpdateFun()">新增</el-button>
+        <el-button type="danger" @click="delFun()" v-hasPermission="['people:list:delete']">删除</el-button>
+    </div>
 
     <el-table :data="dataList" border v-loading="dataListLoading" @selection-change="handleSelectionChange" style="width: 100%">
         <el-table-column type="selection" width="55"></el-table-column>
@@ -26,7 +29,7 @@
         <el-table-column label="操作">
             <template #default="scope">
                 <el-button type="primary" link @click="addOrUpdateFun(scope.row)">编辑</el-button>
-                <el-button type="primary" link @click="delFun(scope.row.id)" v-hasPermission="['people:goods:delete']">删除</el-button>
+                <el-button type="primary" link @click="delFun(scope.row.id)" v-hasPermission="['people:list:delete']">删除</el-button>
             </template>
         </el-table-column>
     </el-table>
@@ -51,6 +54,7 @@ import { onMounted, ref, nextTick } from 'vue'
 import { personnelPeopleList, personnelDeletePeople } from '@/api/personnel'
 import indexAddOrUpdate from './index-add-or-update.vue'
 import { ElLoading, ElMessage, ElMessageBox } from 'element-plus'
+import { Plus } from '@element-plus/icons-vue'
 import { commonMixin } from '@/mixins/common'
 import { deepCopy } from '@/utils/index'
 import { storeToRefs } from 'pinia'

@@ -11,11 +11,11 @@
             </el-form-item>
         </el-form>
 
-        <div>
+        <div style="margin-bottom: 12px">
             <el-button type="primary" :icon="Plus" @click="addOrUpdateFun()">新增</el-button>
         </div>
 
-        <el-table header-cell-class-name="table-cell-header" :data="dataList" border v-loading="dataListLoading" style="width: 100%;margin-top: 20px;">
+        <el-table header-cell-class-name="table-cell-header" :data="dataList" border v-loading="dataListLoading" style="width: 100%;">
             <el-table-column type="index" header-align="center" align="center" label="序号" width="100"></el-table-column>
             <el-table-column prop="label" label="数据标签"></el-table-column>
             <el-table-column prop="value" label="数据键值"></el-table-column>

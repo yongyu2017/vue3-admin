@@ -1,9 +1,7 @@
 <template>
-    <el-form :inline="true" :model="formData" @submit.prevent>
-        <el-form-item>
-            <el-button @click="addOrUpdateFun()">新增</el-button>
-        </el-form-item>
-    </el-form>
+    <div style="margin-bottom: 12px">
+        <el-button type="primary" :icon="Plus" @click="addOrUpdateFun()">新增</el-button>
+    </div>
 
     <el-table :data="dataList" border row-key="id" v-loading="dataListLoading" style="width: 100%">
         <el-table-column prop="menuName" header-align="left" align="left" label="名称"></el-table-column>
@@ -54,9 +52,8 @@ import { userNav, userDeleteNav } from '@/api/user'
 import indexAddOrUpdate from './index-add-or-update.vue'
 import { menuToTreeMenu } from '@/utils'
 import { ElLoading, ElMessage, ElMessageBox } from 'element-plus'
+import { Plus } from '@element-plus/icons-vue'
 
-const formData = ref({
-})
 const dataList = ref([]);
 const dataListLoading = ref(false);
 const indexAddOrUpdateRef = ref(null);

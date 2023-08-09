@@ -6,9 +6,12 @@
         <el-form-item>
             <el-button type="primary" @click="searchFun">查询</el-button>
             <el-button @click="resetFun">重置</el-button>
-            <el-button @click="addOrUpdateFun()">新增</el-button>
         </el-form-item>
     </el-form>
+
+    <div style="margin-bottom: 12px;">
+        <el-button type="primary" :icon="Plus" @click="addOrUpdateFun()">新增</el-button>
+    </div>
 
     <el-table :data="dataList" border v-loading="dataListLoading" style="width: 100%">
         <el-table-column prop="id" label="ID"></el-table-column>
@@ -48,6 +51,7 @@ import { onMounted, ref, nextTick, computed } from 'vue'
 import { userUserList, userDeleteUser, userRole } from '@/api/user'
 import indexAddOrUpdate from './index-add-or-update.vue'
 import { ElLoading, ElMessage, ElMessageBox } from 'element-plus'
+import { Plus } from '@element-plus/icons-vue'
 import { deepCopy } from '@/utils/index'
 const dayjs = require('dayjs')
 
