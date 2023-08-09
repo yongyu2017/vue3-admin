@@ -37,7 +37,7 @@
         <el-table-column label="操作">
             <template #default="scope">
                 <el-button type="primary" link @click="addOrUpdateFun(scope.row)">编辑</el-button>
-                <el-button type="primary" link @click="delFun(scope.row.id)" v-hasPermission="['user:menu:delete']">删除</el-button>
+                <el-button type="primary" link @click="delFun(scope.row.id)">删除</el-button>
             </template>
         </el-table-column>
     </el-table>

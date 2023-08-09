@@ -1,7 +1,7 @@
 <template>
     <el-form :inline="true" :model="formData" @submit.prevent>
-        <el-form-item>
-            <el-input v-model="formData.name" placeholder="请输入账号" clearable class="inp-dom" />
+        <el-form-item label="账号">
+            <el-input v-model="formData.name" placeholder="请输入" clearable class="inp-dom" />
         </el-form-item>
         <el-form-item>
             <el-button type="primary" @click="searchFun">查询</el-button>

@@ -1,10 +1,10 @@
 <template>
     <!-- 角色管理 -->
     <el-form :inline="true" :model="formData" @submit.prevent @keyup.enter="searchFun">
-        <el-form-item label="字典名称：">
+        <el-form-item label="字典名称">
             <el-input v-model="formData.name" placeholder="请输入" clearable class="inp-dom" />
         </el-form-item>
-        <el-form-item label="字典类型：">
+        <el-form-item label="字典类型">
             <el-input v-model="formData.type" placeholder="请输入" clearable class="inp-dom" />
         </el-form-item>
         <el-form-item>

@@ -2,7 +2,7 @@
     <el-dialog @close="closeFun" title="数据字典" :close-on-click-modal="false" v-model="visible" >
 
         <el-form :inline="true" :model="formData" @submit.prevent>
-            <el-form-item label="数据标签：">
+            <el-form-item label="数据标签">
                 <el-input v-model="formData.label" placeholder="请输入" clearable class="inp-dom" />
             </el-form-item>
             <el-form-item>
