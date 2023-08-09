@@ -11,26 +11,27 @@ module.exports = {
         const { id, code, name, parentId } = req['body'];
         const tokenInfo = await verifyToken(token)
 
-        if(tokenInfo){
-            const currentTime = moment(Date.now()).format('YYYY-MM-DD HH:mm:ss')
-            let menuFileData = null
-            if (id) {
-                menuFileData = (await db.connect('UPDATE goods_detail SET code=?,name=?,parentId=?,updateTime=? WHERE id=?', [code, name, parentId, currentTime, id]))
-            } else {
-                menuFileData = (await db.connect('insert into goods_detail (code, name, parentId, sale, state, createTime, updateTime) values (?,?,?,?,?,?,?)', [code, name, parentId, 0, 1, currentTime, currentTime]))
-            }
-
-            if (menuFileData.err) {
-                res.send(statusCodeMap['-1'])
-                return
-            }
-            res.send({
-                code: 200,
-                data: {},
-                msg: '操作成功！',
-            })
-        }else{
+        if (!tokenInfo) {
             res.send(statusCodeMap['401'])
+            return
         }
+
+        const currentTime = moment(Date.now()).format('YYYY-MM-DD HH:mm:ss')
+        let sql_1 = ''
+        if (id) {
+            sql_1 = await db.connect('UPDATE goods_detail SET code=?,name=?,parentId=?,updateTime=? WHERE id=?', [code, name, parentId, currentTime, id])
+        } else {
+            sql_1 = await db.connect('insert into goods_detail (code, name, parentId, sale, state, createTime, updateTime) values (?,?,?,?,?,?,?)', [code, name, parentId, 0, 1, currentTime, currentTime])
+        }
+        if (sql_1.err) {
+            res.send(statusCodeMap['-1'])
+            return
+        }
+
+        res.send({
+            code: 200,
+            data: '',
+            msg: '操作成功！',
+        })
     }
 }

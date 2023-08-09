@@ -11,36 +11,27 @@ module.exports = {
         const { id, name, des } = req['body'];
         const tokenInfo = await verifyToken(token)
 
-        if(tokenInfo){
-            const currentTime = moment(Date.now()).format('YYYY-MM-DD HH:mm:ss')
-
-            if (id) {
-                const menuFileData = (await db.connect('UPDATE category SET name=?,des=?,updateTime=? WHERE id=?', [name, des, currentTime, id]))
-
-                if (menuFileData.err) {
-                    res.send(statusCodeMap['-1'])
-                    return
-                }
-                res.send({
-                    code: 200,
-                    data: {},
-                    msg: '操作成功！',
-                })
-            } else {
-                const menuFileData = (await db.connect('insert into category (name, des, state, createTime, updateTime) values (?,?,?,?,?)', [name, des, 1, currentTime, currentTime]))
-
-                if (menuFileData.err) {
-                    res.send(statusCodeMap['-1'])
-                    return
-                }
-                res.send({
-                    code: 200,
-                    data: {},
-                    msg: '操作成功！',
-                })
-            }
-        }else{
+        if (!tokenInfo) {
             res.send(statusCodeMap['401'])
+            return
         }
+
+        const currentTime = moment(Date.now()).format('YYYY-MM-DD HH:mm:ss')
+        let sql_1 = ''
+        if (id) {
+            sql_1 = (await db.connect('UPDATE category SET name=?,des=?,updateTime=? WHERE id=?', [name, des, currentTime, id]))
+        } else {
+            sql_1 = (await db.connect('insert into category (name, des, state, createTime, updateTime) values (?,?,?,?,?)', [name, des, 1, currentTime, currentTime]))
+        }
+        if (sql_1.err) {
+            res.send(statusCodeMap['-1'])
+            return
+        }
+
+        res.send({
+            code: 200,
+            data: '',
+            msg: '操作成功！',
+        })
     }
 }

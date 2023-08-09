@@ -31,7 +31,7 @@
 <script setup>
 import { ref, defineEmits, nextTick, defineExpose } from 'vue'
 import { ElLoading, ElMessage } from 'element-plus'
-import { goodsWarehousingUpdate, goodsWarehousingGet, goodsGoodsPage } from '@/api/goods'
+import { goodsWarehousingUpdate, goodsWarehousingGet, goodsGoodsListAll } from '@/api/goods'
 
 const dataFormRef = ref();
 const visible = ref(false);
@@ -58,7 +58,7 @@ var init = (id) => {
     dataForm.value.id = id || ''
 
     nextTick(async () => {
-        goodsGoodsPageFun()
+        goodsGoodsListAllFun()
         if (id) {
             goodsWarehousingGet({
                 id,
@@ -69,8 +69,8 @@ var init = (id) => {
     })
 }
 // 获取商品列表
-const goodsGoodsPageFun = () => {
-    goodsGoodsPage({
+const goodsGoodsListAllFun = () => {
+    goodsGoodsListAll({
         name: '',
         pageIndex: '',
         pageSize: '',

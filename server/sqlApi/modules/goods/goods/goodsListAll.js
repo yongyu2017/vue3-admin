@@ -1,13 +1,12 @@
-const { getFileData, setFileData, findParentNode, findChildNode, getMax, generateToken, verifyToken } = require('#root/utils/index.js')
+const { getFileData, setFileData, findParentNode, findChildNode, getMax, generateToken, verifyToken, setCompleteAddress } = require('#root/utils/index.js')
 const statusCodeMap = require('#root/utils/statusCodeMap.js')
 const db = require('#root/db/index.js')
 
-// 获取商品类型信息
+// 获取所有商品
 module.exports = {
-    path: '/goods/category/get',
+    path: '/goods/goods/listAll',
     fn: async function (req, res) {
         const { token } = req.headers
-        const { id } = req['body']
         const tokenInfo = await verifyToken(token)
 
         if (!tokenInfo) {
@@ -15,7 +14,7 @@ module.exports = {
             return
         }
 
-        const sql_1 = (await db.connect('SELECT * FROM category WHERE state=1 and id=?', [id]))
+        const sql_1 = await db.connect("select id,name from goods WHERE state=1", [])
         if (sql_1.err) {
             res.send(statusCodeMap['-1'])
             return
@@ -23,7 +22,9 @@ module.exports = {
 
         res.send({
             code: 200,
-            data: sql_1.res[0],
+            data: {
+                list: sql_1.res,
+            },
             msg: '',
         })
     }

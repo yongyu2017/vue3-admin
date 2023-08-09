@@ -58,7 +58,7 @@
 <script setup>
 import { ref, defineEmits, nextTick, defineExpose } from 'vue'
 import { ElLoading, ElMessage } from 'element-plus'
-import { goodsGoodsUpdate, goodsGoodsGet, goodsCategoryPage } from '@/api/goods'
+import { goodsGoodsUpdate, goodsGoodsGet, goodsCategoryListAll } from '@/api/goods'
 import { getSuffix } from '@/utils/index'
 
 const dataFormRef = ref();
@@ -94,7 +94,7 @@ var init = (id) => {
     dataForm.value.id = id || ''
 
     nextTick(async () => {
-        goodsCategoryPageFun()
+        goodsCategoryListAllFun()
         if (id) {
             goodsGoodsGet({
                 id,
@@ -106,8 +106,8 @@ var init = (id) => {
     })
 }
 // 获取商品分类
-const goodsCategoryPageFun = () => {
-    goodsCategoryPage({
+const goodsCategoryListAllFun = () => {
+    goodsCategoryListAll({
         name: '',
         pageIndex: '',
         pageSize: '',

@@ -10,20 +10,22 @@ module.exports = {
         const { id } = req['body']
         const tokenInfo = await verifyToken(token)
 
-        if(tokenInfo){
-            const menuFileData = (await db.connect('SELECT * FROM goods WHERE state=1 and id=?', [id]))
-            if (menuFileData.err || menuFileData.res.length == 0) {
-                res.send(statusCodeMap['-1'])
-                return
-            }
-            menuFileData.res[0].img = setCompleteAddress(menuFileData.res[0].img)
-            res.send({
-                code: 200,
-                data: menuFileData.res[0],
-                msg: '',
-            })
-        }else{
+        if (!tokenInfo) {
             res.send(statusCodeMap['401'])
+            return
         }
+
+        const sql_1 = await db.connect('SELECT * FROM goods WHERE state=1 and id=?', [id])
+        if (sql_1.err || sql_1.res.length == 0) {
+            res.send(statusCodeMap['-1'])
+            return
+        }
+        sql_1.res[0].img = setCompleteAddress(sql_1.res[0].img)
+
+        res.send({
+            code: 200,
+            data: sql_1.res[0],
+            msg: '',
+        })
     }
 }

@@ -8,6 +8,14 @@ export function goodsGoodsPage (data) {
         data: data
     })
 }
+// 获取所有商品
+export function goodsGoodsListAll (data) {
+    return request({
+        url: '/goods/goods/listAll',
+        method: 'post',
+        data: data
+    })
+}
 // 新增或者修改商品信息
 export function goodsGoodsUpdate (data) {
     return request({
@@ -39,6 +47,14 @@ export function goodsGoodsDelete (data) {
 export function goodsCategoryPage (data) {
     return request({
         url: '/goods/category/page',
+        method: 'post',
+        data: data
+    })
+}
+// 获取所有商品分类
+export function goodsCategoryListAll (data) {
+    return request({
+        url: '/goods/category/listAll',
         method: 'post',
         data: data
     })

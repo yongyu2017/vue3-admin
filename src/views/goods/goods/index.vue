@@ -1,7 +1,7 @@
 <template>
     <el-form :inline="true" :model="formData" @submit.prevent>
-        <el-form-item>
-            <el-input v-model="formData.name" placeholder="请输入商品名称" clearable class="inp-dom" />
+        <el-form-item label="商品名称">
+            <el-input v-model="formData.name" placeholder="请输入" clearable class="inp-dom" />
         </el-form-item>
         <el-form-item>
             <el-button type="primary" @click="searchFun">查询</el-button>
@@ -61,7 +61,7 @@
 <script setup>
 import { onMounted, ref, nextTick } from 'vue'
 import indexAddOrUpdate from './index-add-or-update.vue'
-import { goodsGoodsPage, goodsGoodsDelete, goodsCategoryPage } from '@/api/goods'
+import { goodsGoodsPage, goodsGoodsDelete, goodsCategoryListAll } from '@/api/goods'
 import { ElLoading, ElMessage, ElMessageBox } from 'element-plus'
 import { Plus } from '@element-plus/icons-vue'
 import { deepCopy } from '@/utils/index'
@@ -83,17 +83,13 @@ const indexAddOrUpdateVisible = ref(false);
 const categoryList = ref([])
 
 onMounted(() => {
-    goodsCategoryPageFun()
+    goodsCategoryListAllFun()
     queryList()
 })
 
 // 获取商品分类
-const goodsCategoryPageFun = () => {
-    goodsCategoryPage({
-        name: '',
-        pageIndex: '',
-        pageSize: '',
-    }).then(({ data }) => {
+const goodsCategoryListAllFun = () => {
+    goodsCategoryListAll().then(({ data }) => {
         data.list.forEach((value) => {
             value['value'] = value.id
             value['label'] = value.name

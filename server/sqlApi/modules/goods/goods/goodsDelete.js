@@ -10,19 +10,21 @@ module.exports = {
         const { id } = req['body']
         const tokenInfo = await verifyToken(token)
 
-        if(tokenInfo){
-            const menuFileData = (await db.connect('UPDATE goods SET state=? WHERE id=?', [0, id]))
-            if (menuFileData.err) {
-                res.send(statusCodeMap['-1'])
-                return
-            }
-            res.send({
-                code: 200,
-                data: menuFileData.res[0],
-                msg: '',
-            })
-        }else{
+        if (!tokenInfo) {
             res.send(statusCodeMap['401'])
+            return
         }
+
+        const sql_1 = await db.connect('UPDATE goods SET state=? WHERE id=?', [0, id])
+        if (sql_1.err) {
+            res.send(statusCodeMap['-1'])
+            return
+        }
+
+        res.send({
+            code: 200,
+            data: '',
+            msg: '',
+        })
     }
 }

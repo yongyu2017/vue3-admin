@@ -11,32 +11,32 @@ module.exports = {
         const tokenInfo = await verifyToken(token)
         const start = pageSize ? (pageIndex - 1) * pageSize : 0
 
-        if(tokenInfo){
-            let menuFileData = null
-            if (pageSize) {
-                menuFileData = (await db.connect("select goods.id,goods.name,goods.category,goods.img,goods.des,goods_stock.count from goods left join goods_stock on goods.id = goods_stock.goodsId WHERE goods.state=1 AND name like '%"+ name + "%' ORDER BY id DESC limit ?,?", [start, pageSize]))
-            } else {
-                menuFileData = (await db.connect("SELECT * FROM goods WHERE state=1 AND name like '%"+ name + "%' ORDER BY id DESC", []))
-            }
-            const sum = (await db.connect("SELECT COUNT(*) as total FROM goods WHERE state=1 AND name like '%"+ name + "%'", [])).res[0].total
-
-            if (menuFileData.err) {
-                res.send(statusCodeMap['-1'])
-                return
-            }
-            menuFileData.res.forEach((value) => {
-                value.img = setCompleteAddress(value.img)
-            })
-            res.send({
-                code: 200,
-                data: {
-                    list: menuFileData.res,
-                    sum
-                },
-                msg: '',
-            })
-        }else{
+        if (!tokenInfo) {
             res.send(statusCodeMap['401'])
+            return
         }
+
+        const sql_1 = await db.connect("select goods.id,goods.name,goods.category,goods.img,goods.des,goods_stock.count from goods left join goods_stock on goods.id = goods_stock.goodsId WHERE goods.state=1 AND name like '%"+ name + "%' ORDER BY id DESC limit ?,?", [start, pageSize])
+        if (sql_1.err) {
+            res.send(statusCodeMap['-1'])
+            return
+        }
+        const sql_2 = await db.connect("SELECT COUNT(*) as total FROM goods WHERE state=1 AND name like '%"+ name + "%'", [])
+        if (sql_1.err) {
+            res.send(statusCodeMap['-1'])
+            return
+        }
+        sql_1.res.forEach((value) => {
+            value.img = setCompleteAddress(value.img)
+        })
+
+        res.send({
+            code: 200,
+            data: {
+                list: sql_1.res,
+                sum: sql_2.res[0].total,
+            },
+            msg: '',
+        })
     }
 }

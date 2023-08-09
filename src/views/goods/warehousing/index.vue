@@ -1,9 +1,9 @@
 <template>
     <el-form :inline="true" :model="formData" @submit.prevent>
-        <el-form-item>
-            <el-input v-model="formData.name" placeholder="请输入商品名称" clearable class="inp-dom" />
+        <el-form-item label="商品名称">
+            <el-input v-model="formData.name" placeholder="请输入" clearable class="inp-dom" />
         </el-form-item>
-        <el-form-item>
+        <el-form-item label="所属商品">
             <el-select v-model="formData.parentId" placeholder="请选择" filterable clearable class="inp-dom">
                 <el-option
                         v-for="item in parentIdList"
@@ -60,7 +60,7 @@
 <script setup>
 import { onMounted, ref, nextTick } from 'vue'
 import indexAddOrUpdate from './index-add-or-update.vue'
-import { goodsWarehousingPage, goodsWarehousingDelete, goodsGoodsPage } from '@/api/goods'
+import { goodsWarehousingPage, goodsWarehousingDelete, goodsGoodsListAll } from '@/api/goods'
 import { ElLoading, ElMessage, ElMessageBox } from 'element-plus'
 import { Plus } from '@element-plus/icons-vue'
 import { commonMixin } from '@/mixins/common'
@@ -83,13 +83,13 @@ const indexAddOrUpdateVisible = ref(false)
 const parentIdList = ref([])
 
 onMounted(() => {
-    goodsGoodsPageFun()
+    goodsGoodsListAllFun()
     queryList()
 })
 
 // 获取商品列表
-const goodsGoodsPageFun = () => {
-    goodsGoodsPage({
+const goodsGoodsListAllFun = () => {
+    goodsGoodsListAll({
         name: '',
         pageIndex: '',
         pageSize: '',
