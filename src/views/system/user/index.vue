@@ -18,7 +18,9 @@
         <el-table-column prop="account" label="账号"></el-table-column>
         <el-table-column prop="username" label="昵称"></el-table-column>
         <el-table-column prop="role" label="角色">
-            <template #default="scope">{{ roleStr(scope.row.role) }}</template>
+            <template #default="scope">
+                {{ codeToLabelComputed(scope.row.role, roleList) }}
+            </template>
         </el-table-column>
         <el-table-column prop="email" label="邮箱"></el-table-column>
         <el-table-column prop="createTime" label="创建时间"></el-table-column>
@@ -47,14 +49,16 @@
 </template>
 
 <script setup>
-import { onMounted, ref, nextTick, computed } from 'vue'
+import { onMounted, ref, nextTick } from 'vue'
 import { userUserList, userDeleteUser, userRole } from '@/api/user'
 import indexAddOrUpdate from './index-add-or-update.vue'
 import { ElLoading, ElMessage, ElMessageBox } from 'element-plus'
 import { Plus } from '@element-plus/icons-vue'
 import { deepCopy } from '@/utils/index'
+import { commonMixin } from '@/mixins/common'
 const dayjs = require('dayjs')
 
+const { codeToLabelComputed } = commonMixin()
 const defaultDataForm = {
     name: '',
     pageIndex: 1,
@@ -67,18 +71,6 @@ const dataListLoading = ref(false);
 const roleList = ref([]);
 const indexAddOrUpdateRef = ref(null);
 const indexAddOrUpdateVisible = ref(false);
-
-const roleStr = computed(() => {
-    return (val) => {
-        let str = '';
-        roleList.value.forEach((value) => {
-            if (val == value.id) {
-                str = value.name;
-            }
-        })
-        return str
-    }
-})
 
 onMounted(() => {
     userRoleFun()
@@ -111,6 +103,10 @@ const userRoleFun = () => {
         pageIndex: 1,
         pageSize: 1000
     }).then(({ data }) => {
+        data.list.forEach((value) => {
+            value['value'] = value.id
+            value['label'] = value.name
+        })
         roleList.value = data.list.slice();
     })
 }

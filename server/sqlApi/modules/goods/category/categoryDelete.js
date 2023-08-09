@@ -21,6 +21,24 @@ module.exports = {
             return
         }
 
+        const sql_2 = await db.connect('SELECT id FROM goods WHERE category=?', [id])
+        if (sql_2.err) {
+            res.send(statusCodeMap['-1'])
+            return
+        }
+
+        const ids = sql_2.res.map((value) => value.id)
+        let sql_str = 'UPDATE goods SET category=NULL WHERE id IN ('
+        ids.forEach((value, index) => {
+            sql_str += (index == 0 ? '' : ',') + value
+        })
+        sql_str += ')'
+        const sql_3 = await db.connect(sql_str, [ids])
+        if (sql_3.err) {
+            res.send(statusCodeMap['-1'])
+            return
+        }
+
         res.send({
             code: 200,
             data: sql_1.res[0],

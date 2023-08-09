@@ -17,13 +17,27 @@ module.exports = {
         }
 
         const currentTime = moment(Date.now()).format('YYYY-MM-DD HH:mm:ss')
-        let sql_1 = ''
-        if (id) {
-            sql_1 = (await db.connect('UPDATE category SET name=?,des=?,updateTime=? WHERE id=?', [name, des, currentTime, id]))
-        } else {
-            sql_1 = (await db.connect('insert into category (name, des, state, createTime, updateTime) values (?,?,?,?,?)', [name, des, 1, currentTime, currentTime]))
-        }
+        const sql_1 = await db.connect('SELECT COUNT(*) as total FROM category WHERE name=?', [name])
         if (sql_1.err) {
+            res.send(statusCodeMap['-1'])
+            return
+        }
+        if (sql_1.res[0].total > 0) {
+            res.send({
+                code: -1,
+                data: '',
+                msg: '该分类名称已存在',
+            })
+            return
+        }
+
+        let sql_2 = ''
+        if (id) {
+            sql_2 = (await db.connect('UPDATE category SET name=?,des=?,updateTime=? WHERE id=?', [name, des, currentTime, id]))
+        } else {
+            sql_2 = (await db.connect('insert into category (name, des, state, createTime, updateTime) values (?,?,?,?,?)', [name, des, 1, currentTime, currentTime]))
+        }
+        if (sql_2.err) {
             res.send(statusCodeMap['-1'])
             return
         }
