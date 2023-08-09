@@ -1,13 +1,13 @@
 <template>
     <el-dialog @close="closeFun" title="修改密码" :close-on-click-modal="false" v-model="visible">
         <el-form ref="dataFormRef" :model="dataForm" :rules="dataRule" label-width="100px">
-            <el-form-item label="旧密码：" prop="oldPwd">
+            <el-form-item label="旧密码" prop="oldPwd">
                 <el-input v-model="dataForm.oldPwd" placeholder="请输入" type="password" class="inp-dom"></el-input>
             </el-form-item>
-            <el-form-item label="新密码：" prop="pwd">
+            <el-form-item label="新密码" prop="pwd">
                 <el-input v-model="dataForm.pwd" placeholder="请输入" type="password" class="inp-dom"></el-input>
             </el-form-item>
-            <el-form-item label="确认密码：" prop="pwd2">
+            <el-form-item label="确认密码" prop="pwd2">
                 <el-input v-model="dataForm.pwd2" placeholder="请输入" type="password" class="inp-dom"></el-input>
             </el-form-item>
         </el-form>

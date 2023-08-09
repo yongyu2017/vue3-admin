@@ -4,10 +4,10 @@
 
         <el-form ref="dataFormRef" :model="dataForm" :rules="dataRule" hide-required-asterisk
             @keyup.enter="loginFun()" @submit.prevent class="login-form">
-            <el-form-item label="帐号：" prop="name">
+            <el-form-item label="帐号" prop="name">
                 <el-input size="large" v-model="dataForm.name"></el-input>
             </el-form-item>
-            <el-form-item label="密码：" prop="pwd">
+            <el-form-item label="密码" prop="pwd">
                 <el-input type="password" size="large" v-model="dataForm.pwd"></el-input>
             </el-form-item>
             <el-form-item>
@@ -18,7 +18,7 @@
             </el-form-item>
         </el-form>
     </div>
-    
+
 </template>
 
 <script setup>

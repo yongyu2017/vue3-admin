@@ -5,15 +5,15 @@
         :close-on-click-modal="false"
         v-model="visible">
         <el-form ref="dataFormRef" :model="dataForm" :rules="dataRule" label-width="100px">
-            <el-form-item label="姓名：" prop="name">
+            <el-form-item label="姓名" prop="name">
                 <el-input v-model="dataForm.name" placeholder="请输入" class="inp-dom"></el-input>
             </el-form-item>
-            <el-form-item label="性别：" prop="sex">
+            <el-form-item label="性别" prop="sex">
                 <el-select v-model="dataForm.sex" class="inp-dom">
                     <el-option :label="item.label" :value="item.value" v-for="(item, index) in sexList" :key="index" />
                 </el-select>
             </el-form-item>
-            <el-form-item label="年龄：" prop="age">
+            <el-form-item label="年龄" prop="age">
                 <el-input v-model="dataForm.age" placeholder="请输入" class="inp-dom"></el-input>
             </el-form-item>
         </el-form>

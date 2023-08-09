@@ -1,10 +1,10 @@
 <template>
     <el-dialog @close="closeFun" :title="!dataForm.id ? '新增' : '修改'" :close-on-click-modal="false" v-model="visible">
         <el-form ref="dataFormRef" :model="dataForm" :rules="dataRule" label-width="100px">
-            <el-form-item label="商品名称：" prop="name">
+            <el-form-item label="商品名称" prop="name">
                 <el-input v-model="dataForm.name" placeholder="请输入" class="inp-dom"></el-input>
             </el-form-item>
-            <el-form-item label="商品分类：" prop="category">
+            <el-form-item label="商品分类" prop="category">
                 <el-select v-model="dataForm.category" placeholder="请选择" filterable class="inp-dom">
                     <el-option
                             v-for="item in categoryList"
@@ -14,7 +14,7 @@
                     </el-option>
                 </el-select>
             </el-form-item>
-            <el-form-item label="商品图片：" prop="img">
+            <el-form-item label="商品图片" prop="img">
                 <div>
                     <ul class="upload-file-list">
                         <li class="img-preview" v-if="dataForm.imgUrl">
@@ -41,7 +41,7 @@
                     <div class="info-txt">支持格式：{{ fileTypeList.join(',') }}，单个文件不能超过{{ fileLimit }}MB</div>
                 </div>
             </el-form-item>
-            <el-form-item label="商品描述：" prop="des">
+            <el-form-item label="商品描述" prop="des">
                 <el-input v-model="dataForm.des" placeholder="请输入" :rows="3" type="textarea" class="inp-dom"></el-input>
             </el-form-item>
         </el-form>

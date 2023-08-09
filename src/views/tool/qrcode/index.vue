@@ -1,7 +1,7 @@
 <template>
     <div class="qrcode-page">
         <el-form ref="dataFormRef" :model="dataForm" :rules="dataRule" label-width="70px">
-            <el-form-item label="文本：" prop="content">
+            <el-form-item label="文本" prop="content">
                 <div style="display: flex; align-items: flex-start; width: 100%;">
                     <el-input v-model="dataForm.content" placeholder="请输入" :rows="5" type="textarea" style="width: 500px"></el-input>
                 </div>

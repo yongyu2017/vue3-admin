@@ -2,18 +2,18 @@
     <el-dialog @close="closeFun" :title="!dataForm.id ? '新增' : '修改'" :close-on-click-modal="false" v-model="visible"
         width="30%" >
         <el-form ref="dataFormRef" :model="dataForm" :rules="dataRule" label-width="100px">
-            <el-form-item label="字典名称：" prop="name">
+            <el-form-item label="字典名称" prop="name">
                 <el-input v-model="dataForm.name" placeholder="请输入" clearable maxlength="50" class="inp-dom"></el-input>
             </el-form-item>
-            <el-form-item label="字典类型：" prop="type">
+            <el-form-item label="字典类型" prop="type">
                 <el-input v-model="dataForm.type" placeholder="请输入" clearable maxlength="50" class="inp-dom"></el-input>
             </el-form-item>
-            <el-form-item label="状态：" prop="status">
+            <el-form-item label="状态" prop="status">
                 <el-select v-model="dataForm.status" placeholder="请选择" class="inp-dom">
                     <el-option v-for="item in statusList" :key="item.value" :label="item.label" :value="item.value" />
                 </el-select>
             </el-form-item>
-            <el-form-item label="备注：" prop="remark">
+            <el-form-item label="备注" prop="remark">
                 <el-input type="textarea" v-model="dataForm.remark" placeholder="请输入" clearable :rows="4" maxlength="2000" show-word-limit />
             </el-form-item>
         </el-form>

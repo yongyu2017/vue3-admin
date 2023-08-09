@@ -1,7 +1,7 @@
 <template>
     <div class="fileChange-page">
         <el-form ref="dataFormRef" :model="dataForm" :rules="dataRule" label-position="left" label-width="100px">
-            <el-form-item label="上传文件：" prop="file">
+            <el-form-item label="上传文件" prop="file">
                 <el-upload
                     v-loading="ajaxLoading"
                     :auto-upload="false"
@@ -11,7 +11,7 @@
                     <el-button type="primary">选择文件</el-button>
                 </el-upload>
             </el-form-item>
-            <el-form-item label="帧数：" prop="frameRate">
+            <el-form-item label="帧数" prop="frameRate">
                 <el-input-number
                     v-model="dataForm.frameRate"
                     :min="0"
@@ -32,7 +32,7 @@
                     </template>
                 </el-popover>
             </el-form-item>
-            <el-form-item label="宽度：" prop="width">
+            <el-form-item label="宽度" prop="width">
                 <el-input-number
                     v-model="dataForm.width"
                     :min="0"
@@ -60,7 +60,7 @@
                     </template>
                 </el-popover>
             </el-form-item>
-            <el-form-item label="高度：" prop="height">
+            <el-form-item label="高度" prop="height">
                 <el-input-number
                     v-model="dataForm.height"
                     :min="0"
@@ -88,21 +88,21 @@
                     </template>
                 </el-popover>
             </el-form-item>
-            <el-form-item label="开始时间：" prop="rangeStart">
+            <el-form-item label="开始时间" prop="rangeStart">
                 <el-input v-model="dataForm.rangeStart" placeholder="请输入" class="inp-dom"></el-input>
             </el-form-item>
-            <el-form-item label="结束时间：" prop="rangeEnd">
+            <el-form-item label="结束时间" prop="rangeEnd">
                 <el-input v-model="dataForm.rangeEnd" placeholder="请输入" class="inp-dom"></el-input>
             </el-form-item>
-            <el-form-item label="文件格式：" prop="fileType">
+            <el-form-item label="文件格式" prop="fileType">
                 <el-select v-model="dataForm.fileType" class="inp-dom">
                     <el-option :label="item" :value="item" :key="index" v-for="(item, index) in fileTypeList" />
                 </el-select>
             </el-form-item>
-            <el-form-item label="进度：" prop="rangeEnd">
+            <el-form-item label="进度" prop="rangeEnd">
                 {{ progress }}%
             </el-form-item>
-            <el-form-item label="用时：" prop="rangeEnd">
+            <el-form-item label="用时" prop="rangeEnd">
                 {{ zoneTime }}秒
             </el-form-item>
             <el-form-item>

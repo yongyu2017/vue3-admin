@@ -1,24 +1,24 @@
 <template>
     <el-dialog @close="closeFun" :title="!dataForm.id ? '新增' : '修改'" :close-on-click-modal="false" v-model="visible">
         <el-form ref="dataFormRef" :model="dataForm" :rules="dataRule" label-width="100px">
-            <el-form-item label="账号：" prop="account">
+            <el-form-item label="账号" prop="account">
                 <el-input v-model="dataForm.account" placeholder="请输入" :disabled="dataForm.id != ''" class="inp-dom"></el-input>
             </el-form-item>
-            <el-form-item label="密码：" prop="pwd">
+            <el-form-item label="密码" prop="pwd">
                 <el-input v-model="dataForm.pwd" placeholder="请输入" type="password" class="inp-dom"></el-input>
             </el-form-item>
-            <el-form-item label="昵称：" prop="username">
+            <el-form-item label="昵称" prop="username">
                 <el-input v-model="dataForm.username" placeholder="请输入" class="inp-dom"></el-input>
             </el-form-item>
-            <el-form-item label="角色：" prop="role">
+            <el-form-item label="角色" prop="role">
                 <el-select v-model="dataForm.role" :disabled="dataForm.id === 1" class="inp-dom">
                     <el-option :label="item.name" :value="item.id" v-for="(item, index) in roleList" :key="index" />
                 </el-select>
             </el-form-item>
-            <el-form-item label="邮箱：" prop="email">
+            <el-form-item label="邮箱" prop="email">
                 <el-input v-model="dataForm.email" placeholder="请输入" class="inp-dom"></el-input>
             </el-form-item>
-            <el-form-item label="备注：" prop="des">
+            <el-form-item label="备注" prop="des">
                 <el-input v-model="dataForm.des" placeholder="请输入" :rows="3" type="textarea"
                     class="inp-dom"></el-input>
             </el-form-item>

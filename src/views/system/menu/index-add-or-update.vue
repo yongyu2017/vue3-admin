@@ -5,7 +5,7 @@
         :close-on-click-modal="false"
         v-model="visible">
         <el-form ref="dataFormRef" :model="dataForm" :rules="dataRule" label-width="100px">
-            <el-form-item label="类型：">
+            <el-form-item label="类型">
                 <el-radio-group v-model="dataForm.type">
                     <el-radio :label="item.value" v-for="(item, index) in typeList" :key="index">{{ item.name }}</el-radio>
                 </el-radio-group>
@@ -13,7 +13,7 @@
             <el-form-item :label="menuNameStr" prop="menuName">
                 <el-input v-model="dataForm.menuName" placeholder="请输入" class="inp-dom"></el-input>
             </el-form-item>
-            <el-form-item label="上级菜单：" prop="parentId">
+            <el-form-item label="上级菜单" prop="parentId">
                 <el-tree-select
                     class="inp-dom"
                     v-model="dataForm.parentId"
@@ -23,16 +23,16 @@
                     :render-after-expand="false">
                 </el-tree-select>
             </el-form-item>
-            <el-form-item label="排序：" prop="orderNum" v-if="dataForm.type !== 2">
+            <el-form-item label="排序" prop="orderNum" v-if="dataForm.type !== 2">
                 <el-input-number v-model="dataForm.orderNum" :step="1" step-strictly  class="inp-dom" />
             </el-form-item>
-            <el-form-item label="菜单路由：" prop="jumpUrl" v-if="dataForm.type === 1">
+            <el-form-item label="菜单路由" prop="jumpUrl" v-if="dataForm.type === 1">
                 <el-input v-model="dataForm.jumpUrl" placeholder="请输入" class="inp-dom"></el-input>
             </el-form-item>
-            <el-form-item label="授权标识：" prop="roleUrl" v-if="dataForm.type === 2">
+            <el-form-item label="授权标识" prop="roleUrl" v-if="dataForm.type === 2">
                 <el-input v-model="dataForm.roleUrl" placeholder="请输入" class="inp-dom"></el-input>
             </el-form-item>
-            <el-form-item label="菜单图标：" prop="icon" v-if="dataForm.type != 2">
+            <el-form-item label="菜单图标" prop="icon" v-if="dataForm.type != 2">
                 <el-popover
                     placement="top-end"
                     title=""

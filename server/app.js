@@ -4,8 +4,8 @@ const app = express();
 const bodyParser = require('body-parser');
 const path = require('path')
 const os = require('os')
-const api = require('./api/index.js') // 接口模块
-// const api = require('./sqlApi/index.js') // 接口模块
+// const api = require('./api/index.js') // 接口模块
+const api = require('./sqlApi/index.js') // 接口模块
 const { port } = require('./utils/setting.js')
 const ip = getIPAdress();
 
