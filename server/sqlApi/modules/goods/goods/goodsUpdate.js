@@ -13,7 +13,6 @@ module.exports = {
     bodyParser: false,
     fn: async function (req, res) {
         const { token } = req.headers
-        // const { id, name, category, img, des } = req['body'];
         const tokenInfo = await verifyToken(token)
 
         if (!tokenInfo) {
@@ -27,7 +26,7 @@ module.exports = {
         //设置上传文件的保存路径
         const storeFileName = '/goods'
         const filePath = rootDir + ('/upload' + storeFileName).replace(/\//g, '\\')
-        console.log('filePath', filePath)
+
         form.uploadDir = filePath
         //保留上传文件的后缀名字
         form.keepExtensions = true
@@ -41,18 +40,24 @@ module.exports = {
                 res.send(statusCodeMap['-1'])
                 return
             }
+
             const { id, name, img, category, des } = fields
             let renameImg = ''
             /** 文件重命名 **/
             if (!img) {
-                const newFileName = currentTime.replace(/-| |:/g, '')
+                const temp = currentTime.replace(/-| |:/g, '')
                 const fileKey = 'img'
-                const suffix = getSuffix(files[fileKey].originalFilename)[0]
-                renameImg = storeFileName + '/' + newFileName + '' + suffix
-                fs.renameSync(filePath + '\\' + files[fileKey].newFilename, filePath + '\\' + newFileName + '' + suffix)
+                const originalFilename = files[fileKey].originalFilename
+                const suffix = getSuffix(originalFilename)[0]
+                const lastIndex = originalFilename.lastIndexOf(suffix)
+                const fileName = originalFilename.substring(0, lastIndex)
+                const newFileName = fileName + '_' + temp + '' + suffix
+                renameImg = storeFileName + '/' + newFileName
+                fs.renameSync(filePath + '\\' + files[fileKey].newFilename, filePath + '\\' + newFileName)
             }
             /** 文件重命名 **/
 
+            console.log('img', img)
             let sql_1 = ''
             if (id) {
                 if (img) {

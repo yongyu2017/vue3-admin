@@ -20,21 +20,21 @@
                         <li class="img-preview" v-if="dataForm.imgUrl">
                             <el-image :src="dataForm.imgUrl" fit="cover" />
                             <span class="file-actions">
-                            <span>
-                                <el-icon @click="showImageViewer = true"><zoom-in /></el-icon>
+                                <span>
+                                    <el-icon @click="showImageViewer = true"><zoom-in /></el-icon>
+                                </span>
+                                <span>
+                                    <el-icon @click="delImgFun"><Delete /></el-icon>
+                                </span>
                             </span>
-                            <span>
-                                <el-icon @click="delImgFun"><Delete /></el-icon>
-                            </span>
-                        </span>
                             <Teleport to="body">
                                 <el-image-viewer @close="showImageViewer = false" :url-list="[dataForm.imgUrl]" v-if="showImageViewer"/>
                             </Teleport>
                         </li>
-                        <li class="file-li">
-                        <span class="icon-wrap">
-                            <el-icon><Plus /></el-icon>
-                        </span>
+                        <li class="file-li" v-if="!dataForm.imgUrl">
+                            <span class="icon-wrap">
+                                <el-icon><Plus /></el-icon>
+                            </span>
                             <input type="file" class="file-btn" @change="fileChange">
                         </li>
                     </ul>
@@ -42,7 +42,7 @@
                 </div>
             </el-form-item>
             <el-form-item label="商品描述" prop="des">
-                <el-input v-model="dataForm.des" placeholder="请输入" :rows="3" type="textarea" class="inp-dom"></el-input>
+                <el-input v-model="dataForm.des" placeholder="请输入" :rows="5" type="textarea"></el-input>
             </el-form-item>
         </el-form>
 
@@ -99,8 +99,10 @@ var init = (id) => {
             goodsGoodsGet({
                 id,
             }).then(({ data }) => {
+                data.category = Number(data.category)
                 data.imgUrl = data.img
                 dataForm.value = data
+                console.log(dataForm.value)
             })
         }
     })
@@ -182,6 +184,7 @@ defineExpose({
         line-height: 1;
 
         li {
+            margin: 0 8px 8px 0;
             vertical-align: top;
         }
 
@@ -224,6 +227,10 @@ defineExpose({
                     opacity: 1;
                 }
 
+                .el-icon {
+                    font-size: 26px;
+                }
+
                 span {
                     display: inline-flex;
                     cursor: pointer;
@@ -262,7 +269,7 @@ defineExpose({
 
                 .el-icon {
                     color: #8c939d;
-                    font-size: 36px;
+                    font-size: 46px;
                 }
             }
 
