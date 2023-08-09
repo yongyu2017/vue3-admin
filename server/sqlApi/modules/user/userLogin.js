@@ -9,32 +9,32 @@ module.exports = {
     fn: async function (req, res) {
         const { name, pwd } = req['body']
 
-        if(name && pwd){
-            const userFileData = (await db.connect('SELECT * FROM user WHERE state=1 and account=? and pwd=?', [name, pwd]))[0]
-            if (userFileData.err) {
-                res.send(statusCodeMap['-1'])
-                return
-            } else {
-                if (userFileData.res.length == 0) {
-                    res.send(statusCodeMap['101'])
-                    return
-                }
-            }
-            const { id, account, email } = userFileData.res[0]
-            const token = generateToken({ account, pwd, id }, tokenSurvive)
-
-            res.send({
-                code: 200,
-                data: {
-                    id,
-                    name,
-                    email,
-                    token,
-                },
-                msg: '',
-            })
-        }else{
+        if (!(name && pwd)) {
             res.send(statusCodeMap['101'])
+            return
         }
+
+        const sql_1 = (await db.connect('SELECT * FROM user WHERE state=1 and account=? and pwd=?', [name, pwd]))
+        if (sql_1.err) {
+            res.send(statusCodeMap['-1'])
+            return
+        }
+        if (sql_1.res.length == 0) {
+            res.send(statusCodeMap['101'])
+            return
+        }
+        const { id, account, email } = sql_1.res[0]
+        const token = generateToken({ account, pwd, id }, tokenSurvive)
+
+        res.send({
+            code: 200,
+            data: {
+                id,
+                name,
+                email,
+                token,
+            },
+            msg: '',
+        })
     }
 }

@@ -31,7 +31,7 @@
 <script setup>
 import { ref, defineEmits, nextTick, defineExpose } from 'vue'
 import { ElLoading, ElMessage } from 'element-plus'
-import { goodsWarehousingAddOrModify, goodsWarehousingDetail, goodsGoodsList } from '@/api/goods'
+import { goodsWarehousingUpdate, goodsWarehousingGet, goodsGoodsPage } from '@/api/goods'
 
 const dataFormRef = ref();
 const visible = ref(false);
@@ -58,9 +58,9 @@ var init = (id) => {
     dataForm.value.id = id || ''
 
     nextTick(async () => {
-        goodsGoodsListFun()
+        goodsGoodsPageFun()
         if (id) {
-            goodsWarehousingDetail({
+            goodsWarehousingGet({
                 id,
             }).then(({ data }) => {
                 dataForm.value = data
@@ -69,8 +69,8 @@ var init = (id) => {
     })
 }
 // 获取商品列表
-const goodsGoodsListFun = () => {
-    goodsGoodsList({
+const goodsGoodsPageFun = () => {
+    goodsGoodsPage({
         name: '',
         pageIndex: '',
         pageSize: '',
@@ -86,7 +86,7 @@ const dataFormSubmit = () => {
                 lock: true,
             })
 
-            goodsWarehousingAddOrModify({
+            goodsWarehousingUpdate({
                 ...dataForm.value,
             }).then(() => {
                 loading.close()

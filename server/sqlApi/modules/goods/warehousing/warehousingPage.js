@@ -2,23 +2,24 @@ const { getFileData, setFileData, findParentNode, findChildNode, getMax, generat
 const statusCodeMap = require('#root/utils/statusCodeMap.js')
 const db = require('#root/db/index.js')
 
-// 获取商品类型列表
+// 获取商品入库列表
 module.exports = {
-    path: '/goods/category/list',
+    path: '/goods/warehousing/page',
     fn: async function (req, res) {
         const { token } = req.headers
-        const { name, pageIndex, pageSize } = req['body'];
+        const { name, parentId, pageIndex, pageSize } = req['body'];
         const tokenInfo = await verifyToken(token)
         const start = pageSize ? (pageIndex - 1) * pageSize : 0
 
         if(tokenInfo){
             let menuFileData = null
             if (pageSize) {
-                menuFileData = (await db.connect("SELECT * FROM category WHERE state=1 AND name like '%"+ name + "%' ORDER BY id DESC limit ?,?", [start, pageSize]))[0]
+                const sql = "SELECT * FROM goods_detail WHERE state=1" + (parentId ? " AND parentId=" + parentId : "") + " AND name like '%" + name + "%'"
+                menuFileData = (await db.connect(sql + " ORDER BY id DESC limit ?,?", [start, pageSize]))
             } else {
-               menuFileData = (await db.connect("SELECT * FROM category WHERE state=1 AND name like '%"+ name + "%' ORDER BY id DESC", []))[0]
+               menuFileData = (await db.connect("SELECT * FROM goods_detail WHERE state=1 ORDER BY id DESC", []))
             }
-            const sum = (await db.connect("SELECT COUNT(*) as total FROM category WHERE state=1 AND name like '%"+ name + "%'", []))[0].res[0].total
+            const sum = (await db.connect("SELECT COUNT(*) as total FROM goods_detail WHERE state=1" + (parentId ? " AND parentId=" + parentId : "") + " AND name like '%" + name + "%'", [])).res[0].total
 
             if (menuFileData.err) {
                 res.send(statusCodeMap['-1'])

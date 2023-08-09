@@ -100,7 +100,7 @@ const searchFun = () => {
 }
 // 重置
 const resetFun = () => {
-    formData.value.value = deepCopy(defaultFormData)
+    formData.value = deepCopy(defaultFormData)
     queryList();
 }
 // 每页数

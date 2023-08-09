@@ -10,36 +10,38 @@ module.exports = {
         const { id } = req['body']
         const tokenInfo = await verifyToken(token)
 
-        if(tokenInfo){
-            const menuListData = (await db.connect(`SELECT * FROM menu WHERE state=1 ORDER BY orderNum ASC`, []))[0]
-            if (menuListData.err) {
-                res.send(statusCodeMap['-1'])
-                return
-            }
-            const menuList = menuListData.res
-            const menuTree = menuToTreeMenu(menuList)
-            const childList = findChildNode(id, menuTree)
-            if (childList.length > 0) {
-                res.send({
-                    code: -1,
-                    data: '',
-                    msg: '该数据下有其他选项，无法删除',
-                })
-                return
-            }
-
-            const menuFileData = (await db.connect('UPDATE menu SET state=? WHERE id=?', [0, id]))[0]
-            if (menuFileData.err) {
-                res.send(statusCodeMap['-1'])
-                return
-            }
-            res.send({
-                code: 200,
-                data: menuFileData.res[0],
-                msg: '',
-            })
-        }else{
+        if (!tokenInfo) {
             res.send(statusCodeMap['401'])
+            return
         }
+
+        const sql_1 = await db.connect(`SELECT * FROM menu WHERE state=1 ORDER BY orderNum ASC`, [])
+        if (sql_1.err) {
+            res.send(statusCodeMap['-1'])
+            return
+        }
+        const menuList = sql_1.res
+        const menuTree = menuToTreeMenu(menuList)
+        const childList = findChildNode(id, menuTree)
+        if (childList.length > 0) {
+            res.send({
+                code: -1,
+                data: '',
+                msg: '该数据下有其他选项，无法删除',
+            })
+            return
+        }
+
+        const sql_2 = await db.connect('UPDATE menu SET state=? WHERE id=?', [0, id])
+        if (sql_2.err) {
+            res.send(statusCodeMap['-1'])
+            return
+        }
+
+        res.send({
+            code: 200,
+            data: '',
+            msg: '',
+        })
     }
 }

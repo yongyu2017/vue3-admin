@@ -10,36 +10,38 @@ module.exports = {
         const { id } = req['body']
         const tokenInfo = await verifyToken(token)
 
-        if(tokenInfo){
-            try {
-                const menuFileData = (await db.connect('UPDATE role SET state=? WHERE id=?', [0, id]))[0]
-                if (menuFileData.err) {
-                    res.send(statusCodeMap['-1'])
-                    return
-                }
-                const userData = (await db.connect('SELECT id FROM user WHERE role=?', [id]))[0]
-                if (userData.err) {
-                    res.send(statusCodeMap['-1'])
-                    return
-                }
-
-                const ids = userData.res.map((value) => value.id).join(',')
-                const updateUserData = (await db.connect('UPDATE user SET role=NULL WHERE id IN (?)', [ids]))[0]
-                if (updateUserData.err) {
-                    res.send(statusCodeMap['-1'])
-                    return
-                }
-
-                res.send({
-                    code: 200,
-                    data: '',
-                    msg: '',
-                })
-            } catch (e) {
-                res.send(statusCodeMap['-1'])
-            }
-        }else{
+        if (!tokenInfo) {
             res.send(statusCodeMap['401'])
+            return
+        }
+
+        try {
+            const sql_1 = await db.connect('UPDATE role SET state=? WHERE id=?', [0, id])
+            if (sql_1.err) {
+                res.send(statusCodeMap['-1'])
+                return
+            }
+
+            const sql_2 = await db.connect('SELECT id FROM user WHERE role=?', [id])
+            if (sql_2.err) {
+                res.send(statusCodeMap['-1'])
+                return
+            }
+            const ids = sql_2.res.map((value) => value.id).join(',')
+
+            const sql_3 = await db.connect('UPDATE user SET role=NULL WHERE id IN (?)', [ids])
+            if (sql_3.err) {
+                res.send(statusCodeMap['-1'])
+                return
+            }
+
+            res.send({
+                code: 200,
+                data: '',
+                msg: '',
+            })
+        } catch (e) {
+            res.send(statusCodeMap['-1'])
         }
     }
 }

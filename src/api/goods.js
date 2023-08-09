@@ -1,17 +1,17 @@
 import request from '@/utils/httpRequest.js'
 
 // 获取商品列表
-export function goodsGoodsList (data) {
+export function goodsGoodsPage (data) {
     return request({
-        url: '/goods/goods/goods',
+        url: '/goods/goods/page',
         method: 'post',
         data: data
     })
 }
 // 新增或者修改商品信息
-export function goodsGoodsAddOrModify (data) {
+export function goodsGoodsUpdate (data) {
     return request({
-        url: '/goods/goods/addOrModify',
+        url: '/goods/goods/update',
         method: 'post',
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded'
@@ -20,9 +20,9 @@ export function goodsGoodsAddOrModify (data) {
     })
 }
 // 获取商品信息
-export function goodsGoodsDetail (data) {
+export function goodsGoodsGet (data) {
     return request({
-        url: '/goods/goods/detail',
+        url: '/goods/goods/get',
         method: 'post',
         data: data
     })
@@ -36,25 +36,25 @@ export function goodsGoodsDelete (data) {
     })
 }
 // 获取商品分类
-export function goodsCategoryList (data) {
+export function goodsCategoryPage (data) {
     return request({
-        url: '/goods/category/list',
+        url: '/goods/category/page',
         method: 'post',
         data: data
     })
 }
 // 新增或者修改商品分类
-export function goodsCategoryAddOrModify (data) {
+export function goodsCategoryUpdate (data) {
     return request({
-        url: '/goods/category/addOrModify',
+        url: '/goods/category/update',
         method: 'post',
         data: data
     })
 }
 // 获取商品分类详情
-export function goodsCategoryDetail (data) {
+export function goodsCategoryGet (data) {
     return request({
-        url: '/goods/category/detail',
+        url: '/goods/category/get',
         method: 'post',
         data: data
     })
@@ -68,25 +68,25 @@ export function goodsCategoryDelete (data) {
     })
 }
 // 获取商品入库列表
-export function goodsWarehousingList (data) {
+export function goodsWarehousingPage (data) {
     return request({
-        url: '/goods/goodsWarehousing/list',
+        url: '/goods/warehousing/page',
         method: 'post',
         data: data
     })
 }
 // 新增或者修改商品入库信息
-export function goodsWarehousingAddOrModify (data) {
+export function goodsWarehousingUpdate (data) {
     return request({
-        url: '/goods/goodsWarehousing/addOrModify',
+        url: '/goods/warehousing/update',
         method: 'post',
         data: data
     })
 }
 // 获取商品入库信息
-export function goodsWarehousingDetail (data) {
+export function goodsWarehousingGet (data) {
     return request({
-        url: '/goods/goodsWarehousing/detail',
+        url: '/goods/warehousing/get',
         method: 'post',
         data: data
     })
@@ -94,7 +94,7 @@ export function goodsWarehousingDetail (data) {
 // 删除商品入库信息
 export function goodsWarehousingDelete (data) {
     return request({
-        url: '/goods/goodsWarehousing/delete',
+        url: '/goods/warehousing/delete',
         method: 'post',
         data: data
     })

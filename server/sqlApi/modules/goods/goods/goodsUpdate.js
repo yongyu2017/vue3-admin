@@ -8,7 +8,7 @@ const fs = require('fs')
 
 // 新增或修改商品信息
 module.exports = {
-    path: '/goods/goods/addOrModify',
+    path: '/goods/goods/update',
     bodyParser: false,
     fn: async function (req, res) {
         const { token } = req.headers
@@ -51,9 +51,9 @@ module.exports = {
                 if (id) {
                     let menuFileData = ''
                     if (img) {
-                        menuFileData = (await db.connect('UPDATE goods SET name=?,category=?,des=?,updateTime=? WHERE id=?', [name, category, des, currentTime, id]))[0]
+                        menuFileData = (await db.connect('UPDATE goods SET name=?,category=?,des=?,updateTime=? WHERE id=?', [name, category, des, currentTime, id]))
                     } else {
-                        menuFileData = (await db.connect('UPDATE goods SET name=?,category=?,img=?,des=?,updateTime=? WHERE id=?', [name, category, renameImg, des, currentTime, id]))[0]
+                        menuFileData = (await db.connect('UPDATE goods SET name=?,category=?,img=?,des=?,updateTime=? WHERE id=?', [name, category, renameImg, des, currentTime, id]))
                     }
 
                     if (menuFileData.err) {
@@ -66,17 +66,17 @@ module.exports = {
                         msg: '操作成功！',
                     })
                 } else {
-                    const menuFileData = (await db.connect('insert into goods (name, category, img, des, state, createTime, updateTime) values (?,?,?,?,?,?,?)', [name, category, renameImg, des, 1, currentTime, currentTime]))[0]
+                    const menuFileData = (await db.connect('insert into goods (name, category, img, des, state, createTime, updateTime) values (?,?,?,?,?,?,?)', [name, category, renameImg, des, 1, currentTime, currentTime]))
                     if (menuFileData.err) {
                         res.send(statusCodeMap['-1'])
                         return
                     }
-                    const goodsIdSql = (await db.connect('select max(id) as id from goods WHERE state=1', []))[0]
+                    const goodsIdSql = (await db.connect('select max(id) as id from goods WHERE state=1', []))
                     if (goodsIdSql.err) {
                         res.send(statusCodeMap['-1'])
                         return
                     }
-                    const goodsStockSql = (await db.connect('insert into goods_stock (goodsId, count, state, createTime, updateTime) values (?,0,1,?,?)', [goodsIdSql.res[0].id, currentTime, currentTime]))[0]
+                    const goodsStockSql = (await db.connect('insert into goods_stock (goodsId, count, state, createTime, updateTime) values (?,0,1,?,?)', [goodsIdSql.res[0].id, currentTime, currentTime]))
                     if (goodsStockSql.err) {
                         res.send(statusCodeMap['-1'])
                         return

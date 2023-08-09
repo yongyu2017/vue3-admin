@@ -11,24 +11,29 @@ module.exports = {
         const tokenInfo = await verifyToken(token)
         const start = (pageIndex - 1) * pageSize
 
-        if(tokenInfo){
-            const menuFileData = (await db.connect("SELECT * FROM role WHERE state=1 AND name like '%"+ name + "%' ORDER BY id DESC limit ?,?", [start, pageSize]))[0]
-            const sum = (await db.connect("SELECT COUNT(*) as total FROM role WHERE state=1 AND name like '%"+ name + "%'", []))[0].res[0].total
-
-            if (menuFileData.err) {
-                res.send(statusCodeMap['-1'])
-                return
-            }
-            res.send({
-                code: 200,
-                data: {
-                    list: menuFileData.res,
-                    sum
-                },
-                msg: '',
-            })
-        }else{
+        if (!tokenInfo) {
             res.send(statusCodeMap['401'])
+            return
         }
+
+        const sql_1 = await db.connect("SELECT * FROM role WHERE state=1 AND name like '%"+ name + "%' ORDER BY id DESC limit ?,?", [start, pageSize])
+        if (sql_1.err) {
+            res.send(statusCodeMap['-1'])
+            return
+        }
+        const sql_2 = await db.connect("SELECT COUNT(*) as total FROM role WHERE state=1 AND name like '%"+ name + "%'", [])
+        if (sql_2.err) {
+            res.send(statusCodeMap['-1'])
+            return
+        }
+
+        res.send({
+            code: 200,
+            data: {
+                list: sql_1.res,
+                sum: sql_2.res[0].total
+            },
+            msg: '',
+        })
     }
 }

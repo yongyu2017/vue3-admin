@@ -5,7 +5,7 @@
         </el-form-item>
         <el-form-item>
             <el-button type="primary" @click="searchFun">查询</el-button>
-            <el-button @click="resetSearch">重置</el-button>
+            <el-button @click="resetFun">重置</el-button>
             <el-button @click="addOrUpdateFun()">新增</el-button>
         </el-form-item>
     </el-form>
@@ -83,9 +83,8 @@ const queryList = () => {
     })
 }
 // 重置
-const resetSearch = () => {
+const resetFun = () => {
     formData.value = deepCopy(defaultDataForm)
-
     searchFun()
 }
 // 搜索

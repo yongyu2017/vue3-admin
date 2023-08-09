@@ -11,36 +11,30 @@ module.exports = {
         const { id, account, des, role, email, pwd, username } = req['body'];
         const tokenInfo = await verifyToken(token)
 
-        if(tokenInfo){
-            const currentTime = moment(Date.now()).format('YYYY-MM-DD HH:mm:ss')
-
-            if (id) {
-                const menuFileData = (await db.connect('UPDATE user SET account=?,des=?,role=?,email=?,pwd=?,username=?,updateTime=? WHERE id=?', [account, des, role, email, pwd, username, currentTime, id]))[0]
-
-                if (menuFileData.err) {
-                    res.send(statusCodeMap['-1'])
-                    return
-                }
-                res.send({
-                    code: 200,
-                    data: {},
-                    msg: '操作成功！',
-                })
-            } else {
-                const menuFileData = (await db.connect('insert into user (account, des, role, email, pwd, username, state, createTime, updateTime) values (?,?,?,?,?,?,?,?,?)', [account, des, role, email, pwd, username, 1, currentTime, currentTime]))[0]
-
-                if (menuFileData.err) {
-                    res.send(statusCodeMap['-1'])
-                    return
-                }
-                res.send({
-                    code: 200,
-                    data: {},
-                    msg: '操作成功！',
-                })
-            }
-        }else{
+        if (!tokenInfo) {
             res.send(statusCodeMap['401'])
+            return
         }
+
+
+        const currentTime = moment(Date.now()).format('YYYY-MM-DD HH:mm:ss')
+        let sql_1 = ''
+
+        if (id) {
+            sql_1 = await db.connect('UPDATE user SET account=?,des=?,role=?,email=?,pwd=?,username=?,updateTime=? WHERE id=?', [account, des, role, email, pwd, username, currentTime, id])
+
+        } else {
+            sql_1 = await db.connect('insert into user (account, des, role, email, pwd, username, state, createTime, updateTime) values (?,?,?,?,?,?,?,?,?)', [account, des, role, email, pwd, username, 1, currentTime, currentTime])
+        }
+        if (sql_1.err) {
+            res.send(statusCodeMap['-1'])
+            return
+        }
+
+        res.send({
+            code: 200,
+            data: {},
+            msg: '操作成功！',
+        })
     }
 }

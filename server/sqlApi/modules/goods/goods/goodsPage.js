@@ -4,7 +4,7 @@ const db = require('#root/db/index.js')
 
 // 获取商品列表
 module.exports = {
-    path: '/goods/goods/goods',
+    path: '/goods/goods/page',
     fn: async function (req, res) {
         const { token } = req.headers
         const { name, pageIndex, pageSize } = req['body'];
@@ -14,11 +14,11 @@ module.exports = {
         if(tokenInfo){
             let menuFileData = null
             if (pageSize) {
-                menuFileData = (await db.connect("select goods.id,goods.name,goods.category,goods.img,goods.des,goods_stock.count from goods left join goods_stock on goods.id = goods_stock.goodsId WHERE goods.state=1 AND name like '%"+ name + "%' ORDER BY id DESC limit ?,?", [start, pageSize]))[0]
+                menuFileData = (await db.connect("select goods.id,goods.name,goods.category,goods.img,goods.des,goods_stock.count from goods left join goods_stock on goods.id = goods_stock.goodsId WHERE goods.state=1 AND name like '%"+ name + "%' ORDER BY id DESC limit ?,?", [start, pageSize]))
             } else {
-                menuFileData = (await db.connect("SELECT * FROM goods WHERE state=1 AND name like '%"+ name + "%' ORDER BY id DESC", []))[0]
+                menuFileData = (await db.connect("SELECT * FROM goods WHERE state=1 AND name like '%"+ name + "%' ORDER BY id DESC", []))
             }
-            const sum = (await db.connect("SELECT COUNT(*) as total FROM goods WHERE state=1 AND name like '%"+ name + "%'", []))[0].res[0].total
+            const sum = (await db.connect("SELECT COUNT(*) as total FROM goods WHERE state=1 AND name like '%"+ name + "%'", [])).res[0].total
 
             if (menuFileData.err) {
                 res.send(statusCodeMap['-1'])

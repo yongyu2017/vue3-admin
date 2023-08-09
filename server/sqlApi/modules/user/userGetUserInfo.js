@@ -9,46 +9,48 @@ module.exports = {
         const { token } = req.headers;
         const tokenInfo = await verifyToken(token)
 
-        if(tokenInfo){
-            const userFileData = (await db.connect('SELECT * FROM user WHERE state=1 and id=?', [tokenInfo.id]))[0]
-            if (userFileData.err || userFileData.res.length == 0) {
-                res.send(statusCodeMap['-1'])
-                return
-            }
-            const { id, account, email, role } = userFileData.res[0]
-            const roleFileData = (await db.connect('SELECT * FROM role WHERE state=1 and id=?', [role]))[0]
-            if (roleFileData.err) {
-                res.send(statusCodeMap['-1'] || roleFileData.res.length == 0)
-                return
-            }
-            const roleInfo = roleFileData.res[0]
-            const roleIds = roleInfo.permission ? roleInfo.permission.split(',') : []
-
-            const menuFileData = (await db.connect(`SELECT * FROM menu WHERE state=1 and type=2`, []))[0]
-            if (menuFileData.err) {
-                res.send(statusCodeMap['-1'])
-                return
-            }
-            const menuList = menuFileData.res
-            const permission = []
-            menuList.forEach((value) => {
-                if (roleIds.includes(value.id + '') && value.roleUrl) {
-                    permission.push(value.roleUrl)
-                }
-            })
-
-            res.send({
-                code: 200,
-                data: {
-                    id,
-                    account,
-                    email,
-                    permission,
-                },
-                msg: '',
-            })
-        }else{
+        if (!tokenInfo) {
             res.send(statusCodeMap['401'])
+            return
         }
+
+        const sql_1 = await db.connect('SELECT * FROM user WHERE state=1 and id=?', [tokenInfo.id])
+        if (sql_1.err) {
+            res.send(statusCodeMap['-1'])
+            return
+        }
+        const { id, account, email, role } = sql_1.res[0]
+
+        const sql_2 = await db.connect('SELECT * FROM role WHERE state=1 and id=?', [role])
+        if (sql_2.err) {
+            res.send(statusCodeMap['-1'])
+            return
+        }
+        const roleInfo = sql_2.res[0]
+        const roleIds = roleInfo.permission ? roleInfo.permission.split(',') : []
+
+        const sql_3 = await db.connect(`SELECT * FROM menu WHERE state=1 and type=2`, [])
+        if (sql_3.err) {
+            res.send(statusCodeMap['-1'])
+            return
+        }
+        const menuList = sql_3.res
+        const permission = []
+        menuList.forEach((value) => {
+            if (roleIds.includes(value.id + '') && value.roleUrl) {
+                permission.push(value.roleUrl)
+            }
+        })
+
+        res.send({
+            code: 200,
+            data: {
+                id,
+                account,
+                email,
+                permission,
+            },
+            msg: '',
+        })
     }
 }

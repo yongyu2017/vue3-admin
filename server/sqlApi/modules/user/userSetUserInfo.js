@@ -10,19 +10,20 @@ module.exports = {
         const { email } = req['body'];
         const tokenInfo = await verifyToken(token)
 
-        if(tokenInfo){
-            const sqlResult = (await db.connect('UPDATE user SET email=? WHERE id=?', [email, tokenInfo.id]))[0]
-            if (sqlResult.err || sqlResult.res.affectedRows == 0) {
-                res.send(statusCodeMap['-1'])
-            }
-
-            res.send({
-                code: 200,
-                data: {},
-                msg: '修改成功！',
-            })
-        }else{
+        if (!tokenInfo) {
             res.send(statusCodeMap['401'])
+            return
         }
+
+        const sql_1 = await db.connect('UPDATE user SET email=? WHERE id=?', [email, tokenInfo.id])
+        if (sql_1.err) {
+            res.send(statusCodeMap['-1'])
+        }
+
+        res.send({
+            code: 200,
+            data: '',
+            msg: '修改成功！',
+        })
     }
 }

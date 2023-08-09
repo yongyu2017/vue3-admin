@@ -11,45 +11,41 @@ module.exports = {
         const { id, name, des, permission } = req['body'];
         const tokenInfo = await verifyToken(token)
 
-        if(tokenInfo){
-            const currentTime = moment(Date.now()).format('YYYY-MM-DD HH:mm:ss')
-            const countData = (await db.connect('SELECT COUNT(*) as total FROM role WHERE name=?', [name]))[0]
-            if (countData.res[0].total > 0) {
-                res.send({
-                    code: -1,
-                    data: {},
-                    msg: '该角色名称已存在',
-                })
-                return
-            }
-
-            if (id) {
-                const menuFileData = (await db.connect('UPDATE role SET name=?,des=?,permission=?,updateTime=? WHERE id=?', [name, des, permission, currentTime, id]))[0]
-
-                if (menuFileData.err) {
-                    res.send(statusCodeMap['-1'])
-                    return
-                }
-                res.send({
-                    code: 200,
-                    data: {},
-                    msg: '操作成功！',
-                })
-            } else {
-                const menuFileData = (await db.connect('insert into role (name, des, permission, state, createTime, updateTime) values (?,?,?,?,?,?)', [name, des, permission, 1, currentTime, currentTime]))[0]
-
-                if (menuFileData.err) {
-                    res.send(statusCodeMap['-1'])
-                    return
-                }
-                res.send({
-                    code: 200,
-                    data: {},
-                    msg: '操作成功！',
-                })
-            }
-        }else{
+        if (!tokenInfo) {
             res.send(statusCodeMap['401'])
+            return
         }
+
+        const currentTime = moment(Date.now()).format('YYYY-MM-DD HH:mm:ss')
+        const sql_1 = await db.connect('SELECT COUNT(*) as total FROM role WHERE name=?', [name])
+        if (sql_1.err) {
+            res.send(statusCodeMap['-1'])
+            return
+        }
+        if (sql_1.res[0].total > 0) {
+            res.send({
+                code: -1,
+                data: {},
+                msg: '该角色名称已存在',
+            })
+            return
+        }
+
+        let sql_2 = ''
+        if (id) {
+            sql_2 = await db.connect('UPDATE role SET name=?,des=?,permission=?,updateTime=? WHERE id=?', [name, des, permission, currentTime, id])
+        } else {
+            sql_2 = await db.connect('insert into role (name, des, permission, state, createTime, updateTime) values (?,?,?,?,?,?)', [name, des, permission, 1, currentTime, currentTime])
+        }
+        if (sql_2.err) {
+            res.send(statusCodeMap['-1'])
+            return
+        }
+
+        res.send({
+            code: 200,
+            data: {},
+            msg: '操作成功！',
+        })
     }
 }

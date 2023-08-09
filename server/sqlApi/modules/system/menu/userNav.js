@@ -9,21 +9,22 @@ module.exports = {
         const { token } = req.headers
         const tokenInfo = await verifyToken(token)
 
-        if(tokenInfo){
-            const menuFileData = (await db.connect('SELECT * FROM menu WHERE state=1 ORDER BY orderNum ASC', []))[0]
-            if (menuFileData.err || menuFileData.res.length == 0) {
-                res.send(statusCodeMap['-1'])
-                return
-            }
-            res.send({
-                code: 200,
-                data: {
-                    menuList: menuFileData.res
-                },
-                msg: '',
-            })
-        }else{
+        if (!tokenInfo) {
             res.send(statusCodeMap['401'])
+            return
         }
+
+        const sql_1 = await db.connect('SELECT * FROM menu WHERE state=1 ORDER BY orderNum ASC', [])
+        if (sql_1.err) {
+            res.send(statusCodeMap['-1'])
+            return
+        }
+        res.send({
+            code: 200,
+            data: {
+                menuList: sql_1.res
+            },
+            msg: '',
+        })
     }
 }

@@ -21,7 +21,7 @@
 <script setup>
 import { ref, defineEmits, nextTick, defineExpose } from 'vue'
 import { ElLoading, ElMessage } from 'element-plus'
-import { goodsCategoryAddOrModify, goodsCategoryDetail } from '@/api/goods'
+import { goodsCategoryUpdate, goodsCategoryGet } from '@/api/goods'
 
 const dataFormRef = ref();
 const visible = ref(false);
@@ -44,7 +44,7 @@ var init = (id) => {
 
     nextTick(async () => {
         if (id) {
-            goodsCategoryDetail({
+            goodsCategoryGet({
                 id,
             }).then(({ data }) => {
                 dataForm.value = data
@@ -60,7 +60,7 @@ const dataFormSubmit = () => {
                 lock: true,
             })
 
-            goodsCategoryAddOrModify({
+            goodsCategoryUpdate({
                 ...dataForm.value
             }).then(() => {
                 loading.close()

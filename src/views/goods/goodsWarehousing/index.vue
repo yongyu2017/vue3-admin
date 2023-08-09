@@ -15,7 +15,7 @@
         </el-form-item>
         <el-form-item>
             <el-button type="primary" @click="searchFun">查询</el-button>
-            <el-button @click="resetSearch">重置</el-button>
+            <el-button @click="resetFun">重置</el-button>
             <el-button @click="addOrUpdateFun()">新增</el-button>
         </el-form-item>
     </el-form>
@@ -57,7 +57,7 @@
 <script setup>
 import { onMounted, ref, nextTick } from 'vue'
 import indexAddOrUpdate from './index-add-or-update.vue'
-import { goodsWarehousingList, goodsWarehousingDelete, goodsGoodsList } from '@/api/goods'
+import { goodsWarehousingPage, goodsWarehousingDelete, goodsGoodsPage } from '@/api/goods'
 import { ElLoading, ElMessage, ElMessageBox } from 'element-plus'
 import { commonMixin } from '@/mixins/common'
 import { deepCopy } from '@/utils/index'
@@ -79,13 +79,13 @@ const indexAddOrUpdateVisible = ref(false)
 const parentIdList = ref([])
 
 onMounted(() => {
-    goodsGoodsListFun()
+    goodsGoodsPageFun()
     queryList()
 })
 
 // 获取商品列表
-const goodsGoodsListFun = () => {
-    goodsGoodsList({
+const goodsGoodsPageFun = () => {
+    goodsGoodsPage({
         name: '',
         pageIndex: '',
         pageSize: '',
@@ -99,7 +99,7 @@ const goodsGoodsListFun = () => {
 // 获取员工列表
 const queryList = () => {
     dataListLoading.value = true;
-    goodsWarehousingList({
+    goodsWarehousingPage({
         name: formData.value.name,
         parentId: formData.value.parentId,
         pageIndex: formData.value.pageIndex,
@@ -117,9 +117,8 @@ const queryList = () => {
     })
 }
 // 重置
-const resetSearch = () => {
+const resetFun = () => {
     formData.value = deepCopy(defaultDataForm)
-
     searchFun()
 }
 // 搜索
@@ -172,7 +171,7 @@ const delFun = (id) => {
             loading.close()
         })
 
-    }) 
+    })
 }
 </script>
 

@@ -2,17 +2,17 @@ const { getFileData, setFileData, findParentNode, findChildNode, getMax, generat
 const statusCodeMap = require('#root/utils/statusCodeMap.js')
 const db = require('#root/db/index.js')
 
-// 删除商品入库信息
+// 获取商品入库信息
 module.exports = {
-    path: '/goods/goodsWarehousing/delete',
+    path: '/goods/warehousing/get',
     fn: async function (req, res) {
         const { token } = req.headers
         const { id } = req['body']
         const tokenInfo = await verifyToken(token)
 
         if(tokenInfo){
-            const menuFileData = (await db.connect('UPDATE goods_detail SET state=? WHERE id=?', [0, id]))[0]
-            if (menuFileData.err) {
+            const menuFileData = (await db.connect('SELECT * FROM goods_detail WHERE state=1 and id=?', [id]))
+            if (menuFileData.err || menuFileData.res.length == 0) {
                 res.send(statusCodeMap['-1'])
                 return
             }

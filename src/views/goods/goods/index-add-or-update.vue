@@ -58,7 +58,7 @@
 <script setup>
 import { ref, defineEmits, nextTick, defineExpose } from 'vue'
 import { ElLoading, ElMessage } from 'element-plus'
-import { goodsGoodsAddOrModify, goodsGoodsDetail, goodsCategoryList } from '@/api/goods'
+import { goodsGoodsUpdate, goodsGoodsGet, goodsCategoryPage } from '@/api/goods'
 import { getSuffix } from '@/utils/index'
 
 const dataFormRef = ref();
@@ -94,9 +94,9 @@ var init = (id) => {
     dataForm.value.id = id || ''
 
     nextTick(async () => {
-        goodsCategoryListFun()
+        goodsCategoryPageFun()
         if (id) {
-            goodsGoodsDetail({
+            goodsGoodsGet({
                 id,
             }).then(({ data }) => {
                 data.imgUrl = data.img
@@ -106,8 +106,8 @@ var init = (id) => {
     })
 }
 // 获取商品分类
-const goodsCategoryListFun = () => {
-    goodsCategoryList({
+const goodsCategoryPageFun = () => {
+    goodsCategoryPage({
         name: '',
         pageIndex: '',
         pageSize: '',
@@ -154,7 +154,7 @@ const dataFormSubmit = () => {
                 !filterKey.includes(i) && formData.append(i, dataForm.value[i])
             }
 
-            goodsGoodsAddOrModify(formData).then(() => {
+            goodsGoodsUpdate(formData).then(() => {
                 loading.close()
                 visible.value = false
                 emit('refreshDataList')
