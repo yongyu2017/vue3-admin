@@ -41,7 +41,7 @@ module.exports = {
 
         res.send({
             code: 200,
-            data: sql_1.res[0],
+            data: '',
             msg: '',
         })
     }

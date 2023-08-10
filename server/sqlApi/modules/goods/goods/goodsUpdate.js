@@ -6,6 +6,7 @@ const moment = require('moment')
 const formidable = require('formidable')
 const path = require('path')
 const fs = require('fs')
+const { v4: uuidv4 } = require('uuid');
 
 // 新增或修改商品信息
 module.exports = {
@@ -42,10 +43,11 @@ module.exports = {
             }
 
             const { id, name, img, category, des } = fields
-            let renameImg = ''
             /** 文件重命名 **/
+            let renameImg = '' // 文件重命名名称
             if (!img) {
-                const temp = currentTime.replace(/-| |:/g, '')
+                const strUUID = uuidv4() // ⇨ '1b9d6bcd-bbfd-4b2d-9b5d-ab8dfbbd4bed'
+                const temp = strUUID.replace(/-/g, '')
                 const fileKey = 'img'
                 const originalFilename = files[fileKey].originalFilename
                 const suffix = getSuffix(originalFilename)[0]
@@ -57,12 +59,23 @@ module.exports = {
             }
             /** 文件重命名 **/
 
-            console.log('img', img)
             let sql_1 = ''
             if (id) {
                 if (img) {
                     sql_1 = await db.connect('UPDATE goods SET name=?,category=?,des=?,updateTime=? WHERE id=?', [name, category, des, currentTime, id])
                 } else {
+                    const sql_2 = await db.connect('SELECT img FROM goods WHERE id=?', [id])
+                    if (sql_2.err) {
+                        res.send(statusCodeMap['-1'])
+                        return
+                    }
+                    const originalImg = sql_2.res[0].img
+                    /** 判断文件是否存在，存在则删除 **/
+                    const imgFilePath = rootDir + ('/upload' + originalImg).replace(/\//g, '\\')
+                    const imgFsExistsCb = fs.existsSync(imgFilePath)
+                    imgFsExistsCb && fs.unlinkSync(imgFilePath)
+                    /** 判断文件是否存在，存在则删除 **/
+
                     sql_1 = await db.connect('UPDATE goods SET name=?,category=?,img=?,des=?,updateTime=? WHERE id=?', [name, category, renameImg, des, currentTime, id])
                 }
             } else {
