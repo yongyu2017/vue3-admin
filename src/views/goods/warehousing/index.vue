@@ -37,7 +37,7 @@
         <el-table-column label="操作">
             <template #default="scope">
                 <el-button type="primary" link @click="addOrUpdateFun(scope.row.id)">编辑</el-button>
-                <el-button type="primary" link @click="delFun(scope.row.id)">删除</el-button>
+                <el-button type="primary" link @click="delFun(scope.row.id, scope.row.parentId)">删除</el-button>
             </template>
         </el-table-column>
     </el-table>
@@ -89,13 +89,10 @@ onMounted(() => {
 
 // 获取商品列表
 const goodsGoodsListAllFun = () => {
-    goodsGoodsListAll({
-        name: '',
-        pageIndex: '',
-        pageSize: '',
-    }).then(({ data }) => {
+    goodsGoodsListAll().then(({ data }) => {
         data.list.forEach((value) => {
             value['value'] = value.id
+            value['label'] = value.name
         })
         parentIdList.value = data.list.slice()
     })
@@ -149,7 +146,7 @@ const addOrUpdateFun = (id) => {
     })
 }
 //删除
-const delFun = (id) => {
+const delFun = (id, parentId) => {
     ElMessageBox.confirm(
         `确定要删除ID为${ id }的数据吗?`,
         '提示',
@@ -166,6 +163,7 @@ const delFun = (id) => {
 
         goodsWarehousingDelete({
             id,
+            parentId,
         }).then(() => {
             loading.close()
             queryList()

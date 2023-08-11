@@ -16,7 +16,7 @@ module.exports = {
             return
         }
 
-        const sql_1 = await db.connect("select * from goods WHERE state=1 AND name like '%"+ name + "%' ORDER BY id DESC limit ?,?", [start, pageSize])
+        const sql_1 = await db.connect("select goods.id,goods.name,goods.category,goods.img,goods.des,goods_stock.count,goods.createTime,goods.updateTime from goods left join goods_stock on goods_stock.goodsId = goods.id WHERE goods.state=1 AND goods.name like '%"+ name + "%' ORDER BY id DESC limit ?,?", [start, pageSize])
         if (sql_1.err) {
             res.send(statusCodeMap['-1'])
             return

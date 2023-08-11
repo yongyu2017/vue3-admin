@@ -16,7 +16,7 @@ module.exports = {
             return
         }
 
-        let sql_1 = await db.connect("SELECT COUNT(*) as total FROM goods_detail WHERE state=1" + (parentId ? " AND parentId=" + parentId : "") + " AND name like '%" + name + "%' ORDER BY id DESC limit ?,?", [start, pageSize])
+        let sql_1 = await db.connect("SELECT * FROM goods_detail WHERE state=1" + (parentId ? " AND parentId=" + parentId : "") + " AND name like '%" + name + "%' ORDER BY id DESC limit ?,?", [start, pageSize])
         if (sql_1.err) {
             res.send(statusCodeMap['-1'])
             return
