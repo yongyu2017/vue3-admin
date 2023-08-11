@@ -115,3 +115,11 @@ export function goodsWarehousingDelete (data) {
         data: data
     })
 }
+// 商品出入库
+export function goodsWarehousingSale (data) {
+    return request({
+        url: '/goods/warehousing/sale',
+        method: 'post',
+        data: data
+    })
+}

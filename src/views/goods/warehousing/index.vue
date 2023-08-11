@@ -32,11 +32,17 @@
                 {{ codeToLabelComputed(scope.row.parentId, parentIdList) }}
             </template>
         </el-table-column>
+        <el-table-column prop="parentId" label="销售状态">
+            <template #default="scope">
+                <span :class="[scope.row.sale == 1 ? 'success-txt' : 'info-txt']">{{ scope.row.sale == 1 ? '已售' : '未售' }}</span>
+            </template>
+        </el-table-column>
         <el-table-column prop="createTime" label="创建时间"></el-table-column>
         <el-table-column prop="updateTime" label="修改时间"></el-table-column>
         <el-table-column label="操作">
             <template #default="scope">
                 <el-button type="primary" link @click="addOrUpdateFun(scope.row.id)">编辑</el-button>
+                <el-button type="primary" link @click="updateSaleFun(scope.row.id, scope.row.sale)">{{ scope.row.sale == 1 ? '重新入库' : '出库' }}</el-button>
                 <el-button type="primary" link @click="delFun(scope.row.id, scope.row.parentId)">删除</el-button>
             </template>
         </el-table-column>
@@ -60,7 +66,7 @@
 <script setup>
 import { onMounted, ref, nextTick } from 'vue'
 import indexAddOrUpdate from './index-add-or-update.vue'
-import { goodsWarehousingPage, goodsWarehousingDelete, goodsGoodsListAll } from '@/api/goods'
+import { goodsWarehousingPage, goodsWarehousingDelete, goodsGoodsListAll, goodsWarehousingSale } from '@/api/goods'
 import { ElLoading, ElMessage, ElMessageBox } from 'element-plus'
 import { Plus } from '@element-plus/icons-vue'
 import { commonMixin } from '@/mixins/common'
@@ -173,6 +179,24 @@ const delFun = (id, parentId) => {
             loading.close()
         })
 
+    })
+}
+// 商品出入库
+const updateSaleFun = (id, sale) => {
+    const loading = ElLoading.service({
+        lock: true,
+    })
+
+    goodsWarehousingSale({
+        id,
+        sale: sale == 1 ? 0 : 1,
+    }).then(() => {
+        loading.close()
+        queryList()
+
+        ElMessage.success('操作成功')
+    }).catch(() => {
+        loading.close()
     })
 }
 </script>
