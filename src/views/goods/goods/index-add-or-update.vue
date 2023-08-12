@@ -8,9 +8,9 @@
                 <el-select v-model="dataForm.category" placeholder="请选择" filterable class="inp-dom">
                     <el-option
                             v-for="item in categoryList"
-                            :key="item.id"
-                            :label="item.name"
-                            :value="item.id">
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item.value">
                     </el-option>
                 </el-select>
             </el-form-item>
@@ -109,7 +109,8 @@ var init = (id) => {
 const goodsCategoryListAllFun = () => {
     goodsCategoryListAll().then(({ data }) => {
         data.list.forEach((value) => {
-            value.id = value.id + ''
+            value['value'] = value.id + ''
+            value['label'] = value.name
         })
         categoryList.value = data.list.slice()
     })

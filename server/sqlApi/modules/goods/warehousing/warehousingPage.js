@@ -9,7 +9,7 @@ module.exports = {
     path: '/goods/warehousing/page',
     fn: async function (req, res) {
         const { token } = req.headers
-        const { name, parentId, pageIndex, pageSize } = req['body'];
+        const { name, parentId, sale, pageIndex, pageSize } = req['body'];
         const tokenInfo = await verifyToken(token)
         const start = pageSize ? (pageIndex - 1) * pageSize : 0
 
@@ -26,6 +26,9 @@ module.exports = {
                 },
                 parentId: {
                     [Op.like]: '%' + parentId + '%',
+                },
+                sale: {
+                    [Op.like]: '%' + sale + '%',
                 },
             },
             order: [

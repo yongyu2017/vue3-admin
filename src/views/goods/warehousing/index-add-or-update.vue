@@ -11,9 +11,9 @@
                 <el-select v-model="dataForm.parentId" placeholder="请选择" filterable class="inp-dom">
                     <el-option
                             v-for="item in parentIdList"
-                            :key="item.id"
-                            :label="item.name"
-                            :value="item.id">
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item.value">
                     </el-option>
                 </el-select>
             </el-form-item>
@@ -76,7 +76,8 @@ const goodsGoodsListAllFun = () => {
         pageSize: '',
     }).then(({ data }) => {
         data.list.forEach((value) => {
-            value.id = value.id + ''
+            value['value'] = value.id + ''
+            value['label'] = value.name
         })
         parentIdList.value = data.list.slice()
     })

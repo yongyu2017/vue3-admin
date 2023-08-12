@@ -10,7 +10,7 @@ module.exports = {
     path: '/goods/goods/page',
     fn: async function (req, res) {
         const { token } = req.headers
-        const { name, pageIndex, pageSize } = req['body'];
+        const { name, category, pageIndex, pageSize } = req['body'];
         const tokenInfo = await verifyToken(token)
         const start = pageSize ? (pageIndex - 1) * pageSize : 0
 
@@ -19,6 +19,7 @@ module.exports = {
             return
         }
 
+
         Goods.hasOne(Goods_stock, { foreignKey: 'goodsId', sourceKey: 'id' });
         const sql_1 = await Goods.findAndCountAll({
             attributes: ['id', 'name', 'category', 'img', 'des', 'createTime', 'updateTime'],
@@ -26,6 +27,9 @@ module.exports = {
                 state: 1,
                 name: {
                     [Op.like]: '%' + name + '%'
+                },
+                category: {
+                    [Op.like]: '%' + category + '%'
                 },
             },
             order: [

@@ -3,6 +3,16 @@
         <el-form-item label="商品名称">
             <el-input v-model="formData.name" placeholder="请输入" clearable class="inp-dom" />
         </el-form-item>
+        <el-form-item label="所属商品">
+            <el-select v-model="formData.category" placeholder="请选择" filterable clearable class="inp-dom">
+                <el-option
+                        v-for="item in categoryList"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value">
+                </el-option>
+            </el-select>
+        </el-form-item>
         <el-form-item>
             <el-button type="primary" @click="searchFun">查询</el-button>
             <el-button @click="resetFun">重置</el-button>
@@ -32,7 +42,11 @@
             </template>
         </el-table-column>
         <el-table-column prop="des" label="描述"></el-table-column>
-        <el-table-column prop="count" label="库存"></el-table-column>
+        <el-table-column prop="count" label="库存">
+            <template #default="scope">
+                <el-button type="primary" link @click="toDetailFun(scope.row.id)">{{ scope.row.count }}</el-button>
+            </template>
+        </el-table-column>
         <el-table-column prop="createTime" label="创建时间"></el-table-column>
         <el-table-column prop="updateTime" label="修改时间"></el-table-column>
         <el-table-column label="操作">
@@ -66,11 +80,14 @@ import { ElLoading, ElMessage, ElMessageBox } from 'element-plus'
 import { Plus } from '@element-plus/icons-vue'
 import { deepCopy } from '@/utils/index'
 import { commonMixin } from '@/mixins/common'
+import { useRouter } from 'vue-router'
 const dayjs = require('dayjs')
 
 const { codeToLabelComputed } = commonMixin()
+const router = useRouter()
 const defaultDataForm = {
     name: '',
+    category: '',
     pageIndex: 1,
     pageSize: 10,
     totalPage: 0,
@@ -101,9 +118,7 @@ const goodsCategoryListAllFun = () => {
 const queryList = () => {
     dataListLoading.value = true;
     goodsGoodsPage({
-        name: formData.value.name,
-        pageIndex: formData.value.pageIndex,
-        pageSize: formData.value.pageSize
+        ...formData.value
     }).then(({ data }) => {
         dataListLoading.value = false;
         data.list.forEach((value) => {
@@ -171,6 +186,15 @@ const delFun = (id) => {
             loading.close()
         })
 
+    })
+}
+// 跳转到库存页面
+const toDetailFun = (id) => {
+    router.push({
+        name: 'GoodsWarehousingIndex',
+        query: {
+            id,
+        },
     })
 }
 </script>

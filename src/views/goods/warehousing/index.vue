@@ -7,9 +7,19 @@
             <el-select v-model="formData.parentId" placeholder="请选择" filterable clearable class="inp-dom">
                 <el-option
                         v-for="item in parentIdList"
-                        :key="item.id"
-                        :label="item.name"
-                        :value="item.id">
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value">
+                </el-option>
+            </el-select>
+        </el-form-item>
+        <el-form-item label="销售状态">
+            <el-select v-model="formData.sale" placeholder="请选择" filterable clearable class="inp-dom">
+                <el-option
+                        v-for="item in sale_statusList"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value">
                 </el-option>
             </el-select>
         </el-form-item>
@@ -71,12 +81,19 @@ import { ElLoading, ElMessage, ElMessageBox } from 'element-plus'
 import { Plus } from '@element-plus/icons-vue'
 import { commonMixin } from '@/mixins/common'
 import { deepCopy } from '@/utils/index'
+import { useRoute } from 'vue-router'
+import { storeToRefs } from 'pinia'
+import { useStorePinia } from "@/store"
 const dayjs = require('dayjs')
 
+const store = useStorePinia()
+const { dictType } = storeToRefs(store)
 const { codeToLabelComputed } = commonMixin()
+const route = useRoute()
 const defaultDataForm = {
     name: '',
     parentId: '',
+    sale: '',
     pageIndex: 1,
     pageSize: 10,
     totalPage: 0,
@@ -87,8 +104,10 @@ const dataListLoading = ref(false)
 const indexAddOrUpdateRef = ref(null)
 const indexAddOrUpdateVisible = ref(false)
 const parentIdList = ref([])
+const sale_statusList = ref(dictType.value['sale_status'])
 
 onMounted(() => {
+    formData.value.parentId = route.query.id || ''
     goodsGoodsListAllFun()
     queryList()
 })
@@ -97,20 +116,17 @@ onMounted(() => {
 const goodsGoodsListAllFun = () => {
     goodsGoodsListAll().then(({ data }) => {
         data.list.forEach((value) => {
-            value['value'] = value.id
+            value['value'] = value.id + ''
             value['label'] = value.name
         })
         parentIdList.value = data.list.slice()
     })
 }
-// 获取员工列表
+// 获取列表
 const queryList = () => {
     dataListLoading.value = true;
     goodsWarehousingPage({
-        name: formData.value.name,
-        parentId: formData.value.parentId,
-        pageIndex: formData.value.pageIndex,
-        pageSize: formData.value.pageSize
+        ...formData.value,
     }).then(({ data }) => {
         dataListLoading.value = false;
         data.list.forEach((value) => {
