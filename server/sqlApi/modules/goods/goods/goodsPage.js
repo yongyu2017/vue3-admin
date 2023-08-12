@@ -2,6 +2,7 @@ const { getFileData, setFileData, findParentNode, findChildNode, getMax, generat
 const statusCodeMap = require('#root/utils/statusCodeMap.js')
 const db = require('#root/db/index.js')
 const Goods = require('#root/db/model/goods.js')
+const Goods_stock = require('#root/db/model/Goods_stock.js')
 const { Op } = require("sequelize")
 
 // 获取商品列表
@@ -18,7 +19,9 @@ module.exports = {
             return
         }
 
+        Goods.hasOne(Goods_stock, { foreignKey: 'goodsId', sourceKey: 'id' });
         const sql_1 = await Goods.findAndCountAll({
+            attributes: ['id', 'name', 'category', 'img', 'des', 'createTime', 'updateTime'],
             where: {
                 state: 1,
                 name: {
@@ -28,17 +31,27 @@ module.exports = {
             order: [
                 ['id', 'DESC'],
             ],
+            include: [
+                {
+                    model: Goods_stock,
+                    attributes: ['count'],
+                }
+            ],
             offset: start,
             limit: pageSize,
         })
-        sql_1.rows.forEach((value) => {
-            value.img = setCompleteAddress(value.img)
+        const list = sql_1.rows.map((value) => {
+            let item = value.toJSON()
+            item.count = item.goods_stock ? item.goods_stock.count : null
+            item.img = setCompleteAddress(item.img)
+            delete item.goods_stock
+            return item
         })
 
         res.send({
             code: 200,
             data: {
-                list: sql_1.rows,
+                list,
                 sum: sql_1.count,
             },
             msg: '',
