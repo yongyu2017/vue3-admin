@@ -2,6 +2,10 @@ const { getFileData, setFileData, findParentNode, findChildNode, getMax, generat
 const statusCodeMap = require('#root/utils/statusCodeMap.js')
 const db = require('#root/db/index.js')
 const moment = require('moment')
+const Goods_detail = require('#root/db/model/Goods_detail.js')
+const Goods_stock = require('#root/db/model/Goods_stock.js')
+const { sequelize } = require('#root/db/databaseInit.js')
+const { Op, literal  } = require("sequelize")
 
 // 删除商品入库信息
 module.exports = {
@@ -17,21 +21,46 @@ module.exports = {
         }
 
         const currentTime = moment(Date.now()).format('YYYY-MM-DD HH:mm:ss')
-        const sql_1 = (await db.connect('UPDATE goods_detail SET state=? WHERE id=?', [0, id]))
-        if (sql_1.err) {
-            res.send(statusCodeMap['-1'])
-            return
-        }
-        const sql_2 = await db.connect('UPDATE goods_stock SET count=count-1,updateTime=? WHERE goodsId=?', [currentTime, parentId])
-        if (sql_2.err) {
-            res.send(statusCodeMap['-1'])
-            return
-        }
+        // 开启事务
+        const t = await sequelize.transaction()
+        try {
+            await Goods_detail.update(
+                {
+                    state: 0,
+                    updateTime: currentTime,
+                },
+                {
+                    where: {
+                        id,
+                    },
+                    transaction: t
+                }
+            )
 
-        res.send({
-            code: 200,
-            data: sql_1.res[0],
-            msg: '',
-        })
+            await Goods_stock.update(
+                {
+                    count: literal('count-1'),
+                    updateTime: currentTime,
+                },
+                {
+                    where: {
+                        goodsId: parentId,
+                    },
+                    transaction: t
+                }
+            )
+            // 提交事务
+            await t.commit()
+
+            res.send({
+                code: 200,
+                data: '',
+                msg: '',
+            })
+        } catch (err) {
+            // 回滚事务
+            await t.rollback()
+            res.send(statusCodeMap['-1'])
+        }
     }
 }

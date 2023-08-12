@@ -2,6 +2,8 @@ const { getFileData, setFileData, findParentNode, findChildNode, getMax, generat
 const statusCodeMap = require('#root/utils/statusCodeMap.js')
 const db = require('#root/db/index.js')
 const moment = require('moment')
+const Category = require('#root/db/model/category.js')
+const { Op } = require("sequelize")
 
 // 新增或修改商品类型
 module.exports = {
@@ -17,29 +19,39 @@ module.exports = {
         }
 
         const currentTime = moment(Date.now()).format('YYYY-MM-DD HH:mm:ss')
-        const sql_1 = await db.connect('SELECT COUNT(*) as total FROM category WHERE name=?', [name])
-        if (sql_1.err) {
-            res.send(statusCodeMap['-1'])
-            return
-        }
-        if (sql_1.res[0].total > 0) {
-            res.send({
-                code: -1,
-                data: '',
-                msg: '该分类名称已存在',
-            })
-            return
-        }
 
-        let sql_2 = ''
         if (id) {
-            sql_2 = (await db.connect('UPDATE category SET name=?,des=?,updateTime=? WHERE id=?', [name, des, currentTime, id]))
+            const sql_1 = await Category.findOne({
+                where: {
+                    id,
+                },
+            })
+            if (sql_1.name != name) {
+                const sql_2 = await checkNameExisting(res, name)
+                if (!sql_2) return
+            }
+
+             await Category.update(
+                {
+                    name,
+                    des,
+                },
+                {
+                    where: {
+                        id,
+                    },
+                }
+            )
         } else {
-            sql_2 = (await db.connect('insert into category (name, des, state, createTime, updateTime) values (?,?,?,?,?)', [name, des, 1, currentTime, currentTime]))
-        }
-        if (sql_2.err) {
-            res.send(statusCodeMap['-1'])
-            return
+            const sql_2 = await checkNameExisting(res, name)
+            if (!sql_2) return
+
+            await Category.create({
+                name,
+                des,
+                createTime: currentTime,
+                updateTime: currentTime,
+            })
         }
 
         res.send({
@@ -48,4 +60,23 @@ module.exports = {
             msg: '操作成功！',
         })
     }
+}
+
+// 校验商品编码是否存在
+async function checkNameExisting (res, name) {
+    const sql_1 = await Category.findAndCountAll({
+        where: {
+            name,
+        },
+    })
+    if (sql_1.count > 0) {
+        res.send({
+            code: -1,
+            data: '',
+            msg: '该分类名称已存在',
+        })
+        return false
+    }
+
+    return true
 }

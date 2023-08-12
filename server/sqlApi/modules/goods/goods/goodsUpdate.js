@@ -7,6 +7,8 @@ const formidable = require('formidable')
 const path = require('path')
 const fs = require('fs')
 const { v4: uuidv4 } = require('uuid');
+const Goods = require('#root/db/model/goods.js')
+const { Op } = require("sequelize")
 
 // 新增或修改商品信息
 module.exports = {
@@ -59,33 +61,52 @@ module.exports = {
             }
             /** 文件重命名 **/
 
-            let sql_1 = ''
             if (id) {
-                if (img) {
-                    sql_1 = await db.connect('UPDATE goods SET name=?,category=?,des=?,updateTime=? WHERE id=?', [name, category, des, currentTime, id])
-                } else {
-                    const sql_2 = await db.connect('SELECT img FROM goods WHERE id=?', [id])
-                    if (sql_2.err) {
-                        res.send(statusCodeMap['-1'])
-                        return
-                    }
-                    const originalImg = sql_2.res[0].img
+                if (!img) {
+                    const sql_1 = await Goods.findOne({
+                        where: {
+                            id,
+                        },
+                    })
+                    const originalImg = sql_1.img
                     /** 判断文件是否存在，存在则删除 **/
                     const imgFilePath = rootDir + ('/upload' + originalImg).replace(/\//g, '\\')
                     const imgFsExistsCb = fs.existsSync(imgFilePath)
                     imgFsExistsCb && fs.unlinkSync(imgFilePath)
                     /** 判断文件是否存在，存在则删除 **/
-
-                    sql_1 = await db.connect('UPDATE goods SET name=?,category=?,img=?,des=?,updateTime=? WHERE id=?', [name, category, renameImg, des, currentTime, id])
+                } else {
                 }
+
+                let updateAttributes = {
+                    name,
+                    category,
+                    des,
+                    createTime: currentTime,
+                    updateTime: currentTime,
+                }
+                if (!img) {
+                    updateAttributes['img'] = renameImg
+                }
+                await Goods.update(
+                    updateAttributes,
+                    {
+                        where: {
+                            id,
+                        },
+                    }
+                )
             } else {
-                const sql_1 = await db.connect('insert into goods (name, category, img, des, state, createTime, updateTime) values (?,?,?,?,?,?,?)', [name, category, renameImg, des, 1, currentTime, currentTime])
+                await Goods.create({
+                    name,
+                    category,
+                    img: renameImg,
+                    des,
+                    state: 1,
+                    createTime: currentTime,
+                    updateTime: currentTime,
+                })
             }
 
-            if (sql_1.err) {
-                res.send(statusCodeMap['-1'])
-                return
-            }
             res.send({
                 code: 200,
                 data: '',

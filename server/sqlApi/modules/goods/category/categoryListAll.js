@@ -1,6 +1,8 @@
 const { getFileData, setFileData, findParentNode, findChildNode, getMax, generateToken, verifyToken } = require('#root/utils/index.js')
 const statusCodeMap = require('#root/utils/statusCodeMap.js')
 const db = require('#root/db/index.js')
+const Category = require('#root/db/model/category.js')
+const { Op } = require("sequelize")
 
 // 获取所有商品类型
 module.exports = {
@@ -14,16 +16,20 @@ module.exports = {
             return
         }
 
-        let sql_1 = await db.connect("SELECT * FROM category WHERE state=1 ORDER BY id DESC", [])
-        if (sql_1.err) {
-            res.send(statusCodeMap['-1'])
-            return
-        }
+        const sql_1 = await Category.findAll({
+            attributes: ['id', 'name'],
+            where: {
+                state: 1,
+            },
+            order: [
+                ['id', 'DESC'],
+            ],
+        })
 
         res.send({
             code: 200,
             data: {
-                list: sql_1.res,
+                list: sql_1,
             },
             msg: '',
         })

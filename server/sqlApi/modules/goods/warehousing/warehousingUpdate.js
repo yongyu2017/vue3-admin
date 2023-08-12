@@ -2,6 +2,10 @@ const { getFileData, setFileData, findParentNode, findChildNode, getMax, generat
 const statusCodeMap = require('#root/utils/statusCodeMap.js')
 const db = require('#root/db/index.js')
 const moment = require('moment')
+const Goods_detail = require('#root/db/model/Goods_detail.js')
+const Goods_stock = require('#root/db/model/Goods_stock.js')
+const { sequelize } = require('#root/db/databaseInit.js')
+const { Op, literal  } = require("sequelize")
 
 // 新增或修改商品类型
 module.exports = {
@@ -17,89 +21,85 @@ module.exports = {
         }
 
         const currentTime = moment(Date.now()).format('YYYY-MM-DD HH:mm:ss')
-
-        if (id) {
-            /** 检测商品编码是否重复 **/
-            const sql_4 = await db.connect('SELECT * FROM goods_detail WHERE id=?', [id])
-            const originalData = sql_4.res[0]
-            if (originalData.code != code) {
-                const checkCodeExistingRes = await checkCodeExisting(res, code)
-                if (!checkCodeExistingRes) return
-            }
-            /** 检测商品编码是否重复 **/
-
-            const sql_1 = await db.connect('UPDATE goods_detail SET code=?,name=?,parentId=?,updateTime=? WHERE id=?', [code, name, parentId, currentTime, id])
-            if (sql_1.err) {
-                res.send(statusCodeMap['-1'])
-                return
-            }
-
-            const sql_2 = await db.connect('SELECT COUNT(*) as total FROM goods_stock WHERE goodsId=?', [parentId])
-            if (sql_2.err) {
-                res.send(statusCodeMap['-1'])
-                return
-            }
-
-            let sql_3 = ''
-            if (sql_2.res[0].total > 0) {
-                sql_3 = await db.connect('UPDATE goods_stock SET count=count+1,updateTime=? WHERE goodsId=?', [currentTime, parentId])
-            } else {
-                sql_3 = await db.connect('insert into goods_stock (goodsId, count, state, createTime, updateTime) values (?,?,?,?,?)', [parentId, 1, 1, currentTime, currentTime])
-            }
-            if (sql_3.err) {
-                res.send(statusCodeMap['-1'])
-                return
-            }
-            if (parentId != originalData.parentId) {
-                const sql_6 = await db.connect('UPDATE goods_stock SET count=count-1,updateTime=? WHERE goodsId=?', [currentTime, originalData.parentId])
-                if (sql_6.err) {
-                    res.send(statusCodeMap['-1'])
-                    return
+        // 开启事务
+        const t = await sequelize.transaction()
+        try {
+            if (id) {
+                /** 检测商品编码是否重复 **/
+                const sql_1 = await Goods_detail.findOne({
+                    where: {
+                        id,
+                    },
+                    transaction: t
+                })
+                const originalData = sql_1
+                if (originalData.code != code) {
+                    const checkCodeExistingRes = await checkCodeExisting(res, code, t)
+                    if (!checkCodeExistingRes) return
                 }
-            }
-        } else {
-            const checkCodeExistingRes = await checkCodeExisting(res, code)
-            if (!checkCodeExistingRes) return
-            const sql_1 = await db.connect('insert into goods_detail (code, name, parentId, sale, state, createTime, updateTime) values (?,?,?,?,?,?,?)', [code, name, parentId, 0, 1, currentTime, currentTime])
-            if (sql_1.err) {
-                res.send(statusCodeMap['-1'])
-                return
-            }
+                /** 检测商品编码是否重复 **/
 
-            const sql_2 = await db.connect('SELECT COUNT(*) as total FROM goods_stock WHERE goodsId=?', [parentId])
-            if (sql_2.err) {
-                res.send(statusCodeMap['-1'])
-                return
-            }
+                await Goods_detail.update(
+                    {
+                        code,
+                        name,
+                        parentId,
+                        updateTime: currentTime,
+                    },
+                    {
+                        where: {
+                            id,
+                        },
+                        transaction: t
+                    }
+                )
 
-            let sql_3 = ''
-            if (sql_2.res[0].total > 0) {
-                sql_3 = await db.connect('UPDATE goods_stock SET count=count+1,updateTime=? WHERE goodsId=?', [currentTime, parentId])
+                await updateGoods_stock(id, parentId, originalData, currentTime, t)
             } else {
-                sql_3 = await db.connect('insert into goods_stock (goodsId, count, state, createTime, updateTime) values (?,?,?,?,?)', [parentId, 1, 1, currentTime, currentTime])
+                const checkCodeExistingRes = await checkCodeExisting(res, code, t)
+                if (!checkCodeExistingRes) return
+
+                await Goods_detail.create({
+                    code,
+                    name,
+                    parentId,
+                    sale: 0,
+                    state: 1,
+                    createTime: currentTime,
+                    updateTime: currentTime,
+                }, {
+                    transaction: t
+                })
+
+                await updateGoods_stock(id, parentId, {}, currentTime, t)
             }
-            if (sql_3.err) {
-                res.send(statusCodeMap['-1'])
-                return
-            }
+            // 提交事务
+            await t.commit()
+
+            res.send({
+                code: 200,
+                data: '',
+                msg: '操作成功！',
+            })
+        } catch (err) {
+            // 回滚事务
+            await t.rollback()
+            res.send(statusCodeMap['-1'])
         }
 
-        res.send({
-            code: 200,
-            data: '',
-            msg: '操作成功！',
-        })
     }
 }
 
 // 校验商品编码是否存在
-async function checkCodeExisting (res, code) {
-    const sql_4 = await db.connect('SELECT COUNT(*) as total FROM goods_detail WHERE code=?', [code])
-    if (sql_4.err) {
-        res.send(statusCodeMap['-1'])
-        return false
-    }
-    if (sql_4.res[0].total > 0) {
+async function checkCodeExisting (res, code, t) {
+    const sql_1 = await Goods_detail.findOne({
+        where: {
+            code,
+        },
+        transaction: t
+    })
+
+    if (sql_1) {
         res.send({
             code: -1,
             data: '',
@@ -109,4 +109,54 @@ async function checkCodeExisting (res, code) {
     }
 
     return true
+}
+
+// 更新商品库存表库存信息
+async function updateGoods_stock (id, parentId, originalData, currentTime, t) {
+    const sql_2 = await Goods_stock.findOne({
+        where: {
+            goodsId: parentId,
+        },
+        transaction: t
+    })
+
+    if (sql_2 == null) {
+        await Goods_stock.create({
+            goodsId: parentId,
+            count: 1,
+            state: 1,
+            createTime: currentTime,
+            updateTime: currentTime,
+        }, {
+            transaction: t
+        })
+    } else {
+        await Goods_stock.update(
+            {
+                count: literal('count+1'),
+                updateTime: currentTime,
+            },
+            {
+                where: {
+                    goodsId: parentId,
+                },
+                transaction: t
+            }
+        )
+    }
+
+    if (id && (parentId != originalData.parentId)) {
+        await Goods_stock.update(
+            {
+                count: literal('count-1'),
+                updateTime: currentTime,
+            },
+            {
+                where: {
+                    goodsId: originalData.parentId,
+                },
+                transaction: t
+            }
+        )
+    }
 }

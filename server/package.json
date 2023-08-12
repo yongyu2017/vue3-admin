@@ -23,6 +23,8 @@
     "nodemon": "^2.0.20"
   },
   "dependencies": {
+    "mysql2": "^3.6.0",
+    "sequelize": "^6.32.1",
     "uuid": "^9.0.0"
   }
 }

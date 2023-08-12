@@ -1,6 +1,8 @@
 const { getFileData, setFileData, findParentNode, findChildNode, getMax, generateToken, verifyToken } = require('#root/utils/index.js')
 const statusCodeMap = require('#root/utils/statusCodeMap.js')
 const db = require('#root/db/index.js')
+const Goods = require('#root/db/model/goods.js')
+const { Op } = require("sequelize")
 
 // 删除商品
 module.exports = {
@@ -15,11 +17,16 @@ module.exports = {
             return
         }
 
-        const sql_1 = await db.connect('UPDATE goods SET state=? WHERE id=?', [0, id])
-        if (sql_1.err) {
-            res.send(statusCodeMap['-1'])
-            return
-        }
+        await Goods.update(
+            {
+                state: 0,
+            },
+            {
+                where: {
+                    id,
+                },
+            }
+        )
 
         res.send({
             code: 200,

@@ -2,6 +2,10 @@ const { getFileData, setFileData, findParentNode, findChildNode, getMax, generat
 const statusCodeMap = require('#root/utils/statusCodeMap.js')
 const db = require('#root/db/index.js')
 const moment = require('moment')
+const Goods_detail = require('#root/db/model/Goods_detail.js')
+const Goods_stock = require('#root/db/model/Goods_stock.js')
+const { sequelize } = require('#root/db/databaseInit.js')
+const { Op, literal  } = require("sequelize")
 
 // 商品出入库
 module.exports = {
@@ -17,34 +21,54 @@ module.exports = {
         }
 
         const currentTime = moment(Date.now()).format('YYYY-MM-DD HH:mm:ss')
-        const sql_1 = await db.connect('UPDATE goods_detail SET sale=? WHERE id=?', [sale, id])
-        if (sql_1.err) {
-            res.send(statusCodeMap['-1'])
-            return
-        }
+        // 开启事务
+        const t = await sequelize.transaction()
+        try {
+            const sql_1 = await Goods_detail.findOne(
+                {
+                    where: {
+                        id,
+                    },
+                    transaction: t
+                }
+            )
+            await Goods_detail.update(
+                {
+                    sale,
+                    updateTime: currentTime,
+                },
+                {
+                    where: {
+                        id,
+                    },
+                    transaction: t
+                }
+            )
 
-        const sql_2 = await db.connect('SELECT * FROM goods_detail WHERE state=1 and id=?', [id])
-        if (sql_2.err) {
-            res.send(statusCodeMap['-1'])
-            return
-        }
-        const originalData = sql_2.res[0]
+            await Goods_stock.update(
+                {
+                    count: literal(sale == 1 ? 'count-1' : 'count+1'),
+                    updateTime: currentTime,
+                },
+                {
+                    where: {
+                        goodsId: sql_1.parentId,
+                    },
+                    transaction: t
+                }
+            )
+            // 提交事务
+            await t.commit()
 
-        let sql_3 = ''
-        if (sale == 1) {
-            sql_3 = await db.connect('UPDATE goods_stock SET count=count-1,updateTime=? WHERE goodsId=?', [currentTime, originalData.parentId])
-        } else {
-            sql_3 = await db.connect('UPDATE goods_stock SET count=count+1,updateTime=? WHERE goodsId=?', [currentTime, originalData.parentId])
-        }
-        if (sql_3.err) {
+            res.send({
+                code: 200,
+                data: '',
+                msg: '',
+            })
+        } catch (err) {
+            // 回滚事务
+            await t.rollback()
             res.send(statusCodeMap['-1'])
-            return
         }
-
-        res.send({
-            code: 200,
-            data: '',
-            msg: '',
-        })
     }
 }

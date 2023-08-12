@@ -99,21 +99,18 @@ var init = (id) => {
             goodsGoodsGet({
                 id,
             }).then(({ data }) => {
-                data.category = Number(data.category)
                 data.imgUrl = data.img
                 dataForm.value = data
-                console.log(dataForm.value)
             })
         }
     })
 }
 // 获取商品分类
 const goodsCategoryListAllFun = () => {
-    goodsCategoryListAll({
-        name: '',
-        pageIndex: '',
-        pageSize: '',
-    }).then(({ data }) => {
+    goodsCategoryListAll().then(({ data }) => {
+        data.list.forEach((value) => {
+            value.id = value.id + ''
+        })
         categoryList.value = data.list.slice()
     })
 }

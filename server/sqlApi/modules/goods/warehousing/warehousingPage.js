@@ -1,6 +1,8 @@
 const { getFileData, setFileData, findParentNode, findChildNode, getMax, generateToken, verifyToken } = require('#root/utils/index.js')
 const statusCodeMap = require('#root/utils/statusCodeMap.js')
 const db = require('#root/db/index.js')
+const Goods_detail = require('#root/db/model/Goods_detail.js')
+const { Op } = require("sequelize")
 
 // 获取商品入库列表
 module.exports = {
@@ -16,23 +18,28 @@ module.exports = {
             return
         }
 
-        let sql_1 = await db.connect("SELECT * FROM goods_detail WHERE state=1" + (parentId ? " AND parentId=" + parentId : "") + " AND name like '%" + name + "%' ORDER BY id DESC limit ?,?", [start, pageSize])
-        if (sql_1.err) {
-            res.send(statusCodeMap['-1'])
-            return
-        }
-
-        const sql_2 = (await db.connect("SELECT COUNT(*) as total FROM goods_detail WHERE state=1" + (parentId ? " AND parentId=" + parentId : "") + " AND name like '%" + name + "%'", []))
-        if (sql_2.err) {
-            res.send(statusCodeMap['-1'])
-            return
-        }
+        const sql_1 = await Goods_detail.findAndCountAll({
+            where: {
+                state: 1,
+                name: {
+                    [Op.like]: '%' + name + '%',
+                },
+                parentId: {
+                    [Op.like]: '%' + parentId + '%',
+                },
+            },
+            order: [
+                ['id', 'DESC'],
+            ],
+            offset: start,
+            limit: pageSize,
+        })
 
         res.send({
             code: 200,
             data: {
-                list: sql_1.res,
-                sum: sql_2.res[0].total,
+                list: sql_1.rows,
+                sum: sql_1.count,
             },
             msg: '',
         })
