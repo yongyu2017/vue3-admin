@@ -12,13 +12,12 @@ module.exports = {
         const { token } = req.headers
         const { id, name, des } = req['body'];
         const tokenInfo = await verifyToken(token)
+        const currentTime = moment(Date.now()).format('YYYY-MM-DD HH:mm:ss')
 
         if (!tokenInfo) {
             res.send(statusCodeMap['401'])
             return
         }
-
-        const currentTime = moment(Date.now()).format('YYYY-MM-DD HH:mm:ss')
 
         try {
             if (id) {
@@ -36,6 +35,7 @@ module.exports = {
                     {
                         name,
                         des,
+                        updateTime: currentTime,
                     },
                     {
                         where: {

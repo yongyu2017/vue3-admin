@@ -14,13 +14,12 @@ module.exports = {
         const { token } = req.headers
         const { id, sale } = req['body']
         const tokenInfo = await verifyToken(token)
+        const currentTime = moment(Date.now()).format('YYYY-MM-DD HH:mm:ss')
 
         if (!tokenInfo) {
             res.send(statusCodeMap['401'])
             return
         }
-
-        const currentTime = moment(Date.now()).format('YYYY-MM-DD HH:mm:ss')
         // 开启事务
         const t = await sequelize.transaction()
         try {

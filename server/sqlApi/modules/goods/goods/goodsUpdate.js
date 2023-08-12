@@ -19,13 +19,12 @@ module.exports = {
     fn: async function (req, res) {
         const { token } = req.headers
         const tokenInfo = await verifyToken(token)
+        const currentTime = moment(Date.now()).format('YYYY-MM-DD HH:mm:ss')
 
         if (!tokenInfo) {
             res.send(statusCodeMap['401'])
             return
         }
-
-        const currentTime = moment(Date.now()).format('YYYY-MM-DD HH:mm:ss')
         //创建formidable表单解析对象
         const form = new formidable.IncomingForm()
         //设置上传文件的保存路径
@@ -87,7 +86,6 @@ module.exports = {
                         name,
                         category,
                         des,
-                        createTime: currentTime,
                         updateTime: currentTime,
                     }
                     if (!img) {

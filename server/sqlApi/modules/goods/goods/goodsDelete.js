@@ -1,6 +1,7 @@
 const { getFileData, setFileData, findParentNode, findChildNode, getMax, generateToken, verifyToken } = require('#root/utils/index.js')
 const statusCodeMap = require('#root/utils/statusCodeMap.js')
 const db = require('#root/db/index.js')
+const moment = require('moment')
 const Goods = require('#root/db/model/goods.js')
 const Category = require('#root/db/model/category.js')
 const Goods_detail = require('#root/db/model/Goods_detail.js')
@@ -15,6 +16,7 @@ module.exports = {
         const { token } = req.headers
         const { id } = req['body']
         const tokenInfo = await verifyToken(token)
+        const currentTime = moment(Date.now()).format('YYYY-MM-DD HH:mm:ss')
 
         if (!tokenInfo) {
             res.send(statusCodeMap['401'])
@@ -27,6 +29,7 @@ module.exports = {
             await Goods.update(
                 {
                     state: 0,
+                    updateTime: currentTime,
                 },
                 {
                     where: {
@@ -48,6 +51,7 @@ module.exports = {
             await Goods_detail.update(
                 {
                     parentId: null,
+                    updateTime: currentTime,
                 },
                 {
                     where: {
