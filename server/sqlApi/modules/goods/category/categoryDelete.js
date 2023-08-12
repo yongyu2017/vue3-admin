@@ -22,7 +22,7 @@ module.exports = {
         // 开启事务
         const t = await sequelize.transaction()
         try {
-            const sql_1 = await Category.update(
+            await Category.update(
                 {
                     state: 0,
                 },
@@ -44,7 +44,7 @@ module.exports = {
             })
 
             const ids = sql_2.map((value) => value.id)
-            const sql_3 = await Goods.update(
+            await Goods.update(
                 {
                     category: null,
                 },
@@ -68,7 +68,11 @@ module.exports = {
         } catch (err) {
             // 回滚事务
             await t.rollback()
-            res.send(statusCodeMap['-1'])
+            res.send({
+                code: -1,
+                data: '',
+                msg: err.original.sqlMessage,
+            })
         }
     }
 }

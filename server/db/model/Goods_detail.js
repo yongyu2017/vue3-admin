@@ -18,7 +18,7 @@ const Goods_detail = sequelize.define('goods_detail', {
     },
     parentId: {
         type: Sequelize.STRING,
-        allowNull: false,
+        allowNull: true,
     },
     sale: {
         type: Sequelize.STRING,

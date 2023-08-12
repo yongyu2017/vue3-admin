@@ -60,7 +60,11 @@ module.exports = {
         } catch (err) {
             // 回滚事务
             await t.rollback()
-            res.send(statusCodeMap['-1'])
+            res.send({
+                code: -1,
+                data: '',
+                msg: err.original.sqlMessage,
+            })
         }
     }
 }

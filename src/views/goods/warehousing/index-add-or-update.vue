@@ -75,6 +75,9 @@ const goodsGoodsListAllFun = () => {
         pageIndex: '',
         pageSize: '',
     }).then(({ data }) => {
+        data.list.forEach((value) => {
+            value.id = value.id + ''
+        })
         parentIdList.value = data.list.slice()
     })
 }

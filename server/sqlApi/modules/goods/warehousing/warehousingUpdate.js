@@ -84,7 +84,11 @@ module.exports = {
         } catch (err) {
             // 回滚事务
             await t.rollback()
-            res.send(statusCodeMap['-1'])
+            res.send({
+                code: -1,
+                data: '',
+                msg: err.original.sqlMessage,
+            })
         }
 
     }
@@ -113,37 +117,18 @@ async function checkCodeExisting (res, code, t) {
 
 // 更新商品库存表库存信息
 async function updateGoods_stock (id, parentId, originalData, currentTime, t) {
-    const sql_2 = await Goods_stock.findOne({
-        where: {
-            goodsId: parentId,
-        },
-        transaction: t
-    })
-
-    if (sql_2 == null) {
-        await Goods_stock.create({
-            goodsId: parentId,
-            count: 1,
-            state: 1,
-            createTime: currentTime,
+    await Goods_stock.update(
+        {
+            count: literal('count+1'),
             updateTime: currentTime,
-        }, {
-            transaction: t
-        })
-    } else {
-        await Goods_stock.update(
-            {
-                count: literal('count+1'),
-                updateTime: currentTime,
+        },
+        {
+            where: {
+                goodsId: parentId,
             },
-            {
-                where: {
-                    goodsId: parentId,
-                },
-                transaction: t
-            }
-        )
-    }
+            transaction: t
+        }
+    )
 
     if (id && (parentId != originalData.parentId)) {
         await Goods_stock.update(

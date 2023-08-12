@@ -8,6 +8,8 @@ const path = require('path')
 const fs = require('fs')
 const { v4: uuidv4 } = require('uuid');
 const Goods = require('#root/db/model/goods.js')
+const Goods_stock = require('#root/db/model/Goods_stock.js')
+const { sequelize } = require('#root/db/databaseInit.js')
 const { Op } = require("sequelize")
 
 // 新增或修改商品信息
@@ -61,57 +63,85 @@ module.exports = {
             }
             /** 文件重命名 **/
 
-            if (id) {
-                if (!img) {
-                    const sql_1 = await Goods.findOne({
-                        where: {
-                            id,
-                        },
-                    })
-                    const originalImg = sql_1.img
-                    /** 判断文件是否存在，存在则删除 **/
-                    const imgFilePath = rootDir + ('/upload' + originalImg).replace(/\//g, '\\')
-                    const imgFsExistsCb = fs.existsSync(imgFilePath)
-                    imgFsExistsCb && fs.unlinkSync(imgFilePath)
-                    /** 判断文件是否存在，存在则删除 **/
-                } else {
-                }
-
-                let updateAttributes = {
-                    name,
-                    category,
-                    des,
-                    createTime: currentTime,
-                    updateTime: currentTime,
-                }
-                if (!img) {
-                    updateAttributes['img'] = renameImg
-                }
-                await Goods.update(
-                    updateAttributes,
-                    {
-                        where: {
-                            id,
-                        },
+            // 开启事务
+            const t = await sequelize.transaction()
+            try {
+                if (id) {
+                    if (!img) {
+                        const sql_1 = await Goods.findOne({
+                            where: {
+                                id,
+                            },
+                            transaction: t
+                        })
+                        const originalImg = sql_1.img
+                        /** 判断文件是否存在，存在则删除 **/
+                        const imgFilePath = rootDir + ('/upload' + originalImg).replace(/\//g, '\\')
+                        const imgFsExistsCb = fs.existsSync(imgFilePath)
+                        imgFsExistsCb && fs.unlinkSync(imgFilePath)
+                        /** 判断文件是否存在，存在则删除 **/
+                    } else {
                     }
-                )
-            } else {
-                await Goods.create({
-                    name,
-                    category,
-                    img: renameImg,
-                    des,
-                    state: 1,
-                    createTime: currentTime,
-                    updateTime: currentTime,
+
+                    let updateAttributes = {
+                        name,
+                        category,
+                        des,
+                        createTime: currentTime,
+                        updateTime: currentTime,
+                    }
+                    if (!img) {
+                        updateAttributes['img'] = renameImg
+                    }
+                    await Goods.update(
+                        updateAttributes,
+                        {
+                            where: {
+                                id,
+                            },
+                            transaction: t
+                        }
+                    )
+                } else {
+                    const sql_1 = await Goods.create({
+                        name,
+                        category,
+                        img: renameImg,
+                        des,
+                        state: 1,
+                        createTime: currentTime,
+                        updateTime: currentTime,
+                    }, {
+                        transaction: t
+                    })
+
+                    await Goods_stock.create({
+                        goodsId: sql_1.id,
+                        count: 0,
+                        state: 1,
+                        createTime: currentTime,
+                        updateTime: currentTime,
+                    }, {
+                        transaction: t
+                    })
+                }
+                // 提交事务
+                await t.commit()
+
+                res.send({
+                    code: 200,
+                    data: '',
+                    msg: '操作成功！',
+                })
+            } catch (err) {
+                // 回滚事务
+                await t.rollback()
+                res.send({
+                    code: -1,
+                    data: '',
+                    msg: err.original.sqlMessage,
                 })
             }
-
-            res.send({
-                code: 200,
-                data: '',
-                msg: '操作成功！',
-            })
         })
     }
 }
