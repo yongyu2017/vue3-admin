@@ -57,9 +57,9 @@ module.exports = {
                     transaction: t
                 }
             )
+
             // 提交事务
             await t.commit()
-
             res.send({
                 code: 200,
                 data: '',

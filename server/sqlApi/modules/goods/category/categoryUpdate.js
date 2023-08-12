@@ -20,45 +20,54 @@ module.exports = {
 
         const currentTime = moment(Date.now()).format('YYYY-MM-DD HH:mm:ss')
 
-        if (id) {
-            const sql_1 = await Category.findOne({
-                where: {
-                    id,
-                },
-            })
-            if (sql_1.name != name) {
-                const sql_2 = await checkNameExisting(res, name)
-                if (!sql_2) return
-            }
-
-             await Category.update(
-                {
-                    name,
-                    des,
-                },
-                {
+        try {
+            if (id) {
+                const sql_1 = await Category.findOne({
                     where: {
                         id,
                     },
+                })
+                if (sql_1.name != name) {
+                    const sql_2 = await checkNameExisting(res, name)
+                    if (!sql_2) return
                 }
-            )
-        } else {
-            const sql_2 = await checkNameExisting(res, name)
-            if (!sql_2) return
 
-            await Category.create({
-                name,
-                des,
-                createTime: currentTime,
-                updateTime: currentTime,
+                await Category.update(
+                    {
+                        name,
+                        des,
+                    },
+                    {
+                        where: {
+                            id,
+                        },
+                    }
+                )
+            } else {
+                const sql_2 = await checkNameExisting(res, name)
+                if (!sql_2) return
+
+                await Category.create({
+                    name,
+                    des,
+                    state: 1,
+                    createTime: currentTime,
+                    updateTime: currentTime,
+                })
+            }
+
+            res.send({
+                code: 200,
+                data: '',
+                msg: '操作成功！',
+            })
+        } catch (err) {
+            res.send({
+                code: -1,
+                data: '',
+                msg: JSON.stringify(err),
             })
         }
-
-        res.send({
-            code: 200,
-            data: '',
-            msg: '操作成功！',
-        })
     }
 }
 
