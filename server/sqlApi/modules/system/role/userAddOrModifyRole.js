@@ -2,6 +2,8 @@ const { getFileData, setFileData, findParentNode, findChildNode, getMax, generat
 const statusCodeMap = require('#root/utils/statusCodeMap.js')
 const db = require('#root/db/index.js')
 const moment = require('moment')
+const Role = require('#root/db/model/role.js')
+const { Op } = require("sequelize")
 
 // 新增或修改角色信息
 module.exports = {
@@ -10,42 +12,78 @@ module.exports = {
         const { token } = req.headers
         const { id, name, des, permission } = req['body'];
         const tokenInfo = await verifyToken(token)
+        const currentTime = moment(Date.now()).format('YYYY-MM-DD HH:mm:ss')
 
         if (!tokenInfo) {
             res.send(statusCodeMap['401'])
             return
         }
 
-        const currentTime = moment(Date.now()).format('YYYY-MM-DD HH:mm:ss')
-        const sql_1 = await db.connect('SELECT COUNT(*) as total FROM role WHERE name=?', [name])
-        if (sql_1.err) {
-            res.send(statusCodeMap['-1'])
-            return
-        }
-        if (sql_1.res[0].total > 0) {
+        try {
+            if (id) {
+                const sql_2 = await Role.findOne({
+                    where: {
+                        id,
+                    },
+                })
+                if (sql_2.name != name) {
+                    const sql_1 = await checkKeyNameExisting(res, name)
+                    if (!sql_1) return
+                }
+
+                await Role.update(
+                    {
+                        name, des, permission,
+                        updateTime: currentTime,
+                    },
+                    {
+                        where: {
+                            id,
+                        },
+                    }
+                )
+            } else {
+                const sql_1 = await checkKeyNameExisting(res, name)
+                if (!sql_1) return
+
+                await Role.create({
+                    name, des, permission,
+                    state: 1,
+                    createTime: currentTime,
+                    updateTime: currentTime,
+                })
+            }
+
+            res.send({
+                code: 200,
+                data: '',
+                msg: '操作成功！',
+            })
+        } catch (err) {
             res.send({
                 code: -1,
-                data: {},
-                msg: '该角色名称已存在',
+                data: '',
+                msg: JSON.stringify(err),
             })
-            return
         }
-
-        let sql_2 = ''
-        if (id) {
-            sql_2 = await db.connect('UPDATE role SET name=?,des=?,permission=?,updateTime=? WHERE id=?', [name, des, permission, currentTime, id])
-        } else {
-            sql_2 = await db.connect('insert into role (name, des, permission, state, createTime, updateTime) values (?,?,?,?,?,?)', [name, des, permission, 1, currentTime, currentTime])
-        }
-        if (sql_2.err) {
-            res.send(statusCodeMap['-1'])
-            return
-        }
-
-        res.send({
-            code: 200,
-            data: {},
-            msg: '操作成功！',
-        })
     }
+}
+
+// 校验某个字段名是否存在
+async function checkKeyNameExisting (res, name) {
+    const sql_1 = await Role.findAndCountAll({
+        where: {
+            name,
+        },
+    })
+    if (sql_1.count > 0) {
+        res.send({
+            code: -1,
+            data: '',
+            msg: '该角色名称已存在',
+        })
+        return false
+    }
+
+    return true
 }

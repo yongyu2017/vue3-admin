@@ -27,7 +27,7 @@ module.exports = {
                     },
                 })
                 if (sql_1.name != name) {
-                    const sql_2 = await checkNameExisting(res, name)
+                    const sql_2 = await checkKeyNameExisting(res, name)
                     if (!sql_2) return
                 }
 
@@ -44,7 +44,7 @@ module.exports = {
                     }
                 )
             } else {
-                const sql_2 = await checkNameExisting(res, name)
+                const sql_2 = await checkKeyNameExisting(res, name)
                 if (!sql_2) return
 
                 await Category.create({
@@ -72,7 +72,7 @@ module.exports = {
 }
 
 // 校验商品编码是否存在
-async function checkNameExisting (res, name) {
+async function checkKeyNameExisting (res, name) {
     const sql_1 = await Category.findAndCountAll({
         where: {
             name,

@@ -2,6 +2,8 @@ const { getFileData, setFileData, findParentNode, findChildNode, getMax, generat
 const statusCodeMap = require('#root/utils/statusCodeMap.js')
 const db = require('#root/db/index.js')
 const moment = require('moment')
+const User = require('#root/db/model/user.js')
+const { Op } = require("sequelize")
 
 // 新增或修改菜单
 module.exports = {
@@ -10,31 +12,78 @@ module.exports = {
         const { token } = req.headers
         const { id, account, des, role, email, pwd, username } = req['body'];
         const tokenInfo = await verifyToken(token)
+        const currentTime = moment(Date.now()).format('YYYY-MM-DD HH:mm:ss')
 
         if (!tokenInfo) {
             res.send(statusCodeMap['401'])
             return
         }
 
+        try {
+            if (id) {
+                const sql_2 = await User.findOne({
+                    where: {
+                        id,
+                    },
+                })
+                if (sql_2.account != account) {
+                    const sql_1 = await checkKeyNameExisting(res, account)
+                    if (!sql_1) return
+                }
 
-        const currentTime = moment(Date.now()).format('YYYY-MM-DD HH:mm:ss')
-        let sql_1 = ''
+                await User.update(
+                    {
+                        account, des, role, email, pwd, username,
+                        updateTime: currentTime,
+                    },
+                    {
+                        where: {
+                            id,
+                        },
+                    },
+                )
+            } else {
+                const sql_1 = await checkKeyNameExisting(res, account)
+                if (!sql_1) return
 
-        if (id) {
-            sql_1 = await db.connect('UPDATE user SET account=?,des=?,role=?,email=?,pwd=?,username=?,updateTime=? WHERE id=?', [account, des, role, email, pwd, username, currentTime, id])
+                await User.create({
+                    account, des, role, email, pwd, username,
+                    state: 1,
+                    createTime: currentTime,
+                    updateTime: currentTime,
+                })
+            }
 
-        } else {
-            sql_1 = await db.connect('insert into user (account, des, role, email, pwd, username, state, createTime, updateTime) values (?,?,?,?,?,?,?,?,?)', [account, des, role, email, pwd, username, 1, currentTime, currentTime])
+            res.send({
+                code: 200,
+                data: {},
+                msg: '操作成功！',
+            })
+        } catch (err) {
+            res.send({
+                code: -1,
+                data: '',
+                msg: JSON.stringify(err),
+            })
         }
-        if (sql_1.err) {
-            res.send(statusCodeMap['-1'])
-            return
-        }
-
-        res.send({
-            code: 200,
-            data: {},
-            msg: '操作成功！',
-        })
     }
+}
+
+// 校验某个字段名是否存在
+async function checkKeyNameExisting (res, account) {
+    const sql_1 = await User.findAndCountAll({
+        where: {
+            account,
+        },
+    })
+    if (sql_1.count > 0) {
+        res.send({
+            code: -1,
+            data: '',
+            msg: '该角色名称已存在',
+        })
+        return false
+    }
+
+    return true
 }

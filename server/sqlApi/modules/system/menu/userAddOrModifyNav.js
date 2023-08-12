@@ -2,6 +2,8 @@ const { getFileData, setFileData, findParentNode, findChildNode, getMax, generat
 const statusCodeMap = require('#root/utils/statusCodeMap.js')
 const db = require('#root/db/index.js')
 const moment = require('moment')
+const Menu = require('#root/db/model/menu.js')
+const { Op } = require("sequelize")
 
 // 新增或修改菜单
 module.exports = {
@@ -10,29 +12,46 @@ module.exports = {
         const { token } = req.headers
         const { id, menuName, parentId, jumpUrl, roleUrl, type, icon, orderNum, status, visible, keepAlive } = req['body'];
         const tokenInfo = await verifyToken(token)
+        const currentTime = moment(Date.now()).format('YYYY-MM-DD HH:mm:ss')
 
         if (!tokenInfo) {
             res.send(statusCodeMap['401'])
             return
         }
 
-        const currentTime = moment(Date.now()).format('YYYY-MM-DD HH:mm:ss')
-        let sql_1 = ''
+        try {
+            if (id) {
+                await Menu.update(
+                    {
+                        menuName, parentId, jumpUrl, roleUrl, type, icon, orderNum, status, visible, keepAlive,
+                        updateTime: currentTime,
+                    },
+                    {
+                        where: {
+                            id,
+                        },
+                    }
+                )
+            } else {
+                await Menu.create({
+                    menuName, parentId, jumpUrl, roleUrl, type, icon, orderNum, status, visible, keepAlive,
+                    state: 1,
+                    createTime: currentTime,
+                    updateTime: currentTime,
+                })
+            }
 
-        if (id) {
-            sql_1 = await db.connect('UPDATE menu SET menuName=?,parentId=?,jumpUrl=?,roleUrl=?,type=?,icon=?,orderNum=?,status=?,visible=?,keepAlive=?,updateTime=? WHERE id=?', [menuName, parentId, jumpUrl, roleUrl, type, icon, orderNum, status, visible, keepAlive, currentTime, id])
-
-        } else {
-            sql_1 = await db.connect('insert into menu (menuName, parentId, jumpUrl, roleUrl, type, icon, orderNum, status, visible, keepAlive, state, createTime, updateTime) values (?,?,?,?,?,?,?,?,?,?,?,?,?)', [menuName, parentId, jumpUrl, roleUrl, type, icon, orderNum, status, visible, keepAlive, 1, currentTime, currentTime])
+            res.send({
+                code: 200,
+                data: '',
+                msg: '操作成功！',
+            })
+        } catch (err) {
+            res.send({
+                code: -1,
+                data: '',
+                msg: JSON.stringify(err),
+            })
         }
-        if (sql_1.err) {
-            res.send(statusCodeMap['-1'])
-            return
-        }
-        res.send({
-            code: 200,
-            data: {},
-            msg: '操作成功！',
-        })
     }
 }

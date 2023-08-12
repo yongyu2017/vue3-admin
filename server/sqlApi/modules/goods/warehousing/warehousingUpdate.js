@@ -34,7 +34,7 @@ module.exports = {
                 })
                 const originalData = sql_1
                 if (originalData.code != code) {
-                    const checkCodeExistingRes = await checkCodeExisting(res, code, t)
+                    const checkCodeExistingRes = await checkKeyNameExisting(res, code, t)
                     if (!checkCodeExistingRes) return
                 }
                 /** 检测商品编码是否重复 **/
@@ -56,7 +56,7 @@ module.exports = {
 
                 await updateGoods_stock(id, parentId, originalData, currentTime, t)
             } else {
-                const checkCodeExistingRes = await checkCodeExisting(res, code, t)
+                const checkCodeExistingRes = await checkKeyNameExisting(res, code, t)
                 if (!checkCodeExistingRes) return
 
                 await Goods_detail.create({
@@ -95,7 +95,7 @@ module.exports = {
 }
 
 // 校验商品编码是否存在
-async function checkCodeExisting (res, code, t) {
+async function checkKeyNameExisting (res, code, t) {
     const sql_1 = await Goods_detail.findOne({
         where: {
             code,

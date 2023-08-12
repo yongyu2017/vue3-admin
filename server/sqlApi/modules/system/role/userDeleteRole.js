@@ -1,6 +1,11 @@
 const { getFileData, setFileData, findParentNode, findChildNode, getMax, generateToken, verifyToken } = require('#root/utils/index.js')
 const statusCodeMap = require('#root/utils/statusCodeMap.js')
 const db = require('#root/db/index.js')
+const moment = require('moment')
+const Role = require('#root/db/model/role.js')
+const User = require('#root/db/model/user.js')
+const { sequelize } = require('#root/db/databaseInit.js')
+const { Op } = require("sequelize")
 
 // 删除角色信息
 module.exports = {
@@ -9,44 +14,69 @@ module.exports = {
         const { token } = req.headers
         const { id } = req['body']
         const tokenInfo = await verifyToken(token)
+        const currentTime = moment(Date.now()).format('YYYY-MM-DD HH:mm:ss')
 
         if (!tokenInfo) {
             res.send(statusCodeMap['401'])
             return
         }
 
+        // 开启事务
+        const t = await sequelize.transaction()
         try {
-            const sql_1 = await db.connect('UPDATE role SET state=? WHERE id=?', [0, id])
-            if (sql_1.err) {
-                res.send(statusCodeMap['-1'])
-                return
-            }
+            await Role.update(
+                {
+                    state: 0,
+                    updateTime: currentTime,
+                },
+                {
+                    where: {
+                        id,
+                    },
+                    transaction: t
+                }
+            )
 
-            const sql_2 = await db.connect('SELECT id FROM user WHERE role=?', [id])
-            if (sql_2.err) {
-                res.send(statusCodeMap['-1'])
-                return
-            }
-
-            const ids = sql_2.res.map((value) => value.id)
-            let sql_str = 'UPDATE goods SET category=NULL WHERE id IN ('
-            ids.forEach((value, index) => {
-                sql_str += (index == 0 ? '' : ',') + value
+            const sql_1 = await User.findAll({
+                attributes: ['id'],
+                where: {
+                    state: 1,
+                    role: id,
+                },
+                transaction: t
             })
-            sql_str += ')'
-            const sql_3 = await db.connect(sql_str, [ids])
-            if (sql_3.err) {
-                res.send(statusCodeMap['-1'])
-                return
-            }
 
+            const ids = sql_1.map((value) => value.id)
+            await User.update(
+                {
+                    role: null,
+                    updateTime: currentTime,
+                },
+                {
+                    where: {
+                        id: {
+                            [Op.in]: ids,
+                        },
+                    },
+                    transaction: t
+                }
+            )
+
+            // 提交事务
+            await t.commit()
             res.send({
                 code: 200,
                 data: '',
                 msg: '',
             })
-        } catch (e) {
-            res.send(statusCodeMap['-1'])
+        } catch (err) {
+            // 回滚事务
+            await t.rollback()
+            res.send({
+                code: -1,
+                data: '',
+                msg: err.original.sqlMessage,
+            })
         }
     }
 }

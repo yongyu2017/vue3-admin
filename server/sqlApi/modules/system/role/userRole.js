@@ -1,6 +1,8 @@
 const { getFileData, setFileData, findParentNode, findChildNode, getMax, generateToken, verifyToken } = require('#root/utils/index.js')
 const statusCodeMap = require('#root/utils/statusCodeMap.js')
 const db = require('#root/db/index.js')
+const Role = require('#root/db/model/role.js')
+const { Op } = require("sequelize")
 
 // 获取角色列表
 module.exports = {
@@ -9,31 +11,42 @@ module.exports = {
         const { token } = req.headers
         const { name, pageIndex, pageSize } = req['body'];
         const tokenInfo = await verifyToken(token)
-        const start = (pageIndex - 1) * pageSize
+        const start = pageSize ? (pageIndex - 1) * pageSize : 0
 
         if (!tokenInfo) {
             res.send(statusCodeMap['401'])
             return
         }
 
-        const sql_1 = await db.connect("SELECT * FROM role WHERE state=1 AND name like '%"+ name + "%' ORDER BY id DESC limit ?,?", [start, pageSize])
-        if (sql_1.err) {
-            res.send(statusCodeMap['-1'])
-            return
-        }
-        const sql_2 = await db.connect("SELECT COUNT(*) as total FROM role WHERE state=1 AND name like '%"+ name + "%'", [])
-        if (sql_2.err) {
-            res.send(statusCodeMap['-1'])
-            return
-        }
+        try {
+            const sql_1 = await Role.findAndCountAll({
+                where: {
+                    state: 1,
+                    name: {
+                        [Op.like]: '%' + name + '%'
+                    },
+                },
+                order: [
+                    ['id', 'DESC'],
+                ],
+                offset: start,
+                limit: pageSize,
+            })
 
-        res.send({
-            code: 200,
-            data: {
-                list: sql_1.res,
-                sum: sql_2.res[0].total
-            },
-            msg: '',
-        })
+            res.send({
+                code: 200,
+                data: {
+                    list: sql_1.rows,
+                    sum: sql_1.count,
+                },
+                msg: '',
+            })
+        } catch (err) {
+            res.send({
+                code: -1,
+                data: '',
+                msg: JSON.stringify(err),
+            })
+        }
     }
 }
