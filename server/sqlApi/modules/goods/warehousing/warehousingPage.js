@@ -18,33 +18,41 @@ module.exports = {
             return
         }
 
-        const sql_1 = await Goods_detail.findAndCountAll({
-            where: {
-                state: 1,
-                name: {
-                    [Op.like]: '%' + name + '%',
+        try {
+            const sql_1 = await Goods_detail.findAndCountAll({
+                where: {
+                    state: 1,
+                    name: {
+                        [Op.like]: '%' + name + '%',
+                    },
+                    parentId: {
+                        [Op.like]: '%' + parentId + '%',
+                    },
+                    sale: {
+                        [Op.like]: '%' + sale + '%',
+                    },
                 },
-                parentId: {
-                    [Op.like]: '%' + parentId + '%',
-                },
-                sale: {
-                    [Op.like]: '%' + sale + '%',
-                },
-            },
-            order: [
-                ['id', 'DESC'],
-            ],
-            offset: start,
-            limit: pageSize,
-        })
+                order: [
+                    ['id', 'DESC'],
+                ],
+                offset: start,
+                limit: pageSize,
+            })
 
-        res.send({
-            code: 200,
-            data: {
-                list: sql_1.rows,
-                sum: sql_1.count,
-            },
-            msg: '',
-        })
+            res.send({
+                code: 200,
+                data: {
+                    list: sql_1.rows,
+                    sum: sql_1.count,
+                },
+                msg: '',
+            })
+        } catch (err) {
+            res.send({
+                code: -1,
+                data: '',
+                msg: JSON.stringify(err),
+            })
+        }
     }
 }

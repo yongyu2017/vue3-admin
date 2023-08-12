@@ -18,27 +18,35 @@ module.exports = {
             return
         }
 
-        const sql_1 = await Category.findAndCountAll({
-            where: {
-                state: 1,
-                name: {
-                    [Op.like]: '%' + name + '%'
+        try {
+            const sql_1 = await Category.findAndCountAll({
+                where: {
+                    state: 1,
+                    name: {
+                        [Op.like]: '%' + name + '%'
+                    },
                 },
-            },
-            order: [
-                ['id', 'DESC'],
-            ],
-            offset: start,
-            limit: pageSize,
-        })
+                order: [
+                    ['id', 'DESC'],
+                ],
+                offset: start,
+                limit: pageSize,
+            })
 
-        res.send({
-            code: 200,
-            data: {
-                list: sql_1.rows,
-                sum: sql_1.count,
-            },
-            msg: '',
-        })
+            res.send({
+                code: 200,
+                data: {
+                    list: sql_1.rows,
+                    sum: sql_1.count,
+                },
+                msg: '',
+            })
+        } catch (err) {
+            res.send({
+                code: -1,
+                data: '',
+                msg: JSON.stringify(err),
+            })
+        }
     }
 }

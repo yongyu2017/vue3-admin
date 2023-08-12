@@ -17,16 +17,24 @@ module.exports = {
             return
         }
 
-        const sql_1 = await Goods_detail.findOne({
-            where: {
-                id,
-            },
-        })
+        try {
+            const sql_1 = await Goods_detail.findOne({
+                where: {
+                    id,
+                },
+            })
 
-        res.send({
-            code: 200,
-            data: sql_1,
-            msg: '',
-        })
+            res.send({
+                code: 200,
+                data: sql_1,
+                msg: '',
+            })
+        } catch (err) {
+            res.send({
+                code: -1,
+                data: '',
+                msg: JSON.stringify(err),
+            })
+        }
     }
 }

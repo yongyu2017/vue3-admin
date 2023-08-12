@@ -16,22 +16,30 @@ module.exports = {
             return
         }
 
-        const sql_1 = await Category.findAll({
-            attributes: ['id', 'name'],
-            where: {
-                state: 1,
-            },
-            order: [
-                ['id', 'DESC'],
-            ],
-        })
+        try {
+            const sql_1 = await Category.findAll({
+                attributes: ['id', 'name'],
+                where: {
+                    state: 1,
+                },
+                order: [
+                    ['id', 'DESC'],
+                ],
+            })
 
-        res.send({
-            code: 200,
-            data: {
-                list: sql_1,
-            },
-            msg: '',
-        })
+            res.send({
+                code: 200,
+                data: {
+                    list: sql_1,
+                },
+                msg: '',
+            })
+        } catch (err) {
+            res.send({
+                code: -1,
+                data: '',
+                msg: JSON.stringify(err),
+            })
+        }
     }
 }

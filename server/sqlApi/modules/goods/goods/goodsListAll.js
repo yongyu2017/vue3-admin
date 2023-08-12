@@ -16,19 +16,27 @@ module.exports = {
             return
         }
 
-        const sql_1 = await Goods.findAndCountAll({
-            attributes: ['id', 'name'],
-            where: {
-                state: 1,
-            },
-        })
+        try {
+            const sql_1 = await Goods.findAndCountAll({
+                attributes: ['id', 'name'],
+                where: {
+                    state: 1,
+                },
+            })
 
-        res.send({
-            code: 200,
-            data: {
-                list: sql_1.rows,
-            },
-            msg: '',
-        })
+            res.send({
+                code: 200,
+                data: {
+                    list: sql_1.rows,
+                },
+                msg: '',
+            })
+        } catch (err) {
+            res.send({
+                code: -1,
+                data: '',
+                msg: JSON.stringify(err),
+            })
+        }
     }
 }

@@ -17,17 +17,34 @@ module.exports = {
             return
         }
 
-        const sql_1 = await Category.findOne({
-            where: {
-                state: 1,
-                id,
-            },
-        })
+        try {
 
-        res.send({
-            code: 200,
-            data: sql_1,
-            msg: '',
-        })
+        } catch (err) {
+            res.send({
+                code: -1,
+                data: '',
+                msg: JSON.stringify(err),
+            })
+        }
+        try {
+            const sql_1 = await Category.findOne({
+                where: {
+                    state: 1,
+                    id,
+                },
+            })
+
+            res.send({
+                code: 200,
+                data: sql_1,
+                msg: '',
+            })
+        } catch (err) {
+            res.send({
+                code: -1,
+                data: '',
+                msg: JSON.stringify(err),
+            })
+        }
     }
 }

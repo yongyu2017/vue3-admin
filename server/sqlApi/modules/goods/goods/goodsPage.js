@@ -19,46 +19,53 @@ module.exports = {
             return
         }
 
-
-        Goods.hasOne(Goods_stock, { foreignKey: 'goodsId', sourceKey: 'id' });
-        const sql_1 = await Goods.findAndCountAll({
-            attributes: ['id', 'name', 'category', 'img', 'des', 'createTime', 'updateTime'],
-            where: {
-                state: 1,
-                name: {
-                    [Op.like]: '%' + name + '%'
+        try {
+            Goods.hasOne(Goods_stock, { foreignKey: 'goodsId', sourceKey: 'id' });
+            const sql_1 = await Goods.findAndCountAll({
+                attributes: ['id', 'name', 'category', 'img', 'des', 'createTime', 'updateTime'],
+                where: {
+                    state: 1,
+                    name: {
+                        [Op.like]: '%' + name + '%'
+                    },
+                    category: {
+                        [Op.like]: '%' + category + '%'
+                    },
                 },
-                category: {
-                    [Op.like]: '%' + category + '%'
-                },
-            },
-            order: [
-                ['id', 'DESC'],
-            ],
-            include: [
-                {
-                    model: Goods_stock,
-                    attributes: ['count'],
-                }
-            ],
-            offset: start,
-            limit: pageSize,
-        })
-        const list = sql_1.rows.map((value) => {
-            let item = value.toJSON()
-            item.count = item.goods_stock ? item.goods_stock.count : null
-            item.img = setCompleteAddress(item.img)
-            delete item.goods_stock
-            return item
-        })
+                order: [
+                    ['id', 'DESC'],
+                ],
+                include: [
+                    {
+                        model: Goods_stock,
+                        attributes: ['count'],
+                    }
+                ],
+                offset: start,
+                limit: pageSize,
+            })
+            const list = sql_1.rows.map((value) => {
+                let item = value.toJSON()
+                item.count = item.goods_stock ? item.goods_stock.count : null
+                item.img = setCompleteAddress(item.img)
+                delete item.goods_stock
+                return item
+            })
 
-        res.send({
-            code: 200,
-            data: {
-                list,
-                sum: sql_1.count,
-            },
-            msg: '',
-        })
+            res.send({
+                code: 200,
+                data: {
+                    list,
+                    sum: sql_1.count,
+                },
+                msg: '',
+            })
+        } catch (err) {
+            res.send({
+                code: -1,
+                data: '',
+                msg: JSON.stringify(err),
+            })
+        }
     }
 }

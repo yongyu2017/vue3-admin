@@ -17,18 +17,26 @@ module.exports = {
             return
         }
 
-        const sql_1 = await Goods.findOne({
-            where: {
-                state: 1,
-                id,
-            },
-        })
-        sql_1.img = setCompleteAddress(sql_1.img)
+        try {
+            const sql_1 = await Goods.findOne({
+                where: {
+                    state: 1,
+                    id,
+                },
+            })
+            sql_1.img = setCompleteAddress(sql_1.img)
 
-        res.send({
-            code: 200,
-            data: sql_1,
-            msg: '',
-        })
+            res.send({
+                code: 200,
+                data: sql_1,
+                msg: '',
+            })
+        } catch (err) {
+            res.send({
+                code: -1,
+                data: '',
+                msg: JSON.stringify(err),
+            })
+        }
     }
 }

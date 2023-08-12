@@ -20,6 +20,7 @@ module.exports = {
             res.send(statusCodeMap['401'])
             return
         }
+
         // 开启事务
         const t = await sequelize.transaction()
         try {
