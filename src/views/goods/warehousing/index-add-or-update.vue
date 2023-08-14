@@ -46,6 +46,9 @@ const dataRule = ref({
         { required: true, message: '请输入', trigger: 'blur' },
     ],
     code: [
+        { required: true, message: '请输入', trigger: 'blur' },
+    ],
+    parentId: [
         { required: true, message: '请选择', trigger: 'change' },
     ],
 })
