@@ -57,7 +57,7 @@
 
 <script setup>
 import { ref, nextTick, defineEmits, defineExpose } from 'vue'
-import { dictDataPage, dictDataDelete, dictTypePage } from '@/api/system'
+import { dictDataPage, dictDataDelete, dictTypeListAll } from '@/api/system'
 import { dayjs, ElLoading, ElMessage, ElMessageBox } from 'element-plus'
 import { Plus } from '@element-plus/icons-vue';
 import indexDataAdd from './index-data-add.vue'
@@ -105,12 +105,7 @@ const queryList = () => {
 }
 // 获取字典类型列表
 const dictTypePageFun = () => {
-    dictTypePage({
-        name: '',
-        type: '',
-        pageIndex: 1,
-        pageSize: 0,
-    }).then(({ data }) => {
+    dictTypeListAll().then(({ data }) => {
         data.list.forEach((value) => {
             value['label'] = value.name
             value['value'] = value.id

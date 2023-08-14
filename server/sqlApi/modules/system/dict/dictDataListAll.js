@@ -1,6 +1,9 @@
 const { getFileData, setFileData, findParentNode, findChildNode, getMax, generateToken, verifyToken } = require('#root/utils/index.js')
 const statusCodeMap = require('#root/utils/statusCodeMap.js')
 const db = require('#root/db/index.js')
+const Dict_type = require('#root/db/model/Dict_type.js')
+const Dict_data = require('#root/db/model/Dict_data.js')
+const { Op } = require("sequelize")
 
 // 获得字典数据所有列表
 module.exports = {
@@ -16,27 +19,47 @@ module.exports = {
             return
         }
 
-        const sql_1 = await db.connect("SELECT dict_data.id,dict_data.label,dict_data.value,dict_type.type FROM dict_data left join dict_type on dict_data.dictType = dict_type.id WHERE dict_data.state=1 AND dict_data.status=1 AND dict_type.state=1 AND dict_type.status=1 ORDER BY id DESC", [])
-        if (sql_1.err) {
-            res.send(statusCodeMap['-1'])
-            return
+        try {
+            Dict_data.hasOne(Dict_type, { foreignKey: 'id', sourceKey: 'dictType' });
+            const sql_1 = await Dict_data.findAll({
+                where: {
+                    state: 1,
+                },
+                include: [
+                    {
+                        model: Dict_type,
+                        attributes: ['type'],
+                    }
+                ],
+            })
+
+            let data = {}
+            let keyList = sql_1.map((value) => value.dict_type.type).filter((value, index, array) => {
+                return array.indexOf(value) == index
+            })
+            keyList.forEach((value) => {
+                data[value] = []
+            })
+            sql_1.forEach((value) => {
+                data[value.dict_type.type].push({
+                    id: value.id,
+                    label: value.label,
+                    value: value.value,
+                })
+            })
+
+            res.send({
+                code: 200,
+                data: data,
+                msg: '',
+            })
+        } catch (err) {
+            console.log(err)
+            res.send({
+                code: -1,
+                data: '',
+                msg: JSON.stringify(err),
+            })
         }
-
-        let data = {}
-        let keyList = sql_1.res.map((value) => value.type).filter((value, index, array) => {
-            return array.indexOf(value) == index
-        })
-        keyList.forEach((value) => {
-            data[value] = []
-        })
-        sql_1.res.forEach((value) => {
-            data[value.type].push(value)
-        })
-
-        res.send({
-            code: 200,
-            data,
-            msg: '',
-        })
     }
 }

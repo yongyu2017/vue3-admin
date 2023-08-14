@@ -17,6 +17,14 @@ export function dictTypePage(data) {
         data: data
     })
 }
+// 获得所有字典类型
+export function dictTypeListAll(data) {
+    return request({
+        url: '/system/dict-type/listAll',
+        method: 'post',
+        data: data
+    })
+}
 // 查询字典类型详细
 export function dictTypeGet(data) {
     return request({

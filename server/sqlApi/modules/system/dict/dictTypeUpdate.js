@@ -2,6 +2,8 @@ const { getFileData, setFileData, findParentNode, findChildNode, getMax, generat
 const statusCodeMap = require('#root/utils/statusCodeMap.js')
 const db = require('#root/db/index.js')
 const moment = require('moment')
+const Dict_type = require('#root/db/model/Dict_type.js')
+const { Op } = require("sequelize")
 
 // 修改字典类型
 module.exports = {
@@ -10,29 +12,72 @@ module.exports = {
         const { token } = req.headers
         const { id, name, type, status, remark } = req['body'];
         const tokenInfo = await verifyToken(token)
+        const currentTime = moment(Date.now()).format('YYYY-MM-DD HH:mm:ss')
 
         if (!tokenInfo) {
             res.send(statusCodeMap['401'])
             return
         }
 
-        const currentTime = moment(Date.now()).format('YYYY-MM-DD HH:mm:ss')
-        let sql_1 = ''
+        try {
+            const sql_1 = await Dict_type.findOne(
+                {
+                    where: {
+                        state: 1,
+                        type,
+                    },
+                }
+            )
+            if (id) {
+                if (sql_1 && sql_1.id != id && sql_1.type == type) {
+                    res.send({
+                        code: -1,
+                        data: '',
+                        msg: '该字典类型已存在，请勿重复添加',
+                    })
+                    return
+                }
 
-        if (id) {
-            sql_1 = await db.connect('UPDATE dict_type SET name=?,type=?,status=?,des=?,updateTime=? WHERE id=?', [name, type, status, remark, currentTime, id])
-        } else {
-            sql_1 = await db.connect('insert into dict_type (name, type, status, des, state, createTime, updateTime) values (?,?,?,?,?,?,?)', [name, type, status, remark, 1, currentTime, currentTime])
-        }
-        if (sql_1.err) {
-            res.send(statusCodeMap['-1'])
-            return
-        }
+                await Dict_type.update(
+                    {
+                        name, status, remark,
+                        updateTime: currentTime,
+                    },
+                    {
+                        where: {
+                            id,
+                        },
+                    }
+                )
+            } else {
+                if (sql_1) {
+                    res.send({
+                        code: -1,
+                        data: '',
+                        msg: '该字典类型已存在，请勿重复添加',
+                    })
+                    return
+                }
 
-        res.send({
-            code: 200,
-            data: '',
-            msg: '操作成功！',
-        })
+                await Dict_type.create({
+                    name, type, status, remark,
+                    state: 1,
+                    createTime: currentTime,
+                    updateTime: currentTime,
+                })
+            }
+
+            res.send({
+                code: 200,
+                data: '',
+                msg: '操作成功！',
+            })
+        } catch (err) {
+            res.send({
+                code: -1,
+                data: '',
+                msg: JSON.stringify(err),
+            })
+        }
     }
 }

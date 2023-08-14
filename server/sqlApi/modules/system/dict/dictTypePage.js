@@ -1,6 +1,8 @@
 const { getFileData, setFileData, findParentNode, findChildNode, getMax, generateToken, verifyToken } = require('#root/utils/index.js')
 const statusCodeMap = require('#root/utils/statusCodeMap.js')
 const db = require('#root/db/index.js')
+const Dict_type = require('#root/db/model/Dict_type.js')
+const { Op } = require("sequelize")
 
 // 获得字典类型的分页列表
 module.exports = {
@@ -16,25 +18,38 @@ module.exports = {
             return
         }
 
-        const sql_1 = await db.connect("SELECT * FROM dict_type WHERE state=1 AND name like '%"+ name + "%' AND type like '%"+ type + "%' ORDER BY id DESC limit ?,?", [start, pageSize])
-        if (sql_1.err) {
-            res.send(statusCodeMap['-1'])
-            return
-        }
+        try {
+            const sql_1 = await Dict_type.findAndCountAll({
+                where: {
+                    state: 1,
+                    name: {
+                        [Op.like]: '%' + name + '%'
+                    },
+                    type: {
+                        [Op.like]: '%' + type + '%'
+                    },
+                },
+                order: [
+                    ['id', 'DESC'],
+                ],
+                offset: start,
+                limit: pageSize,
+            })
 
-        const sql_2 = await db.connect("SELECT COUNT(*) as total FROM dict_type WHERE state=1 AND name like '%"+ name + "%' AND type like '%"+ type + "%'", [])
-        if (sql_2.err) {
-            res.send(statusCodeMap['-1'])
-            return
+            res.send({
+                code: 200,
+                data: {
+                    list: sql_1.rows,
+                    sum: sql_1.count,
+                },
+                msg: '',
+            })
+        } catch (err) {
+            res.send({
+                code: -1,
+                data: '',
+                msg: JSON.stringify(err),
+            })
         }
-
-        res.send({
-            code: 200,
-            data: {
-                list: sql_1.res,
-                sum: sql_2.res[0].total
-            },
-            msg: '',
-        })
     }
 }

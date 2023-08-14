@@ -6,7 +6,7 @@
                 <el-input v-model="dataForm.name" placeholder="请输入" clearable maxlength="50" class="inp-dom"></el-input>
             </el-form-item>
             <el-form-item label="字典类型" prop="type">
-                <el-input v-model="dataForm.type" placeholder="请输入" clearable maxlength="50" class="inp-dom"></el-input>
+                <el-input v-model="dataForm.type" placeholder="请输入" :disabled="dataForm.id !== ''" clearable maxlength="50" class="inp-dom"></el-input>
             </el-form-item>
             <el-form-item label="状态" prop="status">
                 <el-select v-model="dataForm.status" placeholder="请选择" class="inp-dom">
