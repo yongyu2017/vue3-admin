@@ -123,3 +123,11 @@ export function goodsWarehousingSale (data) {
         data: data
     })
 }
+// 同步更新商品库存
+export function goodsWarehousingStockRefresh (data) {
+    return request({
+        url: '/goods/warehousing/stockRefresh',
+        method: 'post',
+        data: data
+    })
+}

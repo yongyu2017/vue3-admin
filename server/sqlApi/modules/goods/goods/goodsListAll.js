@@ -17,7 +17,7 @@ module.exports = {
         }
 
         try {
-            const sql_1 = await Goods.findAndCountAll({
+            const sql_1 = await Goods.findAll({
                 attributes: ['id', 'name'],
                 where: {
                     state: 1,
@@ -27,7 +27,7 @@ module.exports = {
             res.send({
                 code: 200,
                 data: {
-                    list: sql_1.rows,
+                    list: sql_1,
                 },
                 msg: '',
             })

@@ -31,6 +31,7 @@
 
     <div style="margin-bottom: 12px">
         <el-button type="primary" :icon="Plus" @click="addOrUpdateFun()">新增</el-button>
+        <el-button :icon="Refresh" @click="refreshFun()">更新库存</el-button>
     </div>
 
     <el-table :data="dataList" border v-loading="dataListLoading" style="width: 100%">
@@ -76,9 +77,9 @@
 <script setup>
 import { onMounted, ref, nextTick } from 'vue'
 import indexAddOrUpdate from './index-add-or-update.vue'
-import { goodsWarehousingPage, goodsWarehousingDelete, goodsGoodsListAll, goodsWarehousingSale } from '@/api/goods'
+import { goodsWarehousingPage, goodsWarehousingDelete, goodsGoodsListAll, goodsWarehousingSale, goodsWarehousingStockRefresh } from '@/api/goods'
 import { ElLoading, ElMessage, ElMessageBox } from 'element-plus'
-import { Plus } from '@element-plus/icons-vue'
+import { Plus, Refresh } from '@element-plus/icons-vue'
 import { commonMixin } from '@/mixins/common'
 import { deepCopy } from '@/utils/index'
 import { useRoute } from 'vue-router'
@@ -215,6 +216,21 @@ const updateSaleFun = (id, sale) => {
         loading.close()
     })
 }
+// 同步更新商品库存
+const refreshFun = () => {
+    const loading = ElLoading.service({
+        lock: true,
+    })
+
+    goodsWarehousingStockRefresh().then(() => {
+        loading.close()
+
+        ElMessage.success('操作成功')
+    }).catch(() => {
+        loading.close()
+    })
+}
+
 </script>
 
 <style>
