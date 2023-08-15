@@ -12,7 +12,7 @@ module.exports = {
     path: '/goods/warehousing/update',
     fn: async function (req, res) {
         const { token } = req.headers
-        const { id, code, name, parentId } = req['body'];
+        const { id, code, name, parentId, costPrice, price } = req['body'];
         const tokenInfo = await verifyToken(token)
         const currentTime = moment(Date.now()).format('YYYY-MM-DD HH:mm:ss')
 
@@ -21,6 +21,7 @@ module.exports = {
             return
         }
 
+        console.log(id, code, name, parentId, costPrice, price)
         // 开启事务
         const t = await sequelize.transaction()
         try {
@@ -44,6 +45,8 @@ module.exports = {
                         code,
                         name,
                         parentId,
+                        costPrice,
+                        price,
                         updateTime: currentTime,
                     },
                     {
@@ -63,6 +66,8 @@ module.exports = {
                     code,
                     name,
                     parentId,
+                    costPrice,
+                    price,
                     sale: 0,
                     state: 1,
                     createTime: currentTime,
@@ -73,9 +78,9 @@ module.exports = {
 
                 await updateGoods_stock(id, parentId, {}, currentTime, t)
             }
+
             // 提交事务
             await t.commit()
-
             res.send({
                 code: 200,
                 data: '',
@@ -87,7 +92,7 @@ module.exports = {
             res.send({
                 code: -1,
                 data: '',
-                msg: err.original.sqlMessage,
+                msg: JSON.stringify(err),
             })
         }
 

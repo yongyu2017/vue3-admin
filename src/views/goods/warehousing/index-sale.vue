@@ -1,11 +1,20 @@
 <template>
-    <el-dialog @close="closeFun" :title="!dataForm.id ? '新增' : '修改'" :close-on-click-modal="false" v-model="visible">
+    <el-dialog @close="closeFun" title="商品出库" :close-on-click-modal="false" v-model="visible">
         <el-form ref="dataFormRef" :model="dataForm" :rules="dataRule" label-width="100px">
-            <el-form-item label="分类名称" prop="name">
-                <el-input v-model="dataForm.name" placeholder="请输入" class="inp-dom"></el-input>
+            <el-form-item label="商品编码" prop="code">
+                <el-input v-model="dataForm.code" placeholder="请输入" disabled class="inp-dom"></el-input>
             </el-form-item>
-            <el-form-item label="分类描述" prop="des">
-                <el-input v-model="dataForm.des" placeholder="请输入" :rows="5" type="textarea" maxlength="500" show-word-limit class="inp-dom" style="width: 100%"></el-input>
+            <el-form-item label="商品名称" prop="name">
+                <el-input v-model="dataForm.name" placeholder="请输入" disabled class="inp-dom"></el-input>
+            </el-form-item>
+            <el-form-item label="成本价格" prop="costPrice">
+                <el-input v-model="dataForm.costPrice" placeholder="请输入" disabled class="inp-dom"></el-input>
+            </el-form-item>
+            <el-form-item label="商品价格" prop="price">
+                <el-input v-model="dataForm.price" placeholder="请输入" disabled class="inp-dom"></el-input>
+            </el-form-item>
+            <el-form-item label="销售价格" prop="salePrice">
+                <el-input v-model="dataForm.salePrice" placeholder="请输入" class="inp-dom"></el-input>
             </el-form-item>
         </el-form>
 
@@ -21,18 +30,22 @@
 <script setup>
 import { ref, defineEmits, nextTick, defineExpose } from 'vue'
 import { ElLoading, ElMessage } from 'element-plus'
-import { goodsCategoryUpdate, goodsCategoryGet } from '@/api/goods'
+import { goodsWarehousingSale, goodsWarehousingGet } from '@/api/goods'
+import { isNumberValidator } from '@/utils/validate.js'
 
 const dataFormRef = ref();
 const visible = ref(false);
 const dataForm = ref({
     id: '',  //修改时填写
     name: '',
-    des: '',
+    code: '',
+    costPrice: '',
+    price: '',
+    salePrice: '',
 })
 const dataRule = ref({
-    name: [
-        { required: true, message: '请输入', trigger: 'blur' },
+    salePrice: [
+        { required: true, validator: isNumberValidator('请输入', 2, false), trigger: 'blur' },
     ],
 })
 const emit = defineEmits(['refreshDataList', 'close'])
@@ -44,9 +57,10 @@ var init = (id) => {
 
     nextTick(async () => {
         if (id) {
-            goodsCategoryGet({
+            goodsWarehousingGet({
                 id,
             }).then(({ data }) => {
+                data['salePrice'] = data['price'] || ''
                 dataForm.value = data
             })
         }
@@ -60,8 +74,8 @@ const dataFormSubmit = () => {
                 lock: true,
             })
 
-            goodsCategoryUpdate({
-                ...dataForm.value
+            goodsWarehousingSale({
+                ...dataForm.value,
             }).then(() => {
                 loading.close()
                 visible.value = false
@@ -80,11 +94,9 @@ const closeFun = () => {
 
 //暴露给父组件使用的方法和数据
 defineExpose({
-    dataForm,
     init,
 })
 </script>
 
 <style lang="scss" scoped>
-
 </style>

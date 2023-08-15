@@ -28,6 +28,22 @@ const Goods_detail = sequelize.define('goods_detail', {
         type: Sequelize.INTEGER,
         allowNull: false,
     },
+    costPrice: {
+        type: Sequelize.DECIMAL(10, 2),
+        allowNull: true,
+    },
+    price: {
+        type: Sequelize.DECIMAL(10, 2),
+        allowNull: true,
+    },
+    salePrice: {
+        type: Sequelize.DECIMAL(10, 2),
+        allowNull: true,
+    },
+    saleTime: {
+        type: Sequelize.DATE,
+        allowNull: true,
+    },
     createTime: {
         type: Sequelize.DATE,
         allowNull: false,

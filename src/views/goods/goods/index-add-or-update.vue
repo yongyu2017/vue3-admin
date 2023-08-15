@@ -42,7 +42,7 @@
                 </div>
             </el-form-item>
             <el-form-item label="商品描述" prop="des">
-                <el-input v-model="dataForm.des" placeholder="请输入" :rows="5" type="textarea"></el-input>
+                <el-input v-model="dataForm.des" placeholder="请输入" :rows="5" type="textarea" maxlength="500" show-word-limit class="inp-dom" style="width: 100%"></el-input>
             </el-form-item>
         </el-form>
 

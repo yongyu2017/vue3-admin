@@ -75,7 +75,7 @@ module.exports = {
             res.send({
                 code: -1,
                 data: '',
-                msg: err.original.sqlMessage,
+                msg: JSON.stringify(err),
             })
         }
     }

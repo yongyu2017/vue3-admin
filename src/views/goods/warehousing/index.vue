@@ -1,5 +1,8 @@
 <template>
     <el-form :inline="true" :model="formData" @submit.prevent>
+        <el-form-item label="商品编码">
+            <el-input v-model="formData.code" placeholder="请输入" clearable class="inp-dom" />
+        </el-form-item>
         <el-form-item label="商品名称">
             <el-input v-model="formData.name" placeholder="请输入" clearable class="inp-dom" />
         </el-form-item>
@@ -35,26 +38,30 @@
     </div>
 
     <el-table :data="dataList" border v-loading="dataListLoading" style="width: 100%">
-        <el-table-column prop="id" label="ID" width="70"></el-table-column>
-        <el-table-column prop="code" label="商品编码"></el-table-column>
-        <el-table-column prop="name" label="商品名称"></el-table-column>
-        <el-table-column prop="parentId" label="所属商品">
+        <el-table-column prop="id" label="ID" fixed="left" width="70"></el-table-column>
+        <el-table-column prop="code" label="商品编码" fixed="left" min-width="160"></el-table-column>
+        <el-table-column prop="name" label="商品名称" fixed="left" min-width="200"></el-table-column>
+        <el-table-column prop="parentId" label="所属商品" min-width="180">
             <template #default="scope">
                 {{ codeToLabelComputed(scope.row.parentId, parentIdList) }}
             </template>
         </el-table-column>
-        <el-table-column prop="parentId" label="销售状态">
+        <el-table-column prop="costPrice" label="成本价格" min-width="160"></el-table-column>
+        <el-table-column prop="price" label="价格" min-width="160"></el-table-column>
+        <el-table-column prop="parentId" label="销售状态" min-width="160">
             <template #default="scope">
                 <span :class="[scope.row.sale == 1 ? 'success-txt' : 'info-txt']">{{ scope.row.sale == 1 ? '已售' : '未售' }}</span>
             </template>
         </el-table-column>
-        <el-table-column prop="createTime" label="创建时间"></el-table-column>
-        <el-table-column prop="updateTime" label="修改时间"></el-table-column>
-        <el-table-column label="操作">
+        <el-table-column prop="salePrice" label="销售价格" min-width="160"></el-table-column>
+        <el-table-column prop="saleTime" label="销售时间" min-width="200"></el-table-column>
+        <el-table-column prop="createTime" label="创建时间" min-width="200"></el-table-column>
+        <el-table-column prop="updateTime" label="修改时间" min-width="200"></el-table-column>
+        <el-table-column label="操作" fixed="right" width="180">
             <template #default="scope">
                 <el-button type="primary" link @click="addOrUpdateFun(scope.row.id)">编辑</el-button>
                 <el-button type="primary" link @click="updateSaleFun(scope.row.id, scope.row.sale)">{{ scope.row.sale == 1 ? '重新入库' : '出库' }}</el-button>
-                <el-button type="primary" link @click="delFun(scope.row.id, scope.row.parentId)">删除</el-button>
+                <el-button type="primary" link @click="delFun(scope.row.id, scope.row.parentId)" v-if="scope.row.sale == 0">删除</el-button>
             </template>
         </el-table-column>
     </el-table>
@@ -72,11 +79,14 @@
 
     <!-- 商品弹窗 -->
     <indexAddOrUpdate ref="indexAddOrUpdateRef" @refreshDataList="searchFun" @close="indexAddOrUpdateVisible= false" v-if="indexAddOrUpdateVisible"></indexAddOrUpdate>
+    <!-- 商品出库 -->
+    <indexSale ref="indexSaleRef" @refreshDataList="searchFun" @close="indexSaleVisible= false" v-if="indexSaleVisible"></indexSale>
 </template>
 
 <script setup>
 import { onMounted, ref, nextTick } from 'vue'
 import indexAddOrUpdate from './index-add-or-update.vue'
+import indexSale from './index-sale.vue'
 import { goodsWarehousingPage, goodsWarehousingDelete, goodsGoodsListAll, goodsWarehousingSale, goodsWarehousingStockRefresh } from '@/api/goods'
 import { ElLoading, ElMessage, ElMessageBox } from 'element-plus'
 import { Plus, Refresh } from '@element-plus/icons-vue'
@@ -92,6 +102,7 @@ const { dictType } = storeToRefs(store)
 const { codeToLabelComputed } = commonMixin()
 const route = useRoute()
 const defaultDataForm = {
+    code: '',
     name: '',
     parentId: '',
     sale: '',
@@ -104,6 +115,8 @@ const dataList = ref([])
 const dataListLoading = ref(false)
 const indexAddOrUpdateRef = ref(null)
 const indexAddOrUpdateVisible = ref(false)
+const indexSaleRef = ref(null)
+const indexSaleVisible = ref(false)
 const parentIdList = ref([])
 const sale_statusList = ref(dictType.value['sale_status'])
 
@@ -133,6 +146,7 @@ const queryList = () => {
         data.list.forEach((value) => {
             value['createTime'] = dayjs(value.createTime).format('YYYY-MM-DD HH:mm:ss')
             value['updateTime'] = dayjs(value.updateTime).format('YYYY-MM-DD HH:mm:ss')
+            value['saleTime'] = value.saleTime ? dayjs(value.saleTime).format('YYYY-MM-DD HH:mm:ss') : ''
         })
         dataList.value = data.list.slice();
         formData.value.totalPage = data.sum;
@@ -200,21 +214,27 @@ const delFun = (id, parentId) => {
 }
 // 商品出入库
 const updateSaleFun = (id, sale) => {
-    const loading = ElLoading.service({
-        lock: true,
-    })
+    if (sale == 1) {
+        const loading = ElLoading.service({
+            lock: true,
+        })
 
-    goodsWarehousingSale({
-        id,
-        sale: sale == 1 ? 0 : 1,
-    }).then(() => {
-        loading.close()
-        queryList()
+        goodsWarehousingSale({
+            id,
+        }).then(() => {
+            loading.close()
+            queryList()
 
-        ElMessage.success('操作成功')
-    }).catch(() => {
-        loading.close()
-    })
+            ElMessage.success('操作成功')
+        }).catch(() => {
+            loading.close()
+        })
+    } else {
+        indexSaleVisible.value = true;
+        nextTick(() => {
+            indexSaleRef.value.init(id)
+        })
+    }
 }
 // 同步更新商品库存
 const refreshFun = () => {

@@ -23,6 +23,19 @@ module.exports = {
         // 开启事务
         const t = await sequelize.transaction()
         try {
+            const sql_1 = await Goods_detail.findOne({
+                where: {
+                    id,
+                },
+            })
+            if (sql_1.sale == 1) {
+                res.send({
+                    code: -1,
+                    msg: '已出库商品不允许删除',
+                })
+                return
+            }
+
             await Goods_detail.update(
                 {
                     state: 0,
@@ -62,7 +75,7 @@ module.exports = {
             res.send({
                 code: -1,
                 data: '',
-                msg: err.original.sqlMessage,
+                msg: JSON.stringify(err),
             })
         }
     }

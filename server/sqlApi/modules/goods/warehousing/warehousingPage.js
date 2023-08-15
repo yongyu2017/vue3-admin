@@ -9,7 +9,7 @@ module.exports = {
     path: '/goods/warehousing/page',
     fn: async function (req, res) {
         const { token } = req.headers
-        const { name, parentId, sale, pageIndex, pageSize } = req['body'];
+        const { code, name, parentId, sale, pageIndex, pageSize } = req['body'];
         const tokenInfo = await verifyToken(token)
         const start = pageSize ? (pageIndex - 1) * pageSize : 0
 
@@ -20,8 +20,12 @@ module.exports = {
 
         try {
             const sql_1 = await Goods_detail.findAndCountAll({
+                attributes: ['id', 'code', 'name', 'parentId', 'sale', 'costPrice', 'price', 'salePrice', 'saleTime', 'createTime', 'updateTime'],
                 where: {
                     state: 1,
+                    code: {
+                        [Op.like]: '%' + code + '%',
+                    },
                     name: {
                         [Op.like]: '%' + name + '%',
                     },

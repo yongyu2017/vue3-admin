@@ -12,7 +12,7 @@ module.exports = {
     path: '/goods/warehousing/sale',
     fn: async function (req, res) {
         const { token } = req.headers
-        const { id, sale } = req['body']
+        const { id, salePrice } = req['body']
         const tokenInfo = await verifyToken(token)
         const currentTime = moment(Date.now()).format('YYYY-MM-DD HH:mm:ss')
 
@@ -32,9 +32,12 @@ module.exports = {
                     transaction: t
                 }
             )
+
             await Goods_detail.update(
                 {
-                    sale,
+                    sale: sql_1.sale == 1 ? 0 : 1,
+                    salePrice: sql_1.sale == 1 ? null : salePrice,
+                    saleTime: sql_1.sale == 1 ? null : currentTime,
                     updateTime: currentTime,
                 },
                 {
@@ -47,7 +50,7 @@ module.exports = {
 
             await Goods_stock.update(
                 {
-                    count: literal(sale == 1 ? 'count-1' : 'count+1'),
+                    count: literal(sql_1.sale == 1 ? 'count-1' : 'count+1'),
                     updateTime: currentTime,
                 },
                 {
@@ -71,7 +74,7 @@ module.exports = {
             res.send({
                 code: -1,
                 data: '',
-                msg: err.original.sqlMessage,
+                msg: JSON.stringify(err),
             })
         }
     }

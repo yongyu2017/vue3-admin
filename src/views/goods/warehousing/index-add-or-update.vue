@@ -7,6 +7,12 @@
             <el-form-item label="商品名称" prop="name">
                 <el-input v-model="dataForm.name" placeholder="请输入" class="inp-dom"></el-input>
             </el-form-item>
+            <el-form-item label="成本价格" prop="costPrice">
+                <el-input v-model="dataForm.costPrice" placeholder="请输入" class="inp-dom"></el-input>
+            </el-form-item>
+            <el-form-item label="商品价格" prop="price">
+                <el-input v-model="dataForm.price" placeholder="请输入" class="inp-dom"></el-input>
+            </el-form-item>
             <el-form-item label="所属商品" prop="parentId">
                 <el-select v-model="dataForm.parentId" placeholder="请选择" filterable class="inp-dom">
                     <el-option
@@ -32,6 +38,7 @@
 import { ref, defineEmits, nextTick, defineExpose } from 'vue'
 import { ElLoading, ElMessage } from 'element-plus'
 import { goodsWarehousingUpdate, goodsWarehousingGet, goodsGoodsListAll } from '@/api/goods'
+import { isNumberValidator } from '@/utils/validate.js'
 
 const dataFormRef = ref();
 const visible = ref(false);
@@ -39,6 +46,8 @@ const dataForm = ref({
     id: '',  //修改时填写
     name: '',
     code: '',
+    costPrice: '',
+    price: '',
     parentId: '',
 })
 const dataRule = ref({
@@ -47,6 +56,12 @@ const dataRule = ref({
     ],
     code: [
         { required: true, message: '请输入', trigger: 'blur' },
+    ],
+    costPrice: [
+        { required: true, validator: isNumberValidator('请输入', 2, false), trigger: 'blur' },
+    ],
+    price: [
+        { required: true, validator: isNumberValidator('请输入', 2, false), trigger: 'blur' },
     ],
     parentId: [
         { required: true, message: '请选择', trigger: 'change' },

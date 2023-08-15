@@ -264,3 +264,31 @@ export function treeNodeRecursive(list) {
         }
     })
 }
+
+/**
+ * 校验数字
+ * ecimalDigits允许最多多少位小数点，0则校验为整数，-1则不校验
+ * positiveNumber是否为正数（Boolean）
+ * **/
+export function isNumber (val, ecimalDigits, positiveNumber) {
+    const regPos = /^[-]?[0-9]+.?[0-9]*$/ //判断是否是数字
+    const str = nullToEmptyString(val) + ''
+    const pointIndex = str.indexOf('.')  // 小数点位置
+    const ecimalDigitsLen = pointIndex != -1 ? str.substr(pointIndex + 1) : '' // 小数点后面的字符串
+    const isPositiveNumber = str.indexOf('-') == -1 ? true : false
+    let valid = true
+
+    if (!regPos.test(str)) return false
+    if (ecimalDigits != -1) {
+        if (ecimalDigits) {
+            valid = pointIndex == -1 ? true : (ecimalDigitsLen.length <= ecimalDigits)
+        } else {
+            valid = pointIndex == -1
+        }
+    }
+    if (positiveNumber) {
+        valid = isPositiveNumber
+    }
+
+    return valid
+}
