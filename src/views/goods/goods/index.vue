@@ -194,6 +194,7 @@ const toDetailFun = (id) => {
         name: 'GoodsWarehousingIndex',
         query: {
             id,
+            sale: 0,
         },
     })
 }

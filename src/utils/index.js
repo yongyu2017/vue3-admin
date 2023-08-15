@@ -31,6 +31,21 @@ export function checkEamil (str) {
     return /^[a-zA-Z0-9]+([-_.][A-Za-zd]+)*@([a-zA-Z0-9]+[-.])+[A-Za-zd]{2,5}$/.test(str)
 }
 
+// 校验身份证号码
+export function checkIDcard (str) {
+    return /^[1-9][0-9]{5}(19|20)[0-9]{2}((01|03|05|07|08|10|12)(0[1-9]|[1-2][0-9]|3[0-1])|(04|06|09|11)(0[1-9]|[1-2][0-9]|30)|02(0[1-9]|[1-2][0-9]))[0-9]{3}([0-9]|x|X)$/.test(str)
+}
+
+// 校验手机号码
+export function checkPhone (str) {
+    return /^1[3456789]\d{9}$/.test(str)
+}
+
+// 验证企业税号
+export function checkTax (str) {
+    return /^[A-Z0-9]{15}$|^[A-Z0-9]{17}$|^[A-Z0-9]{18}$|^[A-Z0-9]{20}$/.test(str)
+}
+
 /**
  * 清除登录信息
  */

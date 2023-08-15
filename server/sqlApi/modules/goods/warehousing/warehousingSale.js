@@ -50,7 +50,7 @@ module.exports = {
 
             await Goods_stock.update(
                 {
-                    count: literal(sql_1.sale == 1 ? 'count-1' : 'count+1'),
+                    count: literal(sql_1.sale == 1 ? 'count+1' : 'count-1'),
                     updateTime: currentTime,
                 },
                 {

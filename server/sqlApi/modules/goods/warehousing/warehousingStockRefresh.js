@@ -47,7 +47,7 @@ module.exports = {
                 const item = sql_2[i]
                 for (let j = 0; j < goodsIdList.length; j++) {
                     const item2 = goodsIdList[j]
-                    if (item.parentId == item2.goodsId) {
+                    if (item.parentId == item2.goodsId && item.sale == 0) {
                         item2.count++
                     }
                 }

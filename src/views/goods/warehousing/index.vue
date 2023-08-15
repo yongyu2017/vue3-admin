@@ -84,7 +84,7 @@
 </template>
 
 <script setup>
-import { onMounted, ref, nextTick } from 'vue'
+import { ref, nextTick, onActivated, onMounted } from 'vue'
 import indexAddOrUpdate from './index-add-or-update.vue'
 import indexSale from './index-sale.vue'
 import { goodsWarehousingPage, goodsWarehousingDelete, goodsGoodsListAll, goodsWarehousingSale, goodsWarehousingStockRefresh } from '@/api/goods'
@@ -119,11 +119,21 @@ const indexSaleRef = ref(null)
 const indexSaleVisible = ref(false)
 const parentIdList = ref([])
 const sale_statusList = ref(dictType.value['sale_status'])
+let isQuery = true
+let lastRouteId = ''
 
 onMounted(() => {
-    formData.value.parentId = route.query.id || ''
     goodsGoodsListAllFun()
-    queryList()
+})
+onActivated(() => {
+    formData.value.parentId = route.query.id ? route.query.id : formData.value.parentId
+    formData.value.sale = route.query.sale ? route.query.sale : formData.value.sale
+    if (route.query.id && lastRouteId != route.query.id) {
+        isQuery = true
+    }
+    lastRouteId = route.query.id || ''
+    isQuery && queryList()
+    isQuery = false
 })
 
 // 获取商品列表

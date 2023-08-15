@@ -1,6 +1,16 @@
 <template>
     <el-dialog @close="closeFun" :title="!dataForm.id ? '新增' : '修改'" :close-on-click-modal="false" v-model="visible">
         <el-form ref="dataFormRef" :model="dataForm" :rules="dataRule" label-width="100px">
+            <el-form-item label="所属商品" prop="parentId">
+                <el-select v-model="dataForm.parentId" placeholder="请选择" filterable class="inp-dom">
+                    <el-option
+                            v-for="item in parentIdList"
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item.value">
+                    </el-option>
+                </el-select>
+            </el-form-item>
             <el-form-item label="商品编码" prop="code">
                 <el-input v-model="dataForm.code" placeholder="请输入" class="inp-dom"></el-input>
             </el-form-item>
@@ -12,16 +22,6 @@
             </el-form-item>
             <el-form-item label="商品价格" prop="price">
                 <el-input v-model="dataForm.price" placeholder="请输入" class="inp-dom"></el-input>
-            </el-form-item>
-            <el-form-item label="所属商品" prop="parentId">
-                <el-select v-model="dataForm.parentId" placeholder="请选择" filterable class="inp-dom">
-                    <el-option
-                            v-for="item in parentIdList"
-                            :key="item.value"
-                            :label="item.label"
-                            :value="item.value">
-                    </el-option>
-                </el-select>
             </el-form-item>
         </el-form>
 
