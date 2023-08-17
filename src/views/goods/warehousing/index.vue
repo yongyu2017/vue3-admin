@@ -59,7 +59,7 @@
         <el-table-column prop="updateTime" label="修改时间" min-width="200"></el-table-column>
         <el-table-column label="操作" fixed="right" width="180">
             <template #default="scope">
-                <el-button type="primary" link @click="addOrUpdateFun(scope.row.id)">编辑</el-button>
+                <el-button type="primary" link @click="addOrUpdateFun(scope.row.id)" v-if="scope.row.sale == 0">编辑</el-button>
                 <el-button type="primary" link @click="updateSaleFun(scope.row.id, scope.row.sale)">{{ scope.row.sale == 1 ? '重新入库' : '出库' }}</el-button>
                 <el-button type="primary" link @click="delFun(scope.row.id, scope.row.parentId)" v-if="scope.row.sale == 0">删除</el-button>
             </template>
@@ -223,7 +223,18 @@ const delFun = (id, parentId) => {
     })
 }
 // 商品出入库
-const updateSaleFun = (id, sale) => {
+const updateSaleFun = async (id, sale) => {
+    const confirmRes = await ElMessageBox.confirm(
+        `确定要对ID为${ id }的数据进行出入库操作吗?`,
+        '提示',
+        {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning',
+        }
+    ).then(() => true).catch(() => false)
+    if (!confirmRes) return
+
     if (sale == 1) {
         const loading = ElLoading.service({
             lock: true,

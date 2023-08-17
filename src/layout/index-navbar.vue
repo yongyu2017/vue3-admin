@@ -60,6 +60,9 @@ const logoutHandle = () => {
     }).then(() => {
         clearLoginInfo()
         router.push({ name: 'login' })
+        setTimeout(() => {
+            location.reload()
+        }, 0)
     }).catch(() => {})
 }
 // 跳转到用户信息页

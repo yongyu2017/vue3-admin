@@ -90,6 +90,13 @@ export function goodsWarehousingPage (data) {
         method: 'post',
         data: data
     })
+}// 查询商品入库列表
+export function goodsWarehousingList (data) {
+    return request({
+        url: '/goods/warehousing/list',
+        method: 'post',
+        data: data
+    })
 }
 // 新增或者修改商品入库信息
 export function goodsWarehousingUpdate (data) {

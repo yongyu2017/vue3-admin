@@ -41,9 +41,9 @@ router.beforeEach((to, from, next) => {
         clearLoginInfo()
         next({
             name: 'login',
-            query: {
-                url: encodeURIComponent(to.fullPath),
-            },
+            // query: {
+            //     url: encodeURIComponent(to.fullPath),
+            // },
             replace: true
         })
         return

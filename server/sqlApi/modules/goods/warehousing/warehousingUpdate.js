@@ -21,7 +21,6 @@ module.exports = {
             return
         }
 
-        console.log(id, code, name, parentId, costPrice, price)
         // 开启事务
         const t = await sequelize.transaction()
         try {
@@ -39,6 +38,15 @@ module.exports = {
                     if (!checkCodeExistingRes) return
                 }
                 /** 检测商品编码是否重复 **/
+
+                if (sql_1.sale == 1) {
+                    res.send({
+                        code: -1,
+                        data: '',
+                        msg: '该商品已出售，不可修改',
+                    })
+                    return
+                }
 
                 await Goods_detail.update(
                     {

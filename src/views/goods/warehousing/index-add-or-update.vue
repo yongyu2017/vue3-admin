@@ -11,11 +11,11 @@
                     </el-option>
                 </el-select>
             </el-form-item>
-            <el-form-item label="商品编码" prop="code">
-                <el-input v-model="dataForm.code" placeholder="请输入" class="inp-dom"></el-input>
-            </el-form-item>
             <el-form-item label="商品名称" prop="name">
                 <el-input v-model="dataForm.name" placeholder="请输入" class="inp-dom"></el-input>
+            </el-form-item>
+            <el-form-item label="商品编码" prop="code">
+                <el-input v-model="dataForm.code" placeholder="请输入" class="inp-dom"></el-input>
             </el-form-item>
             <el-form-item label="成本价格" prop="costPrice">
                 <el-input v-model="dataForm.costPrice" placeholder="请输入" class="inp-dom"></el-input>
