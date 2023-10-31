@@ -7,8 +7,7 @@ let exportObject = {}
 const fileList = getJsonFiles(dir).map((value) => {
     const Index = value.indexOf('modules')
     const fileUrl = './' + value.substr(Index).replace(/\\/g, '\/')
-    const list = fileUrl.split('/')
-    const fileName = list[list.length - 1].replace('.js', '')
+    const fileName = fileUrl.replace('./modules/', '').replace('/', '_').replace('.js', '')
     return {
         fileName,
         fileUrl,

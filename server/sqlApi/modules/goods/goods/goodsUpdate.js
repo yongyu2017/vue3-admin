@@ -64,7 +64,7 @@ module.exports = {
                 }
                 /** 文件重命名 **/
 
-                    // 开启事务
+                // 开启事务
                 const t = await sequelize.transaction()
                 try {
                     if (id) {

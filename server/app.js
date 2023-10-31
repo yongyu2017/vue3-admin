@@ -37,12 +37,15 @@ for (let i in api) {
     const bodyParserType = api[i].bodyParser || (api[i].bodyParser == undefined ? jsonParser : '')  // 请求参数解析方式，默认使用JSON，而文件类型不可以进行bodyParser解析
 
     if (bodyParserType) {
-        app.post(api[i].path, bodyParserType, api[i].fn)
+        if (api[i].method == 'get') {
+            app.get(api[i].path, bodyParserType, api[i].fn)
+        } else {
+            app.post(api[i].path, bodyParserType, api[i].fn)
+        }
     } else {
         app.post(api[i].path, api[i].fn)
     }
 }
-
 //配置服务端口
 app.listen(port, () => {
     console.log('node接口服务正常运行')

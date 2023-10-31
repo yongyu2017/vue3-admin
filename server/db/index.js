@@ -6,7 +6,8 @@ module.exports={
         user : 'root',  //mysql的连接用户名
         password : 'root',  //对应用户的密码
         port: '3306',  // 连接地址对应的端口。（默认：3306）
-        database : 'test'  //所需要连接的数据库的名称
+        database : 'test',  //所需要连接的数据库的名称
+        timezone: '+08:00', //东八时区
     },
     //connect('sql语句',[参数],回调函数（err,data){})
     connect (sql, params, cb) {

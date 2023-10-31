@@ -10,6 +10,7 @@ const { config } = require('./index.js')
 const sequelize = new Sequelize(config.database, config.user, config.password, {
     host: config.host,
     port: config.port,
+    timezone: config.timezone, //东八时区
     dialect: 'mysql',
     define: {
         timestamps: false, // 不要默认时间戳 数据库没有时间戳字段时，设置为false，否则报错  SequelizeDatabaseError: Unknown column 'createdAt' in 'field list'
