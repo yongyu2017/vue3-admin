@@ -3,6 +3,7 @@ const statusCodeMap = require('#root/utils/statusCodeMap.js')
 const db = require('#root/db/index.js')
 const moment = require('moment')
 const music_directory = require('#root/db/model/music_directory.js')
+const music_library = require('#root/db/model/music_library.js')
 const { Op } = require("sequelize")
 
 // 获取音乐目录删除
@@ -39,6 +40,22 @@ module.exports = {
                     code: -1,
                     data: '',
                     msg: '该数据下有其他选项，无法删除',
+                })
+                return
+            }
+
+            const sql_2 = await music_library.findAll({
+                where: {
+                    directory: {
+                        [Op.like]: '%' + (id || '') + '%'
+                    },
+                },
+            })
+            if (sql_2.length > 0) {
+                res.send({
+                    code: -1,
+                    data: '',
+                    msg: '该数据下已有曲库，无法删除',
                 })
                 return
             }
