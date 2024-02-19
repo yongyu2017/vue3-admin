@@ -7,8 +7,8 @@ const formidable = require('formidable')
 const path = require('path')
 const fs = require('fs')
 const { v4: uuidv4 } = require('uuid');
-const music_library = require('#root/db/model/music_library.js')
-const fileSq = require('#root/db/model/file.js')
+const Music_library_sq = require('#root/db/model/Music_library.js')
+const Music_file_sq = require('#root/db/model/Music_file.js')
 const { sequelize } = require('#root/db/databaseInit.js')
 const { Op } = require("sequelize")
 
@@ -47,7 +47,7 @@ module.exports = {
                     return
                 }
 
-                const { id, name, fileid, lrc, directory, des } = fields
+                const { id, name, fileid, lrc, label, des, sort, duration } = fields
                 // 开启事务
                 const t = await sequelize.transaction()
                 try {
@@ -67,16 +67,16 @@ module.exports = {
                         fileSaveUrl = uploadFilePath + '/' + newFileName
                         fs.renameSync(filePath + '\\' + files[fileKey].newFilename, filePath + '\\' + newFileName)
 
-                        const sql_5 = await fileSq.findOne({
+                        const sql_5 = await Music_file_sq.findOne({
                             where: {
                                 name: originalFilename,
                             },
                             transaction: t
                         })
                         if (sql_5) {
-                            sql_3 = sql_5.id
+                            sql_3 = sql_5
                         } else {
-                            sql_3 = await fileSq.create({
+                            sql_3 = await Music_file_sq.create({
                                 name: originalFilename,
                                 url: fileSaveUrl,
                                 des,
@@ -98,16 +98,16 @@ module.exports = {
                         fileSaveUrl2 = uploadFilePath + '/' + newFileName
                         fs.renameSync(filePath + '\\' + files[fileKey].newFilename, filePath + '\\' + newFileName)
 
-                        const sql_5 = await fileSq.findOne({
+                        const sql_5 = await Music_file_sq.findOne({
                             where: {
                                 name: originalFilename,
                             },
                             transaction: t
                         })
                         if (sql_5) {
-                            sql_4 = sql_5.id
+                            sql_4 = sql_5
                         } else {
-                            sql_4 = await fileSq.create({
+                            sql_4 = await Music_file_sq.create({
                                 name: originalFilename,
                                 url: fileSaveUrl2,
                                 des,
@@ -120,18 +120,20 @@ module.exports = {
                         }
                     }
                     /** 文件重命名 **/
-
                     if (id) {
                         let updateAttributes = {
                             name,
-                            directory,
+                            label,
                             fileid: files.fileid ? sql_3.id : fileid || null,
                             lrc: files.lrc ? sql_4.id : lrc || null,
                             des,
+                            sort,
+                            duration,
                             updateTime: currentTime,
                         }
+                        console.log('updateAttributes', updateAttributes)
 
-                        await music_library.update(
+                        await Music_library_sq.update(
                             updateAttributes,
                             {
                                 where: {
@@ -141,12 +143,14 @@ module.exports = {
                             }
                         )
                     } else {
-                        const sql_1 = await music_library.create({
+                        const sql_1 = await Music_library_sq.create({
                             name,
-                            directory,
+                            label,
                             fileid: sql_3.id,
                             lrc: sql_4.id,
                             des,
+                            sort,
+                            duration,
                             state: 1,
                             createTime: currentTime,
                             updateTime: currentTime,

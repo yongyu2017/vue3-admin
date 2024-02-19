@@ -1,17 +1,7 @@
 <template>
     <el-form :inline="true" :model="formData" @submit.prevent>
-        <el-form-item label="歌曲名称">
+        <el-form-item label="名称">
             <el-input v-model="formData.name" placeholder="请输入" clearable class="inp-dom" />
-        </el-form-item>
-        <el-form-item label="歌曲标签">
-            <el-select v-model="formData.label" multiple clearable placeholder="请选择">
-                <el-option
-                    v-for="item in labelList"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.value"
-                />
-            </el-select>
         </el-form-item>
         <el-form-item>
             <el-button type="primary" @click="searchFun">查询</el-button>
@@ -25,24 +15,7 @@
 
     <el-table :data="dataList" border v-loading="dataListLoading" style="width: 100%">
         <el-table-column prop="id" label="ID" width="70"></el-table-column>
-        <el-table-column prop="name" label="歌曲名称"></el-table-column>
-        <el-table-column prop="label" label="歌曲标签">
-            <template #default="scope">
-                {{ codeToLabelComputed(scope.row.label, labelList) }}
-            </template>
-        </el-table-column>
-        <el-table-column prop="fileid" label="歌曲地址">
-            <template #default="scope">
-                <el-link :href="scope.row.fileid.url" type="primary" :underline="false" target="_blank" v-if="scope.row.fileid">{{ scope.row.fileid.url }}</el-link>
-            </template>
-        </el-table-column>
-        <el-table-column prop="lrc" label="歌词地址">
-            <template #default="scope">
-                <el-link :href="scope.row.lrc.url" type="primary" :underline="false" target="_blank" v-if="scope.row.lrc">{{ scope.row.lrc.url }}</el-link>
-            </template>
-        </el-table-column>
-        <el-table-column prop="duration" label="时长"></el-table-column>
-        <el-table-column prop="des" label="描述"></el-table-column>
+        <el-table-column prop="name" label="标签名称"></el-table-column>
         <el-table-column prop="sort" label="排序"></el-table-column>
         <el-table-column prop="createTime" label="创建时间"></el-table-column>
         <el-table-column prop="updateTime" label="修改时间"></el-table-column>
@@ -65,24 +38,22 @@
         layout="total, sizes, prev, pager, next, jumper">
     </el-pagination>
 
-    <!-- 商品弹窗 -->
+    <!-- 添加或者修改 -->
     <indexAddOrUpdate ref="indexAddOrUpdateRef" @refreshDataList="searchFun" @close="indexAddOrUpdateVisible= false" v-if="indexAddOrUpdateVisible"></indexAddOrUpdate>
 </template>
 
 <script setup>
 import { onMounted, ref, nextTick } from 'vue'
 import indexAddOrUpdate from './index-add-or-update.vue'
-import { musicLibraryList, musicLabelListAll, musicLibraryDelete } from '@/api/music.js'
+import { musicLabelList, musicLabelDelete } from '@/api/music.js'
 import { ElLoading, ElMessage, ElMessageBox } from 'element-plus'
 import { Plus } from '@element-plus/icons-vue'
 import { deepCopy } from '@/utils/index'
-import { commonMixin } from '@/mixins/common'
 const dayjs = require('dayjs')
 
-const { codeToLabelComputed } = commonMixin()
 const defaultDataForm = {
     name: '',
-    label: '',
+    directory: '',
     pageIndex: 1,
     pageSize: 10,
     totalPage: 0,
@@ -92,47 +63,26 @@ const dataList = ref([]);
 const dataListLoading = ref(false);
 const indexAddOrUpdateRef = ref(null);
 const indexAddOrUpdateVisible = ref(false);
-const labelList = ref([])
 
 onMounted(() => {
-    musiclabelListFun()
     queryList()
 })
 
 // 获取列表
 const queryList = () => {
     dataListLoading.value = true;
-    let formDataCopy = deepCopy(formData.value)
-    formDataCopy.label = formDataCopy.label ? formDataCopy.label.join(',') : ''
-    musicLibraryList({
-        ...formDataCopy
+    musicLabelList({
+        ...formData.value
     }).then(({ data }) => {
         dataListLoading.value = false;
         data.list.forEach((value) => {
-            value['label'] = value['label'] ? value['label'].split(',') : []
             value['createTime'] = dayjs(value.createTime).format('YYYY-MM-DD HH:mm:ss')
             value['updateTime'] = dayjs(value.updateTime).format('YYYY-MM-DD HH:mm:ss')
-            if (value.fileid) {
-                value.fileid = value.fileList.find((value2) => value2.id == value.fileid)
-            }
-            if (value.lrc) {
-                value.lrc = value.fileList.find((value2) => value2.id == value.lrc)
-            }
         })
-        dataList.value = data.list.slice()
-        formData.value.totalPage = data.sum
+        dataList.value = data.list.slice();
+        formData.value.totalPage = data.sum;
     }).catch(() => {
         dataListLoading.value = false;
-    })
-}
-// 获取歌曲标签
-const musiclabelListFun = () => {
-    musicLabelListAll().then(({ data }) => {
-        data.list.forEach((value) => {
-            value['label'] = value.name
-            value['value'] = value.id
-        })
-        labelList.value = data.list
     })
 }
 // 重置
@@ -179,7 +129,7 @@ const delFun = (id) => {
             lock: true,
         })
 
-        musicLibraryDelete({
+        musicLabelDelete({
             id,
         }).then(() => {
             loading.close()

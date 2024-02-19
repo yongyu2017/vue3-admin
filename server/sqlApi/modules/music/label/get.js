@@ -1,12 +1,12 @@
 const { getFileData, setFileData, findParentNode, findChildNode, getMax, generateToken, verifyToken } = require('#root/utils/index.js')
 const statusCodeMap = require('#root/utils/statusCodeMap.js')
 const db = require('#root/db/index.js')
-const Music_directory_sq = require('#root/db/model/Music_directory.js')
+const Music_label_sq_sq = require('#root/db/model/Music_label.js')
 const { Op } = require("sequelize")
 
-// 获取音乐目录详情
+// 获取音乐标签详情
 module.exports = {
-    path: '/music/directory/get',
+    path: '/music/label/get',
     fn: async function (req, res) {
         const { token } = req.headers
         const { id } = req['body']
@@ -18,7 +18,8 @@ module.exports = {
         }
 
         try {
-            const sql_1 = await Music_directory_sq.findOne({
+            const sql_1 = await Music_label_sq_sq.findOne({
+                attributes: ['id', 'name', 'sort', 'createTime', 'updateTime'],
                 where: {
                     state: 1,
                     id,
@@ -31,6 +32,7 @@ module.exports = {
                 msg: '',
             })
         } catch (err) {
+            console.log(err)
             res.send({
                 code: -1,
                 data: '',

@@ -2,8 +2,8 @@ const { getFileData, setFileData, findParentNode, findChildNode, getMax, generat
 const statusCodeMap = require('#root/utils/statusCodeMap.js')
 const db = require('#root/db/index.js')
 const moment = require('moment')
-const music_directory = require('#root/db/model/music_directory.js')
-const music_library = require('#root/db/model/music_library.js')
+const Music_directory_sq = require('#root/db/model/Music_directory.js')
+const Music_library_sq = require('#root/db/model/Music_library.js')
 const { Op } = require("sequelize")
 
 // 获取音乐目录删除
@@ -21,7 +21,7 @@ module.exports = {
         }
 
         try {
-            const sql_1 = await music_directory.findAll({
+            const sql_1 = await Music_directory_sq.findAll({
                 where: {
                     state: 1,
                 },
@@ -44,7 +44,7 @@ module.exports = {
                 return
             }
 
-            const sql_2 = await music_library.findAll({
+            const sql_2 = await Music_library_sq.findAll({
                 where: {
                     directory: {
                         [Op.like]: '%' + (id || '') + '%'
@@ -60,7 +60,7 @@ module.exports = {
                 return
             }
 
-            await music_directory.update(
+            await Music_directory_sq.update(
                 {
                     state:0,
                     updateTime: currentTime,

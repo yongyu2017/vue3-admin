@@ -23,6 +23,8 @@
     "nodemon": "^2.0.20"
   },
   "dependencies": {
+    "console-color-mr": "^2.0.2",
+    "cors": "^2.8.5",
     "mysql2": "^3.6.0",
     "sequelize": "^6.32.1",
     "uuid": "^9.0.0"

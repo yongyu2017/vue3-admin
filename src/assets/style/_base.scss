@@ -253,3 +253,23 @@ body {
         background-color: #F9F9FA;
     }
 }
+
+.el-dialog-fixed {
+    .el-dialog__footer {
+        padding: 0;
+        background-color: #fff;
+
+        .dialog-footer {
+            display: block;
+            padding: var(--el-dialog-padding-primary);
+            padding-top: 10px;
+            background-color: #fff;
+        }
+
+        .el-affix--fixed {
+            .dialog-footer {
+                box-shadow: var(--el-box-shadow-light);
+            }
+        }
+    }
+}

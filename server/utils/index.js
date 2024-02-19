@@ -3,7 +3,7 @@ const { promisify } = require('util') // promisify 异步处理
 const path = require('path')
 const { tokenSecret, port, tokenSurvive } = require('./setting.js')
 const jwt = require('jsonwebtoken')
-const os = require('os')
+const os = require('os');
 const readFile = promisify(fs.readFile)
 const writeFile = promisify(fs.writeFile)
 

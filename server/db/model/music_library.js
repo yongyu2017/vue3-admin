@@ -1,6 +1,6 @@
 const { Sequelize, sequelize } = require('../databaseInit.js')
 
-const music_library = sequelize.define('music_library', {
+const Music_library_sq = sequelize.define('music_library', {
     id: {
         type: Sequelize.INTEGER,
         primaryKey: true,
@@ -8,7 +8,7 @@ const music_library = sequelize.define('music_library', {
         unique: true,
         autoIncrement: true
     },
-    directory: {
+    label: {
         type: Sequelize.STRING,
         allowNull: false,
     },
@@ -28,6 +28,14 @@ const music_library = sequelize.define('music_library', {
         type: Sequelize.INTEGER,
         allowNull: false,
     },
+    sort: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+    },
+    duration: {
+        type: Sequelize.STRING,
+        allowNull: true,
+    },
     createTime: {
         type: Sequelize.DATE,
         allowNull: false,
@@ -38,4 +46,4 @@ const music_library = sequelize.define('music_library', {
     },
 })
 
-module.exports = music_library
+module.exports = Music_library_sq

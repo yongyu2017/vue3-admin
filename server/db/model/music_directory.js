@@ -1,6 +1,6 @@
 const { Sequelize, sequelize } = require('../databaseInit.js')
 
-const music_directory = sequelize.define('music_directory', {
+const Music_directory_sq = sequelize.define('music_directory', {
     id: {
         type: Sequelize.INTEGER,
         primaryKey: true,
@@ -34,4 +34,4 @@ const music_directory = sequelize.define('music_directory', {
     },
 })
 
-module.exports = music_directory
+module.exports = Music_directory_sq

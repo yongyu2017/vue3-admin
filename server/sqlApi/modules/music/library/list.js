@@ -1,42 +1,49 @@
 const { getFileData, setFileData, findParentNode, findChildNode, getMax, generateToken, verifyToken, menuToTreeMenu, setCompleteAddress } = require('#root/utils/index.js')
 const statusCodeMap = require('#root/utils/statusCodeMap.js')
 const db = require('#root/db/index.js')
-const music_library = require('#root/db/model/music_library.js')
-const fileSq = require('#root/db/model/file.js')
-const { Op } = require("sequelize")
+const Music_library_sq = require('#root/db/model/Music_library.js')
+const Music_file_sq = require('#root/db/model/Music_file.js')
+const { Op, QueryTypes } = require("sequelize")
+const { sequelize } = require('#root/db/databaseInit.js')
 
 // 获取曲库列表
 module.exports = {
     path: '/music/library/list',
     fn: async function (req, res) {
         const { token } = req.headers;
-        const { name, directory, pageIndex, pageSize } = req['body'];
+        const { name, label, pageIndex, pageSize } = req['body'];
         const tokenInfo = await verifyToken(token)
         const start = (pageIndex - 1) * pageSize
 
-        if (!tokenInfo) {
-            res.send(statusCodeMap['401'])
-            return
-        }
+        // if (!tokenInfo) {
+        //     res.send(statusCodeMap['401'])
+        //     return
+        // }
 
         try {
-            const sql_1 = await music_library.findAndCountAll({
-                where: {
-                    state: 1,
-                    name: {
-                        [Op.like]: '%' + name + '%'
-                    },
-                    directory: {
-                        [Op.like]: '%' + (directory || '') + '%'
-                    },
-                },
-                order: [
-                    ['createTime', 'DESC'],
-                ],
-                offset: start,
-                limit: pageSize,
+            const labelList = label ? label.toString().split(',') : []
+            function selectSql (type) {
+                let sql_txt = "SELECT " + (type == 0 ? "COUNT(*)" : "*") + " FROM music_library WHERE name LIKE '%" + name + "%'"
+                if (labelList.length > 0) {
+                    sql_txt +=  "and CONCAT (',',label,',') REGEXP ',(" + labelList.join('|') + "),'"
+                }
+                sql_txt += " ORDER BY updateTime DESC"
+                if (type == 1) {
+                    sql_txt += " LIMIT " + start + ", " + pageSize
+                }
+                return sql_txt
+            }
+            const sql_3 = await sequelize.query(selectSql(0), {
+                model: Music_library_sq,
+                mapToModel: true,
+                type: QueryTypes.SELECT,
             })
-            const list = sql_1.rows.map((value) => {
+            const sql_1 = await sequelize.query(selectSql(1), {
+                model: Music_library_sq,
+                mapToModel: true,
+                type: QueryTypes.SELECT,
+            })
+            const list = sql_1.map((value) => {
                 let item = value.toJSON()
                 // item.file = setCompleteAddress(item.file)
                 return item
@@ -46,7 +53,7 @@ module.exports = {
                 value.fileid && fileidsList.push({ id: value.fileid })
                 value.lrc && fileidsList.push({ id: value.lrc })
             })
-            const sql_2 = await fileSq.findAll({
+            const sql_2 = await Music_file_sq.findAll({
                 where: {
                     [Op.or]: fileidsList
                 },
@@ -68,11 +75,12 @@ module.exports = {
                 value['fileList'] = itemFileList
             })
 
+            console.log(3322)
             res.send({
                 code: 200,
                 data: {
                     list,
-                    sum: sql_1.count,
+                    sum: sql_3[0].dataValues['COUNT(*)'],
                 },
                 msg: '',
             })

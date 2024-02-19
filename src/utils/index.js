@@ -169,7 +169,7 @@ export function zeroFill (val) {
 // 秒转时分秒
 export function secondToTime (time) {
     const h = Math.floor(time / 60 / 60)
-    const m = Math.floor(time / 60 % 60)
+    const m = Math.floor((time % 3600) / 60)
     const s = time % 60
 
     return {

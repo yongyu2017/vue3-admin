@@ -1,16 +1,18 @@
-const { getFileData, setFileData, findParentNode, findChildNode, getMax, generateToken, verifyToken } = require('#root/utils/index.js')
+const { getFileData, setFileData, findParentNode, findChildNode, getMax, generateToken, verifyToken, menuToTreeMenu } = require('#root/utils/index.js')
 const statusCodeMap = require('#root/utils/statusCodeMap.js')
 const db = require('#root/db/index.js')
-const Music_directory_sq = require('#root/db/model/Music_directory.js')
+const moment = require('moment')
+const Music_label_sq_sq = require('#root/db/model/Music_label.js')
 const { Op } = require("sequelize")
 
-// 获取音乐目录详情
+// 删除音乐标签
 module.exports = {
-    path: '/music/directory/get',
+    path: '/music/label/delete',
     fn: async function (req, res) {
         const { token } = req.headers
         const { id } = req['body']
         const tokenInfo = await verifyToken(token)
+        const currentTime = moment(Date.now()).format('YYYY-MM-DD HH:mm:ss')
 
         if (!tokenInfo) {
             res.send(statusCodeMap['401'])
@@ -18,19 +20,19 @@ module.exports = {
         }
 
         try {
-            const sql_1 = await Music_directory_sq.findOne({
+            await Music_label_sq_sq.destroy({
                 where: {
-                    state: 1,
-                    id,
-                },
+                    id
+                }
             })
 
             res.send({
                 code: 200,
-                data: sql_1,
+                data: '',
                 msg: '',
             })
         } catch (err) {
+            console.log(err)
             res.send({
                 code: -1,
                 data: '',

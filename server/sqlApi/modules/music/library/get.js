@@ -1,8 +1,8 @@
 const { getFileData, setFileData, findParentNode, findChildNode, getMax, generateToken, verifyToken } = require('#root/utils/index.js')
 const statusCodeMap = require('#root/utils/statusCodeMap.js')
 const db = require('#root/db/index.js')
-const music_library = require('#root/db/model/music_library.js')
-const fileSq = require('#root/db/model/file.js')
+const Music_library_sq = require('#root/db/model/Music_library.js')
+const Music_file_sq = require('#root/db/model/Music_file.js')
 const { Op } = require("sequelize")
 
 // 获取曲库详情
@@ -20,18 +20,18 @@ module.exports = {
 
         try {
             // 如果存在别名，则删除别名
-            // if(music_library.associations.fileInfo){
-            //     delete music_library.associations.fileInfo
+            // if(Music_library_sq.associations.fileInfo){
+            //     delete Music_library_sq.associations.fileInfo
             // }
-            // music_library.hasOne(fileSq, { foreignKey: 'id', sourceKey: 'fileid', as: 'fileInfo' });
-            const sql_1 = await music_library.findOne({
-                attributes: ['id', 'name', 'directory', 'fileid', 'lrc', 'des', 'createTime', 'updateTime'],
+            // Music_library_sq.hasOne(Music_file_sq, { foreignKey: 'id', sourceKey: 'fileid', as: 'fileInfo' });
+            const sql_1 = await Music_library_sq.findOne({
+                attributes: ['id', 'name', 'label', 'fileid', 'lrc', 'des', 'createTime', 'updateTime', 'sort', 'duration'],
                 where: {
                     state: 1,
                     id,
                 },
             })
-            const sql_2 = await fileSq.findAll({
+            const sql_2 = await Music_file_sq.findAll({
                 where: {
                     [Op.or]: [
                         { id: sql_1.fileid },

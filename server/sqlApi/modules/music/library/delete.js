@@ -2,7 +2,7 @@ const { getFileData, setFileData, findParentNode, findChildNode, getMax, generat
 const statusCodeMap = require('#root/utils/statusCodeMap.js')
 const db = require('#root/db/index.js')
 const moment = require('moment')
-const music_library = require('#root/db/model/music_library.js')
+const Music_library_sq = require('#root/db/model/Music_library.js')
 const { Op } = require("sequelize")
 
 // 曲库删除
@@ -20,17 +20,11 @@ module.exports = {
         }
 
         try {
-            await music_library.update(
-                {
-                    state:0,
-                    updateTime: currentTime,
-                },
-                {
-                    where: {
-                        id,
-                    },
+            await Music_library_sq.destroy({
+                where: {
+                    id
                 }
-            )
+            })
 
             res.send({
                 code: 200,

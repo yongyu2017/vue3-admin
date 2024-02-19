@@ -69,3 +69,43 @@ export function musicLibraryDelete(data) {
     })
 }
 
+// 获取音乐标签列表
+export function musicLabelList(data) {
+    return request({
+        url: '/music/label/list',
+        method: 'post',
+        data: data
+    })
+}
+// 获取音乐标签详情
+export function musicLabelGet(data) {
+    return request({
+        url: '/music/label/get',
+        method: 'post',
+        data: data
+    })
+}
+// 新增或修改音乐标签
+export function musicLabelAddOrModify(data) {
+    return request({
+        url: '/music/label/addOrModify',
+        method: 'post',
+        data: data
+    })
+}
+// 删除音乐标签
+export function musicLabelDelete(data) {
+    return request({
+        url: '/music/label/delete',
+        method: 'post',
+        data: data
+    })
+}
+// 获取所有音乐标签
+export function musicLabelListAll(data) {
+    return request({
+        url: '/music/label/listAll',
+        method: 'post',
+        data: data
+    })
+}
