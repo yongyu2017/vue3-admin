@@ -47,10 +47,41 @@ module.exports = {
                     return
                 }
 
-                const { id, name, fileid, lrc, label, des, sort, duration } = fields
+                const { id, name, fileid, lrc, label, des, sort, duration, fileid_size, lrc_size } = fields
                 // 开启事务
                 const t = await sequelize.transaction()
                 try {
+                    const sql_6 = await Music_library_sq.findOne(
+                        {
+                            where: {
+                                name,
+                            },
+                        }
+                    )
+                    if (sql_6) {
+                        let isRepeat = false // 是否重复
+                        if (id) {
+                            if (sql_6.id != id) {
+                                isRepeat = true
+                            }
+                        } else {
+                            isRepeat = true
+                        }
+                        if (isRepeat) {
+                            /** 判断文件是否存在，存在则删除 **/
+                            if (files && isRepeat) {
+                                deleteFile(files)
+                            }
+                            /** 判断文件是否存在，存在则删除 **/
+                            res.send({
+                                code: -1,
+                                data: '',
+                                msg: '该数据已存在，请勿重复添加',
+                            })
+                            return
+                        }
+                    }
+
                     /** 文件重命名 **/
                     // file字段如果是文件流时，该字段是没有值的
                     let sql_3 = ''
@@ -59,13 +90,13 @@ module.exports = {
                     let fileSaveUrl2 = '' // 文件存储地址
                     if (files.fileid) {
                         const temp = uuidv4().replace(/-/g, '_')
-                        const fileKey = 'fileid' // 接收文件流的字段
-                        let originalFilename = files[fileKey].originalFilename // 文件原始名字
+                        const fileInfo = files['fileid']
+                        let originalFilename = fileInfo.originalFilename // 文件原始名字
                         const fileSuffix = getSuffix(originalFilename)[0] // 文件后缀，如：.mp3
                         const fileName = originalFilename.replace(fileSuffix, '')
                         const newFileName = fileName + '' + fileSuffix
                         fileSaveUrl = uploadFilePath + '/' + newFileName
-                        fs.renameSync(filePath + '\\' + files[fileKey].newFilename, filePath + '\\' + newFileName)
+                        fs.renameSync(filePath + '\\' + fileInfo.newFilename, filePath + '\\' + newFileName)
 
                         const sql_5 = await Music_file_sq.findOne({
                             where: {
@@ -79,6 +110,7 @@ module.exports = {
                             sql_3 = await Music_file_sq.create({
                                 name: originalFilename,
                                 url: fileSaveUrl,
+                                size: fileInfo.size,
                                 des,
                                 state: 1,
                                 createTime: currentTime,
@@ -90,13 +122,14 @@ module.exports = {
                     }
                     if (files.lrc) {
                         const temp = uuidv4().replace(/-/g, '_')
-                        const fileKey = 'lrc' // 接收文件流的字段
-                        let originalFilename = files[fileKey].originalFilename // 文件原始名字
+                        const fileInfo = files['lrc']
+                        console.log('fileInfo', fileInfo)
+                        let originalFilename = fileInfo.originalFilename // 文件原始名字
                         const fileSuffix = getSuffix(originalFilename)[0] // 文件后缀，如：.mp3
                         const fileName = originalFilename.replace(fileSuffix, '')
                         const newFileName = fileName + '' + fileSuffix
                         fileSaveUrl2 = uploadFilePath + '/' + newFileName
-                        fs.renameSync(filePath + '\\' + files[fileKey].newFilename, filePath + '\\' + newFileName)
+                        fs.renameSync(filePath + '\\' + fileInfo.newFilename, filePath + '\\' + newFileName)
 
                         const sql_5 = await Music_file_sq.findOne({
                             where: {
@@ -110,6 +143,7 @@ module.exports = {
                             sql_4 = await Music_file_sq.create({
                                 name: originalFilename,
                                 url: fileSaveUrl2,
+                                size: fileInfo.size,
                                 des,
                                 state: 1,
                                 createTime: currentTime,
@@ -168,6 +202,11 @@ module.exports = {
                     })
                 } catch (err) {
                     console.log(err)
+                    /** 判断文件是否存在，存在则删除 **/
+                    if (files) {
+                        deleteFile(files)
+                    }
+                    /** 判断文件是否存在，存在则删除 **/
                     // 回滚事务
                     await t.rollback()
                     res.send({
@@ -175,9 +214,12 @@ module.exports = {
                         data: '',
                         msg: JSON.stringify(err),
                     })
+                } finally {
+                    await t.cleanup()
                 }
             })
         } catch (err) {
+            console.log(3)
             res.send({
                 code: -1,
                 data: '',
@@ -185,4 +227,18 @@ module.exports = {
             })
         }
     }
+}
+
+function deleteFile (files) {
+    const fileList = []
+    if (files['fileid']) {
+        fileList.push(files['fileid'].filepath)
+    }
+    if (files['lrc']) {
+        fileList.push(files['lrc'].filepath)
+    }
+    fileList.forEach((value) => {
+        const imgFsExistsCb = fs.existsSync(value)
+        imgFsExistsCb && fs.unlinkSync(value)
+    })
 }

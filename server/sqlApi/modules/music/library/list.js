@@ -11,7 +11,7 @@ module.exports = {
     path: '/music/library/list',
     fn: async function (req, res) {
         const { token } = req.headers;
-        const { name, label, pageIndex, pageSize } = req['body'];
+        const { name, label, pageIndex, pageSize, orderBy = 'updateTime' } = req['body'];
         const tokenInfo = await verifyToken(token)
         const start = (pageIndex - 1) * pageSize
 
@@ -27,7 +27,7 @@ module.exports = {
                 if (labelList.length > 0) {
                     sql_txt +=  "and CONCAT (',',label,',') REGEXP ',(" + labelList.join('|') + "),'"
                 }
-                sql_txt += " ORDER BY updateTime DESC"
+                sql_txt += " ORDER BY " + orderBy + " DESC"
                 if (type == 1) {
                     sql_txt += " LIMIT " + start + ", " + pageSize
                 }
@@ -75,7 +75,6 @@ module.exports = {
                 value['fileList'] = itemFileList
             })
 
-            console.log(3322)
             res.send({
                 code: 200,
                 data: {

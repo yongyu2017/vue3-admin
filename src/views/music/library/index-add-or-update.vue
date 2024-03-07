@@ -2,20 +2,7 @@
     <el-dialog @close="closeFun" :title="!dataForm.id ? '新增' : '修改'" :close-on-click-modal="false" v-model="visible" class="el-dialog-fixed">
         <el-form ref="dataFormRef" :model="dataForm" :rules="dataRule" label-width="140px">
             <el-form-item label="歌曲名称" prop="name">
-                <el-input v-model="dataForm.name" placeholder="请输入" clearable class="inp-dom"></el-input>
-            </el-form-item>
-            <el-form-item label="歌曲标签" prop="label">
-                <div class="label-wrap">
-                    <el-tag
-                            v-for="(item, index) in dataForm.label"
-                            :key="index"
-                            closable
-                            @close="labelClose(index)"
-                            size="large">
-                        {{ codeToLabelComputed(item, labelList) }}
-                    </el-tag>
-                    <el-button size="default" @click="addLabelFun" style="margin: 0 12px 12px 0">+ 添加标签</el-button>
-                </div>
+                <el-input v-model.trim="dataForm.name" placeholder="请输入" clearable class="inp-dom"></el-input>
             </el-form-item>
             <el-form-item label="上传mp3文件" prop="fileid">
                 <div style="width: 100%">
@@ -46,6 +33,19 @@
                             <el-button type="primary">选择文件</el-button>
                         </template>
                     </el-upload>
+                </div>
+            </el-form-item>
+            <el-form-item label="歌曲标签" prop="label">
+                <div class="label-wrap">
+                    <el-tag
+                            v-for="(item, index) in dataForm.label"
+                            :key="index"
+                            closable
+                            @close="labelClose(index)"
+                            size="large">
+                        {{ codeToLabelComputed(item, labelList) }}
+                    </el-tag>
+                    <el-button size="default" @click="addLabelFun" style="margin: 0 12px 12px 0">+ 添加标签</el-button>
                 </div>
             </el-form-item>
             <el-form-item label="排序" prop="sort">
@@ -107,9 +107,9 @@ const dataRule = ref({
     ],
 })
 const emit = defineEmits(['refreshDataList', 'close'])
-const fileTypeList = ref(['mp3'])
+const fileTypeList = ref(['.m4a', '.aac', '.mp3', '.wav'])
 const fileSizeLimit = ref(20) // 文件大小限制，单位:MB
-const lrcFileTypeList = ref(['lrc', 'txt'])
+const lrcFileTypeList = ref(['.lrc', '.txt'])
 const labelList = ref([])
 const indexAddOrUpdateLabelRef = ref(null)
 const indexAddOrUpdateLabelVisible = ref(false)
@@ -146,22 +146,21 @@ const musicDirectoryListFun = () => {
 // 图片文件，change
 const beforeUpload = (e, type) => {
     const file = e.raw
-    const fileSuffix = getSuffix(file.name)[1]
+    const fileSuffix = getSuffix(file.name)[0].toLowerCase()
     const fileName = file.name.replace(getSuffix(file.name)[0], '')
 
     if (type == 'fileid') {
         if (!fileTypeList.value.includes(fileSuffix)) {
             ElMessage.warning('请上传' + fileTypeList.value.join(',') + '格式文件！')
             dataForm.value.fileid = []
-            return
+            return false
         }
 
         if (file.size > fileSizeLimit.value * 1024 * 1024) {
             ElMessage.warning('请上传小于' + fileSizeLimit.value + 'MB的文件！')
             dataForm.value.fileid = []
-            return
+            return false
         }
-        dataForm.value.fileid = [file]
         dataForm.value.name = fileName
         getMp3Times(file)
     }
@@ -169,15 +168,14 @@ const beforeUpload = (e, type) => {
         if (!lrcFileTypeList.value.includes(fileSuffix)) {
             ElMessage.warning('请上传' + lrcFileTypeList.value.join(',') + '格式文件！')
             dataForm.value.lrc = []
-            return
+            return false
         }
 
         if (file.size > fileSizeLimit.value * 1024 * 1024) {
             ElMessage.warning('请上传小于' + fileSizeLimit.value + 'MB的文件！')
             dataForm.value.lrc = []
-            return
+            return false
         }
-        dataForm.value.lrc = [file]
     }
 }
 // 获取时长
@@ -209,8 +207,10 @@ const dataFormSubmit = () => {
         if (valid) {
             const formData = new FormData()
             let dataFromCopy = deepCopy(dataForm.value)
-            dataFromCopy.fileid = dataForm.value.fileid.length > 0 ? dataForm.value.fileid[0].id ?  dataForm.value.fileid[0].id : dataForm.value.fileid[0] : ''
-            dataFromCopy.lrc = dataForm.value.lrc.length > 0 ? dataForm.value.lrc[0].id ? dataForm.value.lrc[0].id : dataForm.value.lrc[0] : ''
+            dataFromCopy.fileid = dataForm.value.fileid.length > 0 ? (dataForm.value.fileid[0].id ?  dataForm.value.fileid[0].id : dataForm.value.fileid[0].raw) : ''
+            //dataFromCopy.fileid_size = dataForm.value.fileid.length > 0 ? (dataForm.value.fileid[0].id ?  dataForm.value.fileid[0].id : dataForm.value.fileid[0].raw.size) : ''
+            dataFromCopy.lrc = dataForm.value.lrc.length > 0 ? (dataForm.value.lrc[0].id ? dataForm.value.lrc[0].id : dataForm.value.lrc[0].raw) : ''
+            //dataFromCopy.lrc_size = dataForm.value.fileid.length > 0 ? (dataForm.value.fileid[0].id ?  dataForm.value.fileid[0].id : dataForm.value.fileid[0].raw.size) : ''
             dataFromCopy.label = dataFromCopy.label.join(',')
             for (let i in dataFromCopy) {
                 formData.append(i, dataFromCopy[i])

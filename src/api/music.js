@@ -50,14 +50,16 @@ export function musicLibraryGet(data) {
     })
 }
 // 曲库信息修改或新增
-export function musicLibraryAddOrModify(data) {
+export function musicLibraryAddOrModify(data, onUploadProgress) {
     return request({
         url: '/music/library/addOrModify',
         method: 'post',
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded'
         },
-        data: data
+        data: data,
+        timeout: 1 * 60 * 1000,
+        onUploadProgress,
     })
 }
 // 曲库删除

@@ -12,24 +12,45 @@ module.exports = {
     method: 'get',
     path: '/music/library/read/:fileName',
     fn: async function (req, res) {
-        // 拼接成完整的文件名，这里假设统一使用mp3格式的音乐文件
-        let fileName = req.params.fileName // 破茧.mp3
-
         try {
-            // 存储一份音乐的路径，这里我们在music文件夹里面存放音乐资源
-            let mp3Url = rootDir + ('/upload/music/' + fileName).replace(/\//g, '\\')
-            // fs.statSync判断目录文件是否存在，不存在就会抛出异常，所以需要try catch捕获一下
-            let stat = fs.statSync(mp3Url)
-            // 设置请求头
-            res.writeHead(200, {  // 有的话，就把对应的资源以流的形式返回去
-                'Content-Type': 'audio/mp3', // 类型为音频mp3格式
-                'Content-Length': stat.size, // 指定一下文件大小
-                "Accept-Ranges": "bytes" // 不加的话，前端google浏览器中音频无法拖动
-            })
-            //创建可读流
-            let readStream = fs.createReadStream(mp3Url)
-            // 将读取的结果以管道pipe流的方式返回给前端
-            readStream.pipe(res);
+            const fileName = req.params.fileName // 文件名，破茧.mp3
+            const mp3Url = rootDir + ('/upload/music/' + fileName).replace(/\//g, '\\') // 文件路径
+            const stat = fs.statSync(mp3Url) // 获取文件信息
+            const fileSize = stat.size
+            const range = req.headers.range
+
+            if (range) {
+                const parts = range.replace(/bytes=/, '').split('-')
+                const start = parseInt(parts[0], 10)
+                const end = parts[1] ? parseInt(parts[1], 10) : fileSize - 1
+                const chunksize = (end - start) + 1
+
+                //创建可读流
+                let readStream = fs.createReadStream(mp3Url, {
+                    start,
+                    end,
+                    // encoding: 'utf-8',
+                    // highWaterMark: 1024 * 1024
+                })
+                // 设置响应头
+                const head = {
+                    'Content-Range': `bytes ${ start }-${ end }/${ fileSize }`,
+                    'Accept-Ranges': 'bytes',
+                    'Content-Length': chunksize,
+                    'Content-Type': 'audio/mpeg',
+                }
+                res.writeHead(206, head)
+                // 将读取的结果以管道pipe流的方式返回给前端
+                readStream.pipe(res)
+            } else {
+                const head = {
+                    'Accept-Ranges': 'bytes',
+                    'Content-Length': fileSize,
+                    'Content-Type': 'audio/mpeg',
+                }
+                res.writeHead(200, head)
+                fs.createReadStream(mp3Url).pipe(res)
+            }
         } catch (err) {
             // 读取不到相应文件，就直接返回找不到即可
             res.send('暂无此音乐数据')

@@ -1,5 +1,5 @@
 <template>
-    <el-form :inline="true" :model="formData" @submit.prevent>
+    <el-form :inline="true" :model="formData" @submit.prevent @keydown.enter="searchFun">
         <el-form-item label="歌曲名称">
             <el-input v-model="formData.name" placeholder="请输入" clearable class="inp-dom" />
         </el-form-item>
@@ -21,10 +21,13 @@
 
     <div style="margin-bottom: 12px">
         <el-button type="primary" :icon="Plus" @click="addOrUpdateFun()">新增</el-button>
+        <el-button type="primary" :icon="UploadFilled" @click="moreUploadFun()">批量上传</el-button>
+        <el-button type="danger" :icon="Delete" :disabled="ids.length == 0" @click="delFun()">批量删除</el-button>
     </div>
 
-    <el-table :data="dataList" border v-loading="dataListLoading" style="width: 100%">
-        <el-table-column prop="id" label="ID" width="70"></el-table-column>
+    <el-table :data="dataList" border v-loading="dataListLoading" style="width: 100%" @selection-change="handleSelectionChange">
+        <el-table-column type="selection" align="center" header-align="center" width="55"></el-table-column>
+        <el-table-column prop="id" label="ID" align="center" header-align="center" width="70"></el-table-column>
         <el-table-column prop="name" label="歌曲名称"></el-table-column>
         <el-table-column prop="label" label="歌曲标签">
             <template #default="scope">
@@ -33,12 +36,12 @@
         </el-table-column>
         <el-table-column prop="fileid" label="歌曲地址">
             <template #default="scope">
-                <el-link :href="scope.row.fileid.url" type="primary" :underline="false" target="_blank" v-if="scope.row.fileid">{{ scope.row.fileid.url }}</el-link>
+                <el-link :href="scope.row.fileid.url" type="primary" :underline="false" target="_blank" v-if="scope.row.fileid">{{ urlSplitComputed(scope.row.fileid.url) }}</el-link>
             </template>
         </el-table-column>
         <el-table-column prop="lrc" label="歌词地址">
             <template #default="scope">
-                <el-link :href="scope.row.lrc.url" type="primary" :underline="false" target="_blank" v-if="scope.row.lrc">{{ scope.row.lrc.url }}</el-link>
+                <el-link :href="scope.row.lrc.url" type="primary" :underline="false" target="_blank" v-if="scope.row.lrc">{{ urlSplitComputed(scope.row.lrc.url) }}</el-link>
             </template>
         </el-table-column>
         <el-table-column prop="duration" label="时长"></el-table-column>
@@ -46,7 +49,7 @@
         <el-table-column prop="sort" label="排序"></el-table-column>
         <el-table-column prop="createTime" label="创建时间"></el-table-column>
         <el-table-column prop="updateTime" label="修改时间"></el-table-column>
-        <el-table-column label="操作">
+        <el-table-column label="操作" width="130">
             <template #default="scope">
                 <el-button type="primary" link @click="addOrUpdateFun(scope.row.id)">编辑</el-button>
                 <el-button type="primary" link @click="delFun(scope.row.id)">删除</el-button>
@@ -65,16 +68,19 @@
         layout="total, sizes, prev, pager, next, jumper">
     </el-pagination>
 
-    <!-- 商品弹窗 -->
+    <!-- 新增或编辑 -->
     <indexAddOrUpdate ref="indexAddOrUpdateRef" @refreshDataList="searchFun" @close="indexAddOrUpdateVisible= false" v-if="indexAddOrUpdateVisible"></indexAddOrUpdate>
+    <!-- 批量上传 -->
+    <indexUpload ref="indexUploadRef" @refreshDataList="searchFun" @close="indexUploadVisible= false" v-if="indexUploadVisible"></indexUpload>
 </template>
 
 <script setup>
-import { onMounted, ref, nextTick } from 'vue'
+import { onMounted, ref, nextTick, computed } from 'vue'
 import indexAddOrUpdate from './index-add-or-update.vue'
+import indexUpload from './index-upload.vue'
 import { musicLibraryList, musicLabelListAll, musicLibraryDelete } from '@/api/music.js'
 import { ElLoading, ElMessage, ElMessageBox } from 'element-plus'
-import { Plus } from '@element-plus/icons-vue'
+import { Plus, UploadFilled, Delete } from '@element-plus/icons-vue'
 import { deepCopy } from '@/utils/index'
 import { commonMixin } from '@/mixins/common'
 const dayjs = require('dayjs')
@@ -86,13 +92,24 @@ const defaultDataForm = {
     pageIndex: 1,
     pageSize: 10,
     totalPage: 0,
+    orderBy: 'updateTime',
 }
 const formData = ref(deepCopy(defaultDataForm))
 const dataList = ref([]);
 const dataListLoading = ref(false);
 const indexAddOrUpdateRef = ref(null);
 const indexAddOrUpdateVisible = ref(false);
+const indexUploadRef = ref(null);
+const indexUploadVisible = ref(false);
 const labelList = ref([])
+const ids = ref([])
+
+const urlSplitComputed = computed(function () {
+    return (url) => {
+        const arr = url.split('/')
+        return arr[arr.length - 1]
+    }
+})
 
 onMounted(() => {
     musiclabelListFun()
@@ -163,10 +180,14 @@ const addOrUpdateFun = (id) => {
         indexAddOrUpdateRef.value.init(id)
     })
 }
+const handleSelectionChange = (e) => {
+    ids.value = e.slice()
+}
 //删除
 const delFun = (id) => {
+    let idList = id ? [id] : ids.value.map((value) => value.id)
     ElMessageBox.confirm(
-        `确定要删除ID为${ id }的数据吗?`,
+        `确定要删除ID为【${ idList.join(',') }】的数据吗?`,
         '提示',
         {
             confirmButtonText: '确定',
@@ -180,16 +201,22 @@ const delFun = (id) => {
         })
 
         musicLibraryDelete({
-            id,
+            id: idList.join(','),
         }).then(() => {
             loading.close()
             queryList()
-
             ElMessage.success('操作成功')
         }).catch(() => {
             loading.close()
         })
 
+    })
+}
+// 批量上传
+const moreUploadFun = () => {
+    indexUploadVisible.value = true;
+    nextTick(() => {
+        indexUploadRef.value.init()
     })
 }
 </script>

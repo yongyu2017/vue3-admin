@@ -307,3 +307,8 @@ export function isNumber (val, ecimalDigits, positiveNumber) {
 
     return valid
 }
+
+// 去除字符串前后空格
+export function stringTrim (str) {
+    return str.replace(/^\s+|\s+$/g, '')
+}

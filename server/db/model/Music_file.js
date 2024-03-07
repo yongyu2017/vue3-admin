@@ -14,6 +14,10 @@ const Music_file_sq = sequelize.define('music_file', {
     },
     url: {
         type: Sequelize.STRING,
+        allowNull: false,
+    },
+    size: {
+        type: Sequelize.INTEGER,
         allowNull: true,
     },
     state: {
