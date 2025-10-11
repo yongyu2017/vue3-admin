@@ -23,7 +23,7 @@ module.exports = defineConfig({
         // },
         proxy: {
             '/dev-api': {
-                target: `http://192.168.1.192:8000`,
+                target: `http://192.168.1.193:8000`,
                 changeOrigin: true,
                 pathRewrite: {
                     '^/dev-api': '',

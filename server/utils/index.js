@@ -202,6 +202,9 @@ function getIpAddress() {
         for (let i = 0; i < iface.length; i++) {
             let { family, address, internal } = iface[i]
             if (family === 'IPv4' && address !== '127.0.0.1' && !internal) {
+                if (address == '10.0.8.10') {
+                    address = '42.194.226.165'
+                }
                 return address
             }
         }
