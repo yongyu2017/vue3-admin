@@ -16,7 +16,7 @@
             </div>
         </div>
 
-        <el-table :data="dataList" border v-loading="dataListLoading" style="width: 100%">
+        <el-table ref="elTableRef" :data="dataList" border v-loading="dataListLoading" style="width: 100%">
             <el-table-column type="index" header-align="center" align="center" label="序号" width="70"></el-table-column>
             <el-table-column prop="id" label="ID"></el-table-column>
             <el-table-column prop="account" label="账号"></el-table-column>
@@ -29,7 +29,7 @@
             <el-table-column prop="email" label="邮箱"></el-table-column>
             <el-table-column prop="createTime" label="创建时间"></el-table-column>
             <el-table-column prop="updateTime" label="修改时间"></el-table-column>
-            <el-table-column label="操作">
+            <el-table-column label="操作" width="120" :fixed="$elTable_fixed_computed('right')">
                 <template #default="scope">
                     <el-button type="primary" link @click="addOrUpdateFun(scope.row)">编辑</el-button>
                     <el-button type="danger" link @click="delFun(scope.row.id)" v-if="scope.row.id !== 1">删除</el-button>
@@ -58,23 +58,25 @@ import { onMounted, ref, nextTick, defineOptions } from 'vue'
 import { userUserList, userDeleteUser, userRole } from '@/api/user'
 import indexAddOrUpdate from './index-add-or-update.vue'
 import { ElLoading, ElMessage, ElMessageBox, dayjs } from 'element-plus'
-import { deepCopy } from '@/utils/index'
 import { commonMixin } from '@/mixins/common'
+import { elTableScrollMixin } from '@/mixins/elTableScrollMixin.js'
+const lodash = require('lodash')
 
 defineOptions({ name: 'SystemUserIndex' })
 const { codeToLabelComputed } = commonMixin()
-const defaultDataForm = {
+const defaultFormData = {
     name: '',
     pageIndex: 1,
     pageSize: 10,
     totalPage: 0,
 }
-const formData = ref(deepCopy(defaultDataForm))
+const formData = ref(lodash.cloneDeep(defaultFormData))
 const dataList = ref([]);
 const dataListLoading = ref(false);
 const roleList = ref([]);
 const indexAddOrUpdateRef = ref(null);
 const indexAddOrUpdateVisible = ref(false);
+const { elTableRef, $elTable_fixed_computed } = elTableScrollMixin(dataList, dataListLoading)
 
 onMounted(() => {
     userRoleFun()
@@ -82,94 +84,97 @@ onMounted(() => {
 })
 
 // 获取员工列表
-const queryList = () => {
+function queryList () {
     dataListLoading.value = true;
     userUserList({
         name: formData.value.name,
         pageIndex: formData.value.pageIndex,
         pageSize: formData.value.pageSize
-    }).then(({ data }) => {
+    }).then((res) => {
         dataListLoading.value = false;
-        data.list.forEach((value) => {
-            value['createTime'] = dayjs(value.createTime).format('YYYY-MM-DD HH:mm:ss')
-            value['updateTime'] = dayjs(value.updateTime).format('YYYY-MM-DD HH:mm:ss')
-        })
-        dataList.value = data.list.slice();
-        formData.value.totalPage = data.sum;
+
+        if (res.code == 200) {
+            res.data.list.forEach((value) => {
+                value['createTime'] = dayjs(value.createTime).format('YYYY-MM-DD HH:mm:ss')
+                value['updateTime'] = dayjs(value.updateTime).format('YYYY-MM-DD HH:mm:ss')
+            })
+            dataList.value = res.data.list.slice();
+            formData.value.totalPage = res.data.sum;
+        }
     }).catch(() => {
         dataListLoading.value = false;
     })
 }
 // 获取角色列表
-const userRoleFun = () => {
+function userRoleFun () {
     userRole({
         name: '',
         pageIndex: 1,
         pageSize: 1000
-    }).then(({ data }) => {
-        data.list.forEach((value) => {
-            value['value'] = value.id
-            value['label'] = value.name
-        })
-        roleList.value = data.list.slice();
+    }).then((res) => {
+        if (res.code == 200) {
+            res.data.list.forEach((value) => {
+                value['value'] = value.id
+                value['label'] = value.name
+            })
+            roleList.value = res.data.list.slice();
+        }
     })
 }
 // 重置
-const resetFun = () => {
-    formData.value = deepCopy(defaultDataForm)
+function resetFun () {
+    formData.value = lodash.cloneDeep(defaultFormData)
     searchFun()
 }
 // 搜索
-const searchFun = () => {
+function searchFun () {
     formData.value.pageIndex = 1;
     queryList()
 }
 // 每页数
-const sizeChangeHandle = (val) => {
+function sizeChangeHandle (val) {
     formData.value.pageSize = val
     formData.value.pageIndex = 1;
     queryList()
 }
 // 当前页
-const currentChangeHandle = (val) => {
+function currentChangeHandle (val) {
     formData.value.pageIndex = val
     queryList()
 }
 //新增或者修改
-const addOrUpdateFun = (item) => {
+function addOrUpdateFun (item) {
     indexAddOrUpdateVisible.value = true;
     nextTick(() => {
         indexAddOrUpdateRef.value.init(item || '')
     })
 }
 //删除
-const delFun = (id) => {
-    ElMessageBox.confirm(
-        `确定要删除ID为${ id }的数据吗?`,
-        '提示',
-        {
-            confirmButtonText: '确定',
-            cancelButtonText: '取消',
-            type: 'warning',
-        }
-    ).then(() => {
-
-        const loading = ElLoading.service({
-            lock: true,
-        })
-
-        userDeleteUser({
-            id,
-        }).then(() => {
-            loading.close()
-            queryList()
-
-            ElMessage.success('操作成功')
-        }).catch(() => {
-            loading.close()
-        })
-
+async function delFun (id) {
+    await ElMessageBox.confirm(`确定要删除ID为${ id }的数据吗?`, '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning',
+        draggable: true,
     })
+
+    const loading = ElLoading.service({
+        lock: true,
+    })
+
+    userDeleteUser({
+        id,
+    }).then((res) => {
+        loading.close()
+
+        if (res.code == 200) {
+            ElMessage.success('操作成功')
+            queryList()
+        }
+    }).catch(() => {
+        loading.close()
+    })
+
 }
 </script>
 

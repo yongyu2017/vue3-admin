@@ -25,7 +25,7 @@
         <el-button type="danger" :icon="Delete" :disabled="ids.length == 0" @click="delFun()">批量删除</el-button>
     </div>
 
-    <el-table :data="dataList" border v-loading="dataListLoading" style="width: 100%" @selection-change="handleSelectionChange">
+    <el-table ref="elTableRef" :data="dataList" border v-loading="dataListLoading" style="width: 100%" @selection-change="handleSelectionChange">
         <el-table-column type="selection" align="center" header-align="center" width="55"></el-table-column>
         <el-table-column prop="id" label="ID" align="center" header-align="center" width="70"></el-table-column>
         <el-table-column prop="name" label="歌曲名称"></el-table-column>
@@ -81,11 +81,11 @@ import indexUpload from './index-upload.vue'
 import { musicLibraryList, musicLabelListAll, musicLibraryDelete } from '@/api/music.js'
 import { ElLoading, ElMessage, ElMessageBox, dayjs } from 'element-plus'
 import { Plus, UploadFilled, Delete } from '@element-plus/icons-vue'
-import { deepCopy } from '@/utils/index'
+const lodash = require('lodash')
 import { commonMixin } from '@/mixins/common'
 
 const { codeToLabelComputed } = commonMixin()
-const defaultDataForm = {
+const defaultFormData = {
     name: '',
     label: '',
     pageIndex: 1,
@@ -93,7 +93,7 @@ const defaultDataForm = {
     totalPage: 0,
     orderBy: 'updateTime',
 }
-const formData = ref(deepCopy(defaultDataForm))
+const formData = ref(lodash.cloneDeep(defaultFormData))
 const dataList = ref([]);
 const dataListLoading = ref(false);
 const indexAddOrUpdateRef = ref(null);
@@ -118,7 +118,7 @@ onMounted(() => {
 // 获取列表
 const queryList = () => {
     dataListLoading.value = true;
-    let formDataCopy = deepCopy(formData.value)
+    let formDataCopy = lodash.cloneDeep(formData.value)
     formDataCopy.label = formDataCopy.label ? formDataCopy.label.join(',') : ''
     musicLibraryList({
         ...formDataCopy
@@ -153,7 +153,7 @@ const musiclabelListFun = () => {
 }
 // 重置
 const resetFun = () => {
-    formData.value = deepCopy(defaultDataForm)
+    formData.value = lodash.cloneDeep(defaultFormData)
     searchFun()
 }
 // 搜索

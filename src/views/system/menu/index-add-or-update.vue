@@ -7,7 +7,7 @@
         <el-form ref="dataFormRef" :model="dataForm" :rules="dataRule" label-width="100px">
             <el-form-item label="类型">
                 <el-radio-group v-model="dataForm.type">
-                    <el-radio :label="item.value" v-for="(item, index) in typeList" :key="index">{{ item.name }}</el-radio>
+                    <el-radio :label="item.value" v-for="(item, index) in typeList" :key="index">{{ item.label }}</el-radio>
                 </el-radio-group>
             </el-form-item>
             <el-form-item :label="menuNameStr" prop="menuName">
@@ -85,6 +85,7 @@ import { userNav, userGetNav, userAddOrModifyNav } from '@/api/user'
 import { menuToTreeMenu, nullToEmptyStringFun } from '@/utils/index'
 import * as ElementPlusIconsVue from '@element-plus/icons-vue'
 
+const emit = defineEmits(['refreshDataList', 'close'])
 const dataFormRef = ref();
 const visible = ref(false);
 const dataForm = ref({
@@ -112,19 +113,18 @@ const dataRule = ref({
     ],
 })
 const typeList = ref([
-    { value: 0, name: '目录'},
-    { value: 1, name: '菜单'},
-    { value: 2, name: '按钮'},
+    { value: 0, label: '目录'},
+    { value: 1, label: '菜单'},
+    { value: 2, label: '按钮'},
 ])
 const parentIdList = ref([]);
 const iconList = Object.entries(ElementPlusIconsVue).map((value) => {
     return value[0]
 })
-const emit = defineEmits(['refreshDataList', 'close'])
 const menuNameStr = computed(() => {
     let str = '';
     typeList.value.forEach((value) => {
-        (value.value == dataForm.value.type) && (str = value.name + '名称：')
+        (value.value == dataForm.value.type) && (str = value.label + '名称')
     })
 
     return str
@@ -135,68 +135,76 @@ const menuStatus = ref([
 ])
 
 // eslint-disable-next-line
-var init = (item) => {
-    visible.value = true;
+function init (item) {
+    visible.value = true
 
     nextTick(() => {
         userNavFun()
         if (item) {
             userGetNav({
                 id: item.id,
-            }).then(({ data }) => {
-                data.status = nullToEmptyStringFun(data.status) + ''
-                data.visible = nullToEmptyStringFun(data.visible) + ''
-                data.keepAlive = nullToEmptyStringFun(data.keepAlive) + ''
-                dataForm.value = data;
-                console.log(dataForm.value)
+            }).then((res) => {
+                if (res.code == 200) {
+                    res.data.status = nullToEmptyStringFun(res.data.status) + ''
+                    res.data.visible = nullToEmptyStringFun(res.data.visible) + ''
+                    res.data.keepAlive = nullToEmptyStringFun(res.data.keepAlive) + ''
+                    dataForm.value = res.data
+                }
             })
         }
     })
 }
 // 获取上级菜单
-const userNavFun = () => {
-    userNav().then(({ data }) => {
-        data.menuList = data.menuList.filter((value) => {
-            value['value'] = value.id;
-            value['label'] = value.menuName;
-            return value.type === 0 || value.type === 1
-        })
-        parentIdList.value = [
-            {
-                value: 0,
-                label: '一级菜单',
-                children: menuToTreeMenu(data.menuList),
-            }
-        ]
-    })
-}
-// 图标选择
-const iconChange = (icon) => {
-    dataForm.value.icon = dataForm.value.icon == icon ? '' : icon;
-}
-// 表单提交
-const dataFormSubmit = () => {
-    dataFormRef.value.validate((valid) => {
-        if (valid) {
-            const loading = ElLoading.service({
-                lock: true,
+function userNavFun () {
+    userNav().then((res) => {
+        if (res.code == 200) {
+            res.data.menuList = res.data.menuList.filter((value) => {
+                value['value'] = value.id;
+                value['label'] = value.menuName;
+                return value.type === 0 || value.type === 1
             })
-
-            userAddOrModifyNav({
-                ...dataForm.value
-            }).then(() => {
-                loading.close()
-                visible.value = false
-                emit('refreshDataList')
-                ElMessage.success('操作成功！')
-            }).catch(() => {
-                loading.close()
-            })
+            parentIdList.value = [
+                {
+                    value: 0,
+                    label: '一级菜单',
+                    children: menuToTreeMenu(res.data.menuList),
+                }
+            ]
         }
     })
 }
+// 图标选择
+function iconChange (icon) {
+    dataForm.value.icon = dataForm.value.icon == icon ? '' : icon;
+}
+// 表单提交
+async function dataFormSubmit () {
+    const valid = await dataFormRef.value.validate((valid) => valid)
+    if (!valid) {
+        ElMessage.warning('请完善标红字段信息')
+        return
+    }
+
+    const loading = ElLoading.service({
+        lock: true,
+    })
+
+    userAddOrModifyNav({
+        ...dataForm.value
+    }).then((res) => {
+        loading.close()
+
+        if (res.code == 200) {
+            visible.value = false
+            emit('refreshDataList')
+            ElMessage.success('操作成功')
+        }
+    }).catch(() => {
+        loading.close()
+    })
+}
 //关闭
-const closeFun = () => {
+function closeFun () {
     emit('close')
 }
 

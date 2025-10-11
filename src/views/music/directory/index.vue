@@ -3,7 +3,7 @@
         <el-button type="primary" :icon="Plus" @click="addOrUpdateFun()">新增</el-button>
     </div>
 
-    <el-table :data="dataList" border row-key="id" v-loading="dataListLoading" style="width: 100%">
+    <el-table ref="elTableRef" :data="dataList" border row-key="id" v-loading="dataListLoading" style="width: 100%">
         <el-table-column prop="name" header-align="left" align="left" label="名称"></el-table-column>
         <el-table-column prop="sort" label="排序"></el-table-column>
         <el-table-column label="操作">

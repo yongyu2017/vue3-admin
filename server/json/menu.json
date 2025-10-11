@@ -9,12 +9,12 @@
       "type": 0,
       "icon": "Setting",
       "orderNum": 10,
-      "status": 1,
+      "status": "1",
       "state": 1,
-      "visible": 1,
-      "keepAlive": null,
+      "visible": "1",
+      "keepAlive": "",
       "createTime": 1670295016989,
-      "modifiedTime": 1681453648450
+      "modifiedTime": 1760171432091
     },
     {
       "id": 2,
@@ -399,6 +399,54 @@
       "state": 1,
       "createTime": 1760163674652,
       "modifiedTime": 1760163690089
+    },
+    {
+      "id": 26,
+      "menuName": "",
+      "parentId": "",
+      "jumpUrl": "",
+      "roleUrl": "",
+      "type": 0,
+      "icon": "",
+      "orderNum": 0,
+      "status": "1",
+      "visible": "1",
+      "keepAlive": "1",
+      "state": 0,
+      "createTime": 1760171625841,
+      "modifiedTime": 1760171625841
+    },
+    {
+      "id": 27,
+      "menuName": "11",
+      "parentId": 0,
+      "jumpUrl": "",
+      "roleUrl": "",
+      "type": 2,
+      "icon": "",
+      "orderNum": 0,
+      "status": "1",
+      "visible": "1",
+      "keepAlive": "1",
+      "state": 0,
+      "createTime": 1760171763354,
+      "modifiedTime": 1760171763354
+    },
+    {
+      "id": 28,
+      "menuName": "1",
+      "parentId": 0,
+      "jumpUrl": "",
+      "roleUrl": "",
+      "type": 0,
+      "icon": "",
+      "orderNum": 0,
+      "status": "1",
+      "visible": "1",
+      "keepAlive": "1",
+      "state": 0,
+      "createTime": 1760171994452,
+      "modifiedTime": 1760171994452
     }
   ]
 }

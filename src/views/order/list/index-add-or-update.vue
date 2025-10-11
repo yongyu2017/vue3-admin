@@ -3,7 +3,7 @@
         <indexAddOrUpdateSearch @change="indexAddOrUpdateSearchChange"></indexAddOrUpdateSearch>
 
         <div class="orderPay-box">
-            <el-table :data="dataForm.goodsId" style="width: 100%">
+            <el-table ref="elTableRef" :data="dataForm.goodsId" style="width: 100%">
                 <el-table-column prop="name" label="商品名称" />
                 <el-table-column prop="price" label="售价（￥）" align="right" header-align="right" />
                 <el-table-column prop="count" label="数量" align="right" header-align="right" />

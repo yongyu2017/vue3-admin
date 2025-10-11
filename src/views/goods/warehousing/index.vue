@@ -37,7 +37,7 @@
         <el-button :icon="Refresh" @click="refreshFun()">更新库存</el-button>
     </div>
 
-    <el-table :data="dataList" border v-loading="dataListLoading" style="width: 100%">
+    <el-table ref="elTableRef" :data="dataList" border v-loading="dataListLoading" style="width: 100%">
         <el-table-column prop="id" label="ID" fixed="left" width="70"></el-table-column>
         <el-table-column prop="code" label="商品编码" fixed="left" min-width="160"></el-table-column>
         <el-table-column prop="name" label="商品名称" fixed="left" min-width="200"></el-table-column>
@@ -91,7 +91,7 @@ import { goodsWarehousingPage, goodsWarehousingDelete, goodsGoodsListAll, goodsW
 import { ElLoading, ElMessage, ElMessageBox, dayjs } from 'element-plus'
 import { Plus, Refresh } from '@element-plus/icons-vue'
 import { commonMixin } from '@/mixins/common'
-import { deepCopy } from '@/utils/index'
+const lodash = require('lodash')
 import { useRoute } from 'vue-router'
 import { storeToRefs } from 'pinia'
 import { useStorePinia } from "@/store"
@@ -100,7 +100,7 @@ const store = useStorePinia()
 const { dictType } = storeToRefs(store)
 const { codeToLabelComputed } = commonMixin()
 const route = useRoute()
-const defaultDataForm = {
+const defaultFormData = {
     code: '',
     name: '',
     parentId: '',
@@ -109,7 +109,7 @@ const defaultDataForm = {
     pageSize: 10,
     totalPage: 0,
 }
-const formData = ref(deepCopy(defaultDataForm))
+const formData = ref(lodash.cloneDeep(defaultFormData))
 const dataList = ref([])
 const dataListLoading = ref(false)
 const indexAddOrUpdateRef = ref(null)
@@ -165,7 +165,7 @@ const queryList = () => {
 }
 // 重置
 const resetFun = () => {
-    formData.value = deepCopy(defaultDataForm)
+    formData.value = lodash.cloneDeep(defaultFormData)
     searchFun()
 }
 // 搜索

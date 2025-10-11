@@ -383,6 +383,54 @@
       "state": 1,
       "createTime": 1689384455459,
       "updateTime": 1691723951239
+    },
+    {
+      "id": 33,
+      "dictType": 12,
+      "label": "111",
+      "value": "111111",
+      "sort": 0,
+      "status": "1",
+      "remark": "",
+      "state": 0,
+      "createTime": 1760174241360,
+      "updateTime": 1760174241360
+    },
+    {
+      "id": 34,
+      "dictType": 12,
+      "label": "1123",
+      "value": "3434",
+      "sort": 0,
+      "status": "1",
+      "remark": "",
+      "state": 0,
+      "createTime": 1760174264910,
+      "updateTime": 1760174264910
+    },
+    {
+      "id": 35,
+      "dictType": 12,
+      "label": "324234",
+      "value": "345345",
+      "sort": 0,
+      "status": "1",
+      "remark": "",
+      "state": 0,
+      "createTime": 1760174292567,
+      "updateTime": 1760174292567
+    },
+    {
+      "id": 36,
+      "dictType": 12,
+      "label": "23444",
+      "value": "23434",
+      "sort": 0,
+      "status": "1",
+      "remark": "",
+      "state": 0,
+      "createTime": 1760174460684,
+      "updateTime": 1760174464077
     }
   ]
 }

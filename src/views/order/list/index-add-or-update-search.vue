@@ -6,7 +6,7 @@
             </el-form-item>
         </el-form>
 
-        <el-table :data="dataList" border max-height="200" style="width: 100%" v-if="dataList.length > 0">
+        <el-table ref="elTableRef" :data="dataList" border max-height="200" style="width: 100%" v-if="dataList.length > 0">
             <el-table-column prop="id" label="ID" fixed="left" width="70"></el-table-column>
             <el-table-column prop="code" label="商品编码" fixed="left"></el-table-column>
             <el-table-column prop="name" label="商品名称" fixed="left"></el-table-column>
@@ -24,13 +24,13 @@
 import { ref, defineEmits } from 'vue'
 import { Search } from '@element-plus/icons-vue'
 import { goodsWarehousingList } from '@/api/goods'
-import { deepCopy } from '@/utils/index'
+const lodash = require('lodash')
 
 const emit = defineEmits(['change'])
-const defaultDataForm = {
+const defaultFormData = {
     name: '',
 }
-const formData = ref(deepCopy(defaultDataForm))
+const formData = ref(lodash.cloneDeep(defaultFormData))
 const dataList = ref([])
 const dataListLoading = ref(false)
 

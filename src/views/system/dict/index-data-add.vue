@@ -36,7 +36,7 @@
 </template>
 
 <script setup>
-import { ref, reactive, defineEmits, nextTick, defineExpose } from 'vue'
+import { ref, defineEmits, nextTick, defineExpose } from 'vue'
 import { ElLoading, ElMessage } from 'element-plus'
 import { dictDataGet, dictDataUpdate } from '@/api/system'
 
@@ -51,7 +51,7 @@ const dataForm = ref({
     remark: '',
     dictType: '',
 })
-const dataRule = reactive({
+const dataRule = ref({
     label: [
         { required: true, message: '请输入', trigger: 'blur' },
     ],
@@ -68,7 +68,7 @@ const statusList = ref([
     { label: '关闭', value: '0' },
 ])
 
-var init = (dictType, id) => {
+function init (dictType, id) {
     visible.value = true;
     dataForm.value.id = id || ''
     dataForm.value.dictType = dictType || ''
@@ -78,30 +78,37 @@ var init = (dictType, id) => {
             dictDataGet({
                 id,
             }).then((res) => {
-                res.data.status = res.data.status + ''
-                dataForm.value = res.data
+                if (res.code == 200) {
+                    res.data.status = res.data.status + ''
+                    dataForm.value = res.data
+                }
             })
         }
 
     })
 }
 // 表单提交
-const dataFormSubmit = () => {
-    dataFormRef.value.validate((valid) => {
-        if (valid) {
-            const loading = ElLoading.service({
-                lock: true,
-            })
+async function dataFormSubmit () {
+    const valid = await dataFormRef.value.validate((valid) => valid)
+    if (!valid) {
+        ElMessage.warning('请完善标红字段信息')
+        return
+    }
 
-            dictDataUpdate(dataForm.value).then(() => {
-                loading.close()
-                visible.value = false
-                emit('refreshDataList')
-                ElMessage.success('操作成功！')
-            }).catch(() => {
-                loading.close()
-            })
+    const loading = ElLoading.service({
+        lock: true,
+    })
+
+    dictDataUpdate(dataForm.value).then((res) => {
+        loading.close()
+
+        if (res.code == 200) {
+            visible.value = false
+            emit('refreshDataList')
+            ElMessage.success('操作成功')
         }
+    }).catch(() => {
+        loading.close()
     })
 }
 //关闭

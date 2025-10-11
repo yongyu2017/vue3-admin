@@ -61,7 +61,7 @@ const defaultProps = {
 const emit = defineEmits(['refreshDataList', 'close'])
 
 // eslint-disable-next-line
-var init = (item) => {
+function init (item) {
     visible.value = true;
 
     nextTick(async () => {
@@ -69,27 +69,31 @@ var init = (item) => {
         if (item) {
             userGetRole({
                 id: item.id,
-            }).then(({ data }) => {
-                data['permission'] = data['permission'] ? data['permission'].split(',') : [];
-                dataForm.value = data;
+            }).then((res) => {
+                if (res.code == 200) {
+                    res.data['permission'] = res.data['permission'] ? res.data['permission'].split(',') : []
+                    dataForm.value = res.data
 
-                treeRef.value.setCheckedKeys(dataForm.value.permission, false)
+                    treeRef.value.setCheckedKeys(dataForm.value.permission, false)
+                }
             })
         }
     })
 }
 // 获取权限列表
-const userNavFun = async () => {
-    await userNav().then(({ data }) => {
-        data.menuList.forEach((value) => {
-            value['value'] = value.id;
-            value['label'] = value.menuName;
-        })
-        permissionList.value = menuToTreeMenu(data.menuList);
+async function userNavFun () {
+    await userNav().then((res) => {
+        if (res.code == 200) {
+            res.data.menuList.forEach((value) => {
+                value['value'] = value.id
+                value['label'] = value.menuName
+            })
+            permissionList.value = menuToTreeMenu(res.data.menuList)
+        }
     })
 }
 // 权限树节点check
-const treeCheck = (e) => {
+function treeCheck (e) {
     let childIds = []
     let checkedList = treeRef.value.getCheckedKeys(false)
     findTarget(e.id, permissionList.value)
@@ -127,26 +131,31 @@ const treeCheck = (e) => {
     }
 }
 // 表单提交
-const dataFormSubmit = () => {
-    dataFormRef.value.validate((valid) => {
-        if (valid) {
-            const loading = ElLoading.service({
-                lock: true,
-            })
+async function dataFormSubmit () {
+    const valid = await dataFormRef.value.validate((valid) => valid)
+    if (!valid) {
+        ElMessage.warning('请完善标红字段信息')
+        return
+    }
 
-            dataForm.value.permission = treeRef.value.getCheckedKeys(false).join(',');
+    const loading = ElLoading.service({
+        lock: true,
+    })
 
-            userAddOrModifyRole({
-                ...dataForm.value
-            }).then(() => {
-                loading.close()
-                visible.value = false
-                emit('refreshDataList')
-                ElMessage.success('操作成功！')
-            }).catch(() => {
-                loading.close()
-            })
+    dataForm.value.permission = treeRef.value.getCheckedKeys(false).join(',');
+
+    userAddOrModifyRole({
+        ...dataForm.value
+    }).then((res) => {
+        loading.close()
+
+        if (res.code == 200) {
+            visible.value = false
+            emit('refreshDataList')
+            ElMessage.success('操作成功')
         }
+    }).catch(() => {
+        loading.close()
     })
 }
 //关闭

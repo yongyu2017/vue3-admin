@@ -17,7 +17,7 @@
             </div>
         </div>
 
-        <el-table header-cell-class-name="table-cell-header" :data="dataList" border v-loading="dataListLoading" style="width: 100%;">
+        <el-table ref="elTableRef" header-cell-class-name="table-cell-header" :data="dataList" border v-loading="dataListLoading" style="width: 100%;">
             <el-table-column type="index" header-align="center" align="center" label="序号" width="100"></el-table-column>
             <el-table-column prop="label" label="数据标签"></el-table-column>
             <el-table-column prop="value" label="数据键值"></el-table-column>
@@ -62,8 +62,8 @@ import { ref, nextTick, defineEmits, defineExpose } from 'vue'
 import { dictDataPage, dictDataDelete, dictTypeListAll } from '@/api/system'
 import { dayjs, ElLoading, ElMessage, ElMessageBox } from 'element-plus'
 import indexDataAdd from './index-data-add.vue'
-import { deepCopy } from '@/utils/index'
 import { commonMixin } from "@/mixins/common.js";
+const lodash = require('lodash')
 
 const visible = ref(false);
 const emit = defineEmits(['close'])
@@ -74,7 +74,7 @@ const defaultFormData = {
     label: '',
     dictType: '',
 }
-const formData = ref(deepCopy(defaultFormData));
+const formData = ref(lodash.cloneDeep(defaultFormData));
 const dataList = ref([]);
 const dataListLoading = ref(false);
 const indexDataAddRef = ref(null);
@@ -82,7 +82,7 @@ const indexDataAddVisible = ref(false);
 const { codeToLabelComputed } = commonMixin()
 const dictTypeList = ref([])
 
-var init = (dictType) => {
+function init (dictType) {
     visible.value = true;
     formData.value.dictType = dictType
 
@@ -91,77 +91,87 @@ var init = (dictType) => {
         queryList()
     })
 }
-const queryList = () => {
+function queryList () {
     dataListLoading.value = true;
-    dictDataPage(formData.value).then(({ data }) => {
+
+    dictDataPage(formData.value).then((res) => {
         dataListLoading.value = false;
-        data.list.forEach((value) => {
-            value['createTime'] = value.createTime ? dayjs(value.createTime).format('YYYY-MM-DD HH:mm:ss') : ''
-        })
-        dataList.value = data.list.slice();
-        formData.value.totalPage = data.sum;
+
+        if (res.code == 200) {
+            res.data.list.forEach((value) => {
+                value['createTime'] = value.createTime ? dayjs(value.createTime).format('YYYY-MM-DD HH:mm:ss') : ''
+            })
+            dataList.value = res.data.list.slice();
+            formData.value.totalPage = res.data.sum;
+        }
     }).catch(() => {
         dataListLoading.value = false;
     })
 }
 // 获取字典类型列表
-const dictTypePageFun = () => {
-    dictTypeListAll().then(({ data }) => {
-        data.list.forEach((value) => {
-            value['label'] = value.name
-            value['value'] = value.id
-        })
-        dictTypeList.value = data.list.slice();
+function dictTypePageFun () {
+    dictTypeListAll().then((res) => {
+        if (res.code == 200) {
+            res.data.list.forEach((value) => {
+                value['label'] = value.name
+                value['value'] = value.id
+            })
+            dictTypeList.value = res.data.list.slice();
+        }
     })
 }
 // 搜索
-const searchFun = () => {
+function searchFun () {
     formData.value.pageIndex = 1;
     queryList()
 }
 // 重置
-const resetFun = () => {
-    formData.value = deepCopy(defaultFormData)
+function resetFun () {
+    formData.value = lodash.cloneDeep(defaultFormData)
     searchFun()
 }
 // 每页数
-const sizeChangeHandle = (val) => {
+function sizeChangeHandle (val) {
     formData.value.pageSize = val
     formData.value.pageIndex = 1;
     queryList()
 }
 // 当前页
-const currentChangeHandle = (val) => {
+function currentChangeHandle (val) {
     formData.value.pageIndex = val
     queryList()
 }
 //新增或者修改
-const addOrUpdateFun = (id) => {
+function addOrUpdateFun (id) {
     indexDataAddVisible.value = true;
     nextTick(() => {
         indexDataAddRef.value.init(formData.value.dictType, id || '')
     })
 }
 //删除
-const delFun = (data) => {
-    ElMessageBox.confirm(`确定要删除'${data.label}'的数据吗?`, "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning",
+async function delFun (data) {
+    await ElMessageBox.confirm(`确定要删除'${data.label}'的数据吗?`, '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning',
         draggable: true,
-    }).then(() => {
-        const loading = ElLoading.service({ lock: true })
-        dictDataDelete({ id: data.id }).then(() => {
-            loading.close()
-            queryList()
+    })
+
+    const loading = ElLoading.service({ lock: true })
+
+    dictDataDelete({ id: data.id }).then((res) => {
+        loading.close()
+
+        if (res.code == 200) {
             ElMessage.success('操作成功')
-        }).catch(() => {
-            loading.close()
-        })
+            queryList()
+        }
+    }).catch(() => {
+        loading.close()
     })
 }
 //关闭
-const closeFun = () => {
+function closeFun () {
     emit('close')
 }
 

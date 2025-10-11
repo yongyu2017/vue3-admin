@@ -89,7 +89,9 @@ body {
     }
 
     .el-message {
-        margin-top: 30vh;
+        //&.is-center {
+        //    margin-top: 30vh;
+        //}
 
         & > .el-icon {
             margin-right: 6px;

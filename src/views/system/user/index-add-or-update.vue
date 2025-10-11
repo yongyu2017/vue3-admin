@@ -37,20 +37,8 @@
 import { ref, defineEmits, nextTick, defineExpose } from 'vue'
 import { ElLoading, ElMessage } from 'element-plus'
 import { userGetUser, userAddOrModifyUser, userRole } from '@/api/user'
-import { checkEamil }  from '@/utils'
+import { EamilValidator } from '@/utils/validate.js'
 
-// 校验邮箱
-const emailValidator = (rule, value, callback) => {
-    if (value) {
-        if (checkEamil(value)) {
-            callback()
-        }else {
-            callback(new Error('请输入正确的邮箱！'))
-        }
-    } else {
-        callback(new Error('请输入邮箱！'))
-    }
-}
 const dataFormRef = ref();
 const visible = ref(false);
 const dataForm = ref({
@@ -76,56 +64,65 @@ const dataRule = ref({
         { required: true, message: '请选择', trigger: 'change' },
     ],
     email: [
-        { required: true, validator: emailValidator, trigger: 'blur' },
+        { required: true, validator: EamilValidator(), trigger: 'blur' },
     ]
 })
 const roleList = ref([]);
 const emit = defineEmits(['refreshDataList', 'close'])
 
 // eslint-disable-next-line
-var init = (item) => {
-    visible.value = true;
+function init (item) {
+    visible.value = true
 
     nextTick(async () => {
         userRoleFun()
         if (item) {
             userGetUser({
                 id: item.id,
-            }).then(({ data }) => {
-                dataForm.value = data;
+            }).then((res) => {
+                if (res.code == 200) {
+                    dataForm.value = res.data
+                }
             })
         }
     })
 }
 // 获取角色列表
-const userRoleFun = () => {
+function userRoleFun () {
     userRole({
         name: '',
         pageIndex: 1,
         pageSize: 1000
-    }).then(({ data }) => {
-        roleList.value = data.list.slice();
+    }).then((res) => {
+        if (res.code == 200) {
+            roleList.value = res.data.list.slice()
+        }
     })
 }
 // 表单提交
-const dataFormSubmit = () => {
-    dataFormRef.value.validate((valid) => {
-        if (valid) {
-            const loading = ElLoading.service({
-                lock: true,
-            })
+async function dataFormSubmit () {
+    const valid = await dataFormRef.value.validate((valid) => valid)
+    if (!valid) {
+        ElMessage.warning('请完善标红字段信息')
+        return
+    }
 
-            userAddOrModifyUser({
-                ...dataForm.value
-            }).then(() => {
-                loading.close()
-                visible.value = false
-                emit('refreshDataList')
-                ElMessage.success('操作成功！')
-            }).catch(() => {
-                loading.close()
-            })
+    const loading = ElLoading.service({
+        lock: true,
+    })
+
+    userAddOrModifyUser({
+        ...dataForm.value
+    }).then((res) => {
+        loading.close()
+
+        if (res.code == 200) {
+            visible.value = false
+            emit('refreshDataList')
+            ElMessage.success('操作成功')
         }
+    }).catch(() => {
+        loading.close()
     })
 }
 //关闭

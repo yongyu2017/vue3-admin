@@ -7,12 +7,12 @@ import SparkMD5 from 'spark-md5'
 import CryptoJS from 'crypto-js'
 
 //深拷贝
-export function deepCopy(obj) {
+export function cloneDeep (obj) {
     var result = Array.isArray(obj) ? [] : {};
     for (var key in obj) {
         if (Object.prototype.hasOwnProperty.call(obj, key)) {
             if (typeof obj[key] === 'object' && obj[key]!==null) {
-                result[key] = deepCopy(obj[key]);  //递归复制
+                result[key] = cloneDeep(obj[key]);  //递归复制
             } else {
                 result[key] = obj[key];
             }

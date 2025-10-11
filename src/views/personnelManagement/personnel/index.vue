@@ -17,7 +17,7 @@
             </div>
         </div>
 
-        <el-table :data="dataList" border v-loading="dataListLoading" @selection-change="handleSelectionChange" style="width: 100%">
+        <el-table ref="elTableRef" :data="dataList" border v-loading="dataListLoading" @selection-change="handleSelectionChange" style="width: 100%">
             <el-table-column type="selection" header-align="center" align="center" width="55"></el-table-column>
             <el-table-column type="index" header-align="center" align="center" label="序号" width="70"></el-table-column>
             <el-table-column prop="id" label="ID"></el-table-column>
@@ -30,7 +30,7 @@
             <el-table-column prop="age" label="年龄"></el-table-column>
             <el-table-column prop="createTime" label="创建时间"></el-table-column>
             <el-table-column prop="updateTime" label="修改时间"></el-table-column>
-            <el-table-column label="操作">
+            <el-table-column label="操作" width="120" :fixed="$elTable_fixed_computed('right')">
                 <template #default="scope">
                     <el-button type="primary" link @click="addOrUpdateFun(scope.row)">编辑</el-button>
                     <el-button type="danger" link @click="delFun(scope.row.id)" v-hasPermission="['people:list:delete']">删除</el-button>
@@ -61,115 +61,118 @@ import indexAddOrUpdate from './index-add-or-update.vue'
 import { ElLoading, ElMessage, ElMessageBox, dayjs } from 'element-plus'
 import { Plus } from '@element-plus/icons-vue'
 import { commonMixin } from '@/mixins/common'
-import { deepCopy } from '@/utils/index'
 import { storeToRefs } from 'pinia'
 import { useStorePinia } from "@/store"
+import { elTableScrollMixin } from '@/mixins/elTableScrollMixin.js'
+const lodash = require('lodash')
 
 defineOptions({ name: 'PersonnelManagementPersonnelIndex' })
 const store = useStorePinia()
 const { dictType } = storeToRefs(store)
 const { codeToLabelComputed } = commonMixin()
-const defaultDataForm = {
+const defaultFormData = {
     name: '',
     pageIndex: 1,
     pageSize: 10,
     totalPage: 0,
 }
-const formData = ref(deepCopy(defaultDataForm))
+const formData = ref(lodash.cloneDeep(defaultFormData))
 const dataList = ref([]);
 const idList = ref([]);
 const dataListLoading = ref(false);
 const indexAddOrUpdateRef = ref(null);
 const indexAddOrUpdateVisible = ref(false);
 const sexList = ref(dictType.value['sex'])
+const { elTableRef, $elTable_fixed_computed } = elTableScrollMixin(dataList, dataListLoading)
 
 onMounted(() => {
     queryList()
 })
 
 // 获取员工列表
-const queryList = () => {
+function queryList () {
     dataListLoading.value = true;
     personnelPeopleList({
         name: formData.value.name,
         pageIndex: formData.value.pageIndex,
         pageSize: formData.value.pageSize
-    }).then(({ data }) => {
+    }).then((res) => {
         dataListLoading.value = false;
-        data.list.forEach((value) => {
-            value['createTime'] = dayjs(value.createTime).format('YYYY-MM-DD HH:mm:ss')
-            value['updateTime'] = dayjs(value.updateTime).format('YYYY-MM-DD HH:mm:ss')
-        })
-        dataList.value = data.list.slice();
-        formData.value.totalPage = data.sum;
+
+        if (res.code == 200) {
+            res.data.list.forEach((value) => {
+                value['createTime'] = dayjs(value.createTime).format('YYYY-MM-DD HH:mm:ss')
+                value['updateTime'] = dayjs(value.updateTime).format('YYYY-MM-DD HH:mm:ss')
+            })
+            dataList.value = res.data.list.slice();
+            formData.value.totalPage = res.data.sum;
+        }
     }).catch(() => {
         dataListLoading.value = false;
     })
 }
-// 重置
-const resetFun = () => {
-    formData.value = deepCopy(defaultDataForm)
-    searchFun()
-}
+
 // 搜索
-const searchFun = () => {
+function searchFun () {
     formData.value.pageIndex = 1;
     queryList()
 }
+// 重置
+function resetFun () {
+    formData.value = lodash.cloneDeep(defaultFormData)
+    queryList();
+}
 // 每页数
-const sizeChangeHandle = (val) => {
+function sizeChangeHandle (val) {
     formData.value.pageSize = val
     formData.value.pageIndex = 1;
     queryList()
 }
 // 当前页
-const currentChangeHandle = (val) => {
+function currentChangeHandle (val) {
     formData.value.pageIndex = val
     queryList()
 }
 //selection-change
-const handleSelectionChange = (val) => {
+function handleSelectionChange (val) {
     idList.value = val.map(value => value.id)
 }
 //新增或者修改
-const addOrUpdateFun = (item) => {
+function addOrUpdateFun (item) {
     indexAddOrUpdateVisible.value = true;
     nextTick(() => {
         indexAddOrUpdateRef.value.init(item || '')
     })
 }
 //删除
-const delFun = (id) => {
+async function delFun (id) {
     const ids = id || idList.value.join(',');
     if (!ids) {
-        ElMessage.warning('请选择需要删除的数据！')
+        ElMessage.warning('请选择需要删除的数据')
         return
     }
-    ElMessageBox.confirm(
-        `确定要删除ID为${ ids }的数据吗?`,
-        '提示',
-        {
-            confirmButtonText: '确定',
-            cancelButtonText: '取消',
-            type: 'warning',
-        }
-    ).then(() => {
+    await ElMessageBox.confirm(`确定要删除ID为${ ids }的数据吗?`, '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning',
+        draggable: true,
+    })
 
-        const loading = ElLoading.service({
-            lock: true,
-        })
+    const loading = ElLoading.service({
+        lock: true,
+    })
 
-        personnelDeletePeople({
-            id: ids,
-        }).then(() => {
-            loading.close()
-            queryList()
+    personnelDeletePeople({
+        id: ids,
+    }).then((res) => {
+        loading.close()
 
+        if (res.code == 200) {
             ElMessage.success('操作成功')
-        }).catch(() => {
-            loading.close()
-        })
-
+            queryList()
+        }
+    }).catch(() => {
+        loading.close()
     })
 }
 </script>

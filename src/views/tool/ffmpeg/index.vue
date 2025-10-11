@@ -165,7 +165,7 @@ const startTime = ref('')
 const endTime = ref('')
 const downloadFileUrl = ref('')
 let mediainfo = null
-const defaultDataForm = {
+const defaultFormData = {
     frameRate: 25,
 }
 const dataForm = ref({
@@ -260,7 +260,7 @@ const getVideoInfo = (file) => {
                 }
                 if (value.type == 'General') {
                     videoInfo['Duration'] = value.Duration
-                    videoInfo['FrameRate'] = value.FrameRate || defaultDataForm.frameRate
+                    videoInfo['FrameRate'] = value.FrameRate || defaultFormData.frameRate
                 }
             })
             fileInfo.value = result.media.track

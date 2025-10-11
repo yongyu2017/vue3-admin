@@ -28,20 +28,20 @@
 </template>
 
 <script setup>
-import { ref, reactive, defineEmits, nextTick, defineExpose } from 'vue'
+import { ref, defineEmits, nextTick, defineExpose } from 'vue'
 import { ElLoading, ElMessage } from 'element-plus'
 import { dictTypeGet, dictTypeUpdate } from '@/api/system'
 
 const dataFormRef = ref();
-let visible = ref(false);
-let dataForm = ref({
+const visible = ref(false);
+const dataForm = ref({
     id: '',  //修改时填写
     name: '',
     type: '',
     status: '1',
     remark: '',
 })
-const dataRule = reactive({
+const dataRule = ref({
     name: [
         { required: true, message: '请输入', trigger: 'blur' },
     ],
@@ -55,7 +55,7 @@ const statusList = ref([
     { label: '关闭', value: '0' },
 ])
 
-var init = (id) => {
+function init (id) {
     visible.value = true;
     dataForm.value.id = id || ''
 
@@ -64,30 +64,37 @@ var init = (id) => {
             dictTypeGet({
                 id,
             }).then((res) => {
-                res.data.status = res.data.status + ''
-                dataForm.value = res.data
+                if (res.code == 200) {
+                    res.data.status = res.data.status + ''
+                    dataForm.value = res.data
+                }
             })
         }
 
     })
 }
 // 表单提交
-const dataFormSubmit = () => {
-    dataFormRef.value.validate((valid) => {
-        if (valid) {
-            const loading = ElLoading.service({
-                lock: true,
-            })
+async function dataFormSubmit () {
+    const valid = await dataFormRef.value.validate((valid) => valid)
+    if (!valid) {
+        ElMessage.warning('请完善标红字段信息')
+        return
+    }
 
-            dictTypeUpdate(dataForm.value).then(() => {
-                loading.close()
-                visible.value = false
-                emit('refreshDataList')
-                ElMessage.success('操作成功！')
-            }).catch(() => {
-                loading.close()
-            })
+    const loading = ElLoading.service({
+        lock: true,
+    })
+
+    dictTypeUpdate(dataForm.value).then((res) => {
+        loading.close()
+
+        if (res.code == 200) {
+            visible.value = false
+            emit('refreshDataList')
+            ElMessage.success('操作成功')
         }
+    }).catch(() => {
+        loading.close()
     })
 }
 //关闭

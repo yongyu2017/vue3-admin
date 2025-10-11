@@ -4,7 +4,7 @@
         :title="!dataForm.id ? '新增' : '修改'"
         :close-on-click-modal="false"
         v-model="visible">
-        <el-form ref="dataFormRef" :model="dataForm" :rules="dataRule" label-width="100px">
+        <el-form ref="dataFormRef" :model="dataForm" :rules="dataRule" label-width="70px">
             <el-form-item label="姓名" prop="name">
                 <el-input v-model="dataForm.name" placeholder="请输入" class="inp-dom"></el-input>
             </el-form-item>
@@ -34,8 +34,9 @@ import { personnelAddOrModifyPeople, personnelGetPeople } from '@/api/personnel'
 import { storeToRefs } from 'pinia'
 import { useStorePinia } from "@/store"
 
-const dataFormRef = ref();
+const emit = defineEmits(['refreshDataList', 'close'])
 const visible = ref(false);
+const dataFormRef = ref();
 const dataForm = ref({
     id: '',  //修改时填写
     name: '',
@@ -53,46 +54,52 @@ const dataRule = ref({
         { required: true, message: '请输入年龄', trigger: 'blur' },
     ],
 })
-const emit = defineEmits(['refreshDataList', 'close'])
 const store = useStorePinia()
 const { dictType } = storeToRefs(store)
 const sexList = ref(dictType.value['sex'])
 
 // eslint-disable-next-line
-var init = (item) => {
+function init (item) {
     visible.value = true;
 
     nextTick(() => {
         if (item) {
             personnelGetPeople({
                 id: item.id,
-            }).then(({ data }) => {
-                data.sex = data.sex + ''
-                dataForm.value = data;
+            }).then((res) => {
+                if (res.code == 200) {
+                    res.data.sex = res.data.sex + ''
+                    dataForm.value = res.data;
+                }
             })
         }
     })
 }
 
 // 表单提交
-const dataFormSubmit = () => {
-    dataFormRef.value.validate((valid) => {
-        if (valid) {
-            const loading = ElLoading.service({
-                lock: true,
-            })
+async function dataFormSubmit () {
+    const valid = await dataFormRef.value.validate((valid) => valid)
+    if (!valid) {
+        ElMessage.warning('请完善标红字段信息')
+        return
+    }
 
-            personnelAddOrModifyPeople({
-                ...dataForm.value
-            }).then(() => {
-                loading.close()
-                visible.value = false
-                emit('refreshDataList')
-                ElMessage.success('操作成功！')
-            }).catch(() => {
-                loading.close()
-            })
+    const loading = ElLoading.service({
+        lock: true,
+    })
+
+    personnelAddOrModifyPeople({
+        ...dataForm.value
+    }).then((res) => {
+        loading.close()
+
+        if (res.code == 200) {
+            visible.value = false
+            emit('refreshDataList')
+            ElMessage.success('操作成功')
         }
+    }).catch(() => {
+        loading.close()
     })
 }
 //关闭

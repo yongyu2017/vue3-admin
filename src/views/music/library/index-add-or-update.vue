@@ -76,8 +76,9 @@ import indexAddOrUpdateLabel from './index-add-or-update-label.vue'
 import { ref, defineEmits, nextTick, defineExpose } from 'vue'
 import { ElLoading, ElMessage } from 'element-plus'
 import { musicLabelListAll, musicLibraryGet, musicLibraryAddOrModify } from '@/api/music.js'
-import { getSuffix, deepCopy, secondToTimeFun } from '@/utils/index'
+import { getSuffix, secondToTimeFun } from '@/utils/index'
 import { commonMixin } from '@/mixins/common'
+const lodash = require('lodash')
 
 const { codeToLabelComputed } = commonMixin()
 const dataFormRef = ref();
@@ -206,7 +207,7 @@ const dataFormSubmit = () => {
     dataFormRef.value.validate((valid) => {
         if (valid) {
             const formData = new FormData()
-            let dataFromCopy = deepCopy(dataForm.value)
+            let dataFromCopy = lodash.cloneDeep(dataForm.value)
             dataFromCopy.fileid = dataForm.value.fileid.length > 0 ? (dataForm.value.fileid[0].id ?  dataForm.value.fileid[0].id : dataForm.value.fileid[0].raw) : ''
             //dataFromCopy.fileid_size = dataForm.value.fileid.length > 0 ? (dataForm.value.fileid[0].id ?  dataForm.value.fileid[0].id : dataForm.value.fileid[0].raw.size) : ''
             dataFromCopy.lrc = dataForm.value.lrc.length > 0 ? (dataForm.value.lrc[0].id ? dataForm.value.lrc[0].id : dataForm.value.lrc[0].raw) : ''

@@ -5,7 +5,7 @@
             <el-button type="primary" @click="startUpload">开始上传</el-button>
         </div>
 
-        <el-table :data="dataList" border style="width: 100%">
+        <el-table ref="elTableRef" :data="dataList" border style="width: 100%">
             <el-table-column type="index" label="序号" width="70"></el-table-column>
             <el-table-column prop="name" label="名称"></el-table-column>
             <el-table-column prop="fileid_name" label="mp3">
@@ -52,7 +52,8 @@
 import { ref, defineEmits, nextTick, defineExpose, computed } from 'vue'
 import { ElMessage } from 'element-plus'
 import { musicLibraryAddOrModify } from '@/api/music.js'
-import { getSuffix, deepCopy, secondToTimeFun } from '@/utils/index'
+import { getSuffix, secondToTimeFun } from '@/utils/index'
+const lodash = require('lodash')
 
 const emit = defineEmits(['refreshDataList', 'close'])
 const visible = ref(false);
@@ -141,7 +142,7 @@ const uploadFun = (item, Index) => {
             return
         }
         const formData = new FormData()
-        let dataFromCopy = deepCopy(item)
+        let dataFromCopy = lodash.cloneDeep(item)
         dataFromCopy.fileid = item.fileid
         dataFromCopy.lrc = item.lrc
         for (let i in dataFromCopy) {

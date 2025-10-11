@@ -13,7 +13,7 @@
         <el-button type="primary" :icon="Plus" @click="addOrUpdateFun()">新增</el-button>
     </div>
 
-    <el-table :data="dataList" border v-loading="dataListLoading" style="width: 100%">
+    <el-table ref="elTableRef" :data="dataList" border v-loading="dataListLoading" style="width: 100%">
         <el-table-column prop="id" label="ID" width="70"></el-table-column>
         <el-table-column prop="name" label="分类名称"></el-table-column>
         <el-table-column prop="des" label="描述"></el-table-column>
@@ -48,15 +48,15 @@ import indexAddOrUpdate from './index-add-or-update.vue'
 import { goodsCategoryPage, goodsCategoryDelete } from '@/api/goods'
 import { ElLoading, ElMessage, ElMessageBox, dayjs } from 'element-plus'
 import { Plus } from '@element-plus/icons-vue'
-import { deepCopy } from '@/utils/index'
+const lodash = require('lodash')
 
-const defaultDataForm = {
+const defaultFormData = {
     name: '',
     pageIndex: 1,
     pageSize: 10,
     totalPage: 0,
 }
-const formData = ref(deepCopy(defaultDataForm))
+const formData = ref(lodash.cloneDeep(defaultFormData))
 const dataList = ref([]);
 const dataListLoading = ref(false);
 const indexAddOrUpdateRef = ref(null);
@@ -87,7 +87,7 @@ const queryList = () => {
 }
 // 重置
 const resetFun = () => {
-    formData.value = deepCopy(defaultDataForm)
+    formData.value = lodash.cloneDeep(defaultFormData)
     searchFun()
 }
 // 搜索
