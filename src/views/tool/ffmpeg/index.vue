@@ -152,10 +152,9 @@
 import { ref, onMounted, onUnmounted, computed, nextTick } from 'vue'
 import { ffmpegTranscoding } from '@/api/tool'
 import { Download } from '@element-plus/icons-vue'
-import { ElMessage } from 'element-plus'
+import { ElMessage, dayjs } from 'element-plus'
 import { createFFmpeg, fetchFile } from '@ffmpeg/ffmpeg'
 import { loadJS, getSuffix, secondToTime, downloadForBlob } from '@/utils/index'
-const dayjs = require('dayjs')
 
 let ffmpeg = null
 let st = null

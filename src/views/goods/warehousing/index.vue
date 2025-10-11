@@ -88,14 +88,13 @@ import { ref, nextTick, onActivated, onMounted } from 'vue'
 import indexAddOrUpdate from './index-add-or-update.vue'
 import indexSale from './index-sale.vue'
 import { goodsWarehousingPage, goodsWarehousingDelete, goodsGoodsListAll, goodsWarehousingSale, goodsWarehousingStockRefresh } from '@/api/goods'
-import { ElLoading, ElMessage, ElMessageBox } from 'element-plus'
+import { ElLoading, ElMessage, ElMessageBox, dayjs } from 'element-plus'
 import { Plus, Refresh } from '@element-plus/icons-vue'
 import { commonMixin } from '@/mixins/common'
 import { deepCopy } from '@/utils/index'
 import { useRoute } from 'vue-router'
 import { storeToRefs } from 'pinia'
 import { useStorePinia } from "@/store"
-const dayjs = require('dayjs')
 
 const store = useStorePinia()
 const { dictType } = storeToRefs(store)

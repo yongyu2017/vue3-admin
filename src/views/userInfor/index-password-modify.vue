@@ -32,10 +32,10 @@ const pwd2Validator = (rule, value, callback) => {
         if (dataForm.value.pwd == value) {
             callback()
         } else {
-            callback(new Error('两次密码不一致！'))
+            callback(new Error('两次密码不一致'))
         }
     } else {
-        callback(new Error('请输入！'))
+        callback(new Error('请输入'))
     }
 }
 const dataFormRef = ref();

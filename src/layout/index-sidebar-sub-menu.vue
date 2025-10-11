@@ -1,26 +1,34 @@
 <template>
     <el-sub-menu :index="menu.menuId + ''" v-if="menu.children && menu.children.length> 0">
         <template #title>
-            <el-icon v-if="menu.icon">
-                <component :is="menu.icon" />
-            </el-icon>
-            <span>{{ menu.name }}</span>
+            <div class="menu-item-box" :title="menu.name">
+                <div class="icon-box">
+                    <el-icon v-if="menu.icon">
+                        <component :is="menu.icon" />
+                    </el-icon>
+                    <!--<i :class="['iconfont', menu.icon]" v-if="menu.icon"></i>-->
+                </div>
+                <span class="txt">{{ menu.name }}</span>
+            </div>
         </template>
 
         <indexSidebarSubMenu :menu="item" v-for="(item, index) in menu.children" :key="index"></indexSidebarSubMenu>
     </el-sub-menu>
-    <el-menu-item :index="menu.menuId + ''" @click="gotoRouteHandle(menu)" v-else>
-        <el-icon v-if="menu.icon">
-            <component :is="menu.icon" />
-        </el-icon>
+    <el-menu-item :index="menu.menuId + ''" class="menu-item-box" :title="menu.name" @click="gotoRouteHandle(menu)" v-else>
+        <div class="icon-box">
+            <el-icon v-if="menu.icon">
+                <component :is="menu.icon" />
+            </el-icon>
+            <!--<i :class="['iconfont', menu.icon]" v-if="menu.icon"></i>-->
+        </div>
         <template #title>
-            <span>{{ menu.name }}</span>
+            <span class="txt">{{ menu.name }}</span>
         </template>
     </el-menu-item>
 </template>
 
 <script setup>
-import { defineProps, onMounted, toRefs } from 'vue'
+import { defineProps, toRefs } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { storeToRefs } from 'pinia'
 import { useStorePinia } from '@/store'
@@ -38,10 +46,8 @@ const props = defineProps({
 })
 const { menu } = toRefs(props);
 
-onMounted(() => {
-})
 // 通过menuId与动态(菜单)路由进行匹配跳转至指定路由
-const gotoRouteHandle = function (menu) {
+function gotoRouteHandle (menu) {
     const menuToRoute = dynamicMenuRoutes.value.filter((value) => {
         return value.meta.menuId == menu.menuId
     })
@@ -56,5 +62,5 @@ const gotoRouteHandle = function (menu) {
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 </style>

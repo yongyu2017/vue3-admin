@@ -1,0 +1,26 @@
+:root {
+	body {
+		--el-border-radius-base: 3px;
+		--el-text-color-regular: #666;
+
+		--el-color-primary: #23b8ff;
+		--el-color-primary-light-3: rgba(35, 184, 255, 0.8);
+		--el-color-primary-light-5: rgba(35, 184, 255, 0.6);
+		--el-color-primary-dark-2: rgba(35, 184, 255, 0.95);
+
+		--el-color-danger: #ff0000;
+		--el-color-danger-light-3: rgb(255, 60, 60, 0.8);
+		--el-color-danger-light-5: rgb(255, 60, 60, 0.6);
+		--el-color-danger-dark-3: rgb(255, 60, 60, 0.95);
+
+		--el-color-warning: #F59A23;
+		--el-color-warning-light-3: rgb(245, 154, 35, 0.8);
+		--el-color-warning-light-5: rgb(245, 154, 35, 0.6);
+		--el-color-warning-dark-3: rgb(245, 154, 35, 0.95);
+
+		.el-table {
+			--el-table-border-color: #e9e9e9;
+			--el-table-border: 1px solid #e9e9e9;
+		}
+	}
+}

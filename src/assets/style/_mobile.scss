@@ -1,0 +1,101 @@
+@media screen and (max-width: 750px) {
+	body #app {
+		.classlist-edit-page {
+			width: 100%;
+		}
+
+		.el-dialog {
+			width: 90% !important;
+		}
+
+		.table-flex-page {
+			position: relative;
+			top: auto;
+			right: auto;
+			bottom: auto;
+			left: auto;
+			display: block;
+		}
+
+		.el-form {
+			.el-form-item__label-wrap {
+				margin-left: auto !important;
+			}
+
+			.el-form-item {
+				margin-right: 0;
+				display: block;
+			}
+
+			.el-form-item__label {
+				margin-bottom: 3px;
+				width: auto !important;
+				max-width: 100%;
+				height: auto;
+				line-height: 1.2;
+				text-align: left;
+			}
+
+			.inp-dom {
+				width: 100%;
+			}
+		}
+
+		.login-page {
+			.page-top, .page-middle, .page-bottom {
+				position: relative;
+				min-width: auto;
+				height: auto;
+
+				.part-main {
+					width: auto;
+				}
+			}
+
+			.page-middle {
+				top: auto;
+				bottom: auto;
+			}
+
+			.login-form {
+				position: relative;
+				top: auto;
+				right: auto;
+				left: auto;
+				margin: 20px;
+				width: auto;
+				transform: translate(0, 0);
+			}
+		}
+
+		.studycamera-page {
+			.gr_info {
+				position: relative;
+				top: auto;
+				left: auto;
+			}
+
+			.img-list-box {
+				margin-left: 0;
+			}
+		}
+	}
+
+	body {
+		.el-date-range-picker {
+			width: 100%;
+
+			.el-picker-panel__body {
+				min-width: auto;
+			}
+
+			.el-date-range-picker__content {
+				width: 100%;
+			}
+		}
+
+		.el-form-wrap {
+			margin-right: 0;
+		}
+	}
+}

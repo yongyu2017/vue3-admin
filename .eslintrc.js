@@ -9,8 +9,8 @@ module.exports = {
     },
     rules: {
         "vue/multi-word-component-names": 0,
-        indent: ["error", 4],
         "no-extra-semi": "error",
-        "no-useless-escape": "off"
+        "no-useless-escape": "off",
+        "indent": "off"
     },
 };

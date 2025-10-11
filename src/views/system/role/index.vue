@@ -1,56 +1,60 @@
 <template>
-    <el-form :inline="true" :model="formData" @submit.prevent>
-        <el-form-item label="角色名称">
-            <el-input v-model="formData.name" placeholder="请输入" clearable class="inp-dom" />
-        </el-form-item>
-        <el-form-item>
-            <el-button type="primary" @click="searchFun">查询</el-button>
-            <el-button @click="resetFun">重置</el-button>
-        </el-form-item>
-    </el-form>
+    <div class="table-flex-page">
+        <el-form :inline="true" :model="formData" label-width="70px" @submit.prevent style="margin-bottom: 12px">
+            <el-form-item label="角色名称">
+                <el-input v-model="formData.name" placeholder="请输入" clearable class="inp-dom" />
+            </el-form-item>
+            <el-form-item>
+                <el-button type="primary" @click="searchFun">查询</el-button>
+                <el-button @click="resetFun">重置</el-button>
+            </el-form-item>
+        </el-form>
 
-    <div style="margin-bottom: 12px;">
-        <el-button type="primary" :icon="Plus" @click="addOrUpdateFun()">新增</el-button>
+        <div class="table-op-box" style="margin-bottom: 12px">
+            <div class="box-l">
+                <el-button type="primary" @click="addOrUpdateFun()"><el-icon><Plus /></el-icon><span>新增</span></el-button>
+            </div>
+        </div>
+
+        <el-table :data="dataList" border v-loading="dataListLoading" style="width: 100%">
+            <el-table-column type="index" header-align="center" align="center" label="序号" width="70"></el-table-column>
+            <el-table-column prop="id" label="ID"></el-table-column>
+            <el-table-column prop="name" label="角色名称"></el-table-column>
+            <el-table-column prop="des" label="角色描述"></el-table-column>
+            <el-table-column prop="createTime" label="创建时间"></el-table-column>
+            <el-table-column prop="updateTime" label="修改时间"></el-table-column>
+            <el-table-column label="操作">
+                <template #default="scope">
+                    <el-button type="primary" link @click="addOrUpdateFun(scope.row)">编辑</el-button>
+                    <el-button type="danger" link @click="delFun(scope.row.id)" v-if="scope.row.id !== 1">删除</el-button>
+                </template>
+            </el-table-column>
+        </el-table>
+
+        <el-pagination
+                class="el-pagination"
+                @size-change="sizeChangeHandle"
+                @current-change="currentChangeHandle"
+                :current-page="formData.pageIndex"
+                :page-sizes="[10, 20, 50, 100]"
+                :page-size="formData.pageSize"
+                :total="formData.totalPage"
+                layout="total, sizes, prev, pager, next, jumper">
+        </el-pagination>
     </div>
-
-    <el-table :data="dataList" border v-loading="dataListLoading" style="width: 100%">
-        <el-table-column prop="id" label="ID"></el-table-column>
-        <el-table-column prop="name" label="角色名称"></el-table-column>
-        <el-table-column prop="des" label="角色描述"></el-table-column>
-        <el-table-column prop="createTime" label="创建时间"></el-table-column>
-        <el-table-column prop="updateTime" label="修改时间"></el-table-column>
-        <el-table-column label="操作">
-            <template #default="scope">
-                <el-button type="primary" link @click="addOrUpdateFun(scope.row)">编辑</el-button>
-                <el-button type="primary" link @click="delFun(scope.row.id)" v-if="scope.row.id !== 1">删除</el-button>
-            </template>
-        </el-table-column>
-    </el-table>
-
-    <el-pagination
-        class="el-pagination"
-        @size-change="sizeChangeHandle"
-        @current-change="currentChangeHandle"
-        :current-page="formData.pageIndex"
-        :page-sizes="[10, 20, 50, 100]"
-        :page-size="formData.pageSize"
-        :total="formData.totalPage"
-        layout="total, sizes, prev, pager, next, jumper">
-    </el-pagination>
 
      <!-- 员工信息弹窗 -->
      <indexAddOrUpdate ref="indexAddOrUpdateRef" @refreshDataList="searchFun" @close="indexAddOrUpdateVisible= false" v-if="indexAddOrUpdateVisible"></indexAddOrUpdate>
 </template>
 
 <script setup>
-import { onMounted, ref, nextTick } from 'vue'
+import { onMounted, ref, nextTick, defineOptions } from 'vue'
 import { userRole, userDeleteRole } from '@/api/user'
 import indexAddOrUpdate from './index-add-or-update.vue'
-import { ElLoading, ElMessage, ElMessageBox } from 'element-plus'
-import { Plus } from '@element-plus/icons-vue'
+import { ElLoading, ElMessage, ElMessageBox, dayjs } from 'element-plus'
 import { deepCopy } from '@/utils/index'
-const dayjs = require('dayjs')
 
+defineOptions({ name: 'SystemRoleIndex' })
 const defaultDataForm = {
     name: '',
     pageIndex: 1,

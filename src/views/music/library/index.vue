@@ -79,11 +79,10 @@ import { onMounted, ref, nextTick, computed } from 'vue'
 import indexAddOrUpdate from './index-add-or-update.vue'
 import indexUpload from './index-upload.vue'
 import { musicLibraryList, musicLabelListAll, musicLibraryDelete } from '@/api/music.js'
-import { ElLoading, ElMessage, ElMessageBox } from 'element-plus'
+import { ElLoading, ElMessage, ElMessageBox, dayjs } from 'element-plus'
 import { Plus, UploadFilled, Delete } from '@element-plus/icons-vue'
 import { deepCopy } from '@/utils/index'
 import { commonMixin } from '@/mixins/common'
-const dayjs = require('dayjs')
 
 const { codeToLabelComputed } = commonMixin()
 const defaultDataForm = {

@@ -5,6 +5,7 @@ import { isURL, clearLoginInfo, menuToTreeMenu } from '@/utils'
 import { userMenuList } from '@/api/user'
 import { storeToRefs } from 'pinia'
 import { useStorePinia } from "@/store"
+import { interRoute } from './interRoute.js'
 
 // 全局路由(无需嵌套上左右整体布局)
 let globalRoutes = [
@@ -22,8 +23,7 @@ let mainRoutes = {
         // 1. isTab: 是否通过tab展示内容, true: 是, false: 否
         // 2. iframeUrl: 是否通过iframe嵌套展示内容, '以http[s]://开头': 是, '': 否
         // 提示: 如需要通过iframe嵌套展示内容, 但不通过tab打开, 请自行创建组件使用iframe处理!
-        { path: '/home', component: () => import('@/views/home'), name: 'home', meta: { title: '首页' } },
-        { path: '/userInfor', component: () => import('@/views/userInfor'), name: 'userInfor', meta: { title: '用户信息', isTab: true } },
+        ...interRoute,
     ],
 };
 let router = createRouter({
@@ -56,6 +56,18 @@ router.beforeEach((to, from, next) => {
             lock: true,
         })
         userMenuList().then(({ data })=> {
+            data.menuList.forEach((value) => {
+                value['label'] = value.menuName
+                value['component'] = value.url
+                value['componentName'] = (function () {
+                    return value.component.split('/').map((value2) => {
+                        return value2.slice(0, 1).toUpperCase() + value2.slice(1)
+                    }).join('')
+                })()
+                value['isTab'] = true
+                value['keepAlive'] = true
+                value['closable'] = true
+            })
             loading.close()
             const list = menuToTreeMenu(data.menuList)
 
@@ -105,48 +117,44 @@ function fnAddDynamicMenuRoutes (menuList = []) {
 
     const { updateCommonStore } = useStorePinia();
     updateCommonStore('dynamicMenuRoutes', mainRoutes.children || [])
-    console.log('%c!<-------------------- 动态(菜单)路由 s -------------------->', 'color:blue')
-    console.log(mainRoutes.children)
-    console.log('%c!<-------------------- 动态(菜单)路由 e -------------------->', 'color:blue')
+    // console.log('%c!<-------------------- 动态(菜单)路由 s -------------------->', 'color:blue')
+    // console.log(mainRoutes.children)
+    // console.log('%c!<-------------------- 动态(菜单)路由 e -------------------->', 'color:blue')
 
     function computedMenuRoutes (list) {
-        for (var i = 0; i < list.length; i++) {
-            if (list[i].children && list[i].children.length >= 1) {
-                computedMenuRoutes(list[i].children)
+        list.forEach((value) => {
+            if (value.children && value.children.length > 0) {
+                computedMenuRoutes(value.children)
             } else {
-                // list[i].url = list[i].url.replace(/^\//, '')
-                const componentName = list[i].url.split('/').map((value) => {
-                    return value.substr(0, 1).toUpperCase() + value.substr(1)
-                }).join('')
                 let item = {
-                    path: '/' + list[i].url,
+                    path: value.url, // system/category/index
                     component: null,
-                    name: componentName,
+                    name: value.componentName,
                     meta: {
-                        menuId: list[i].menuId,
-                        title: list[i].name,
+                        menuId: value.menuId,
+                        title: value.name,
                         isDynamic: true,
-                        isTab: true,
+                        isTab: value.isTab === undefined ? false : value.isTab,
                         iframeUrl: '',
-                        keepAlive: list[i].keepAlive == 1 ? true : false,
+                        keepAlive: value.keepAlive === undefined ? false : value.keepAlive,
+                        closable: true,
                     }
                 }
                 // url以http[s]://开头, 通过iframe展示
-                if (isURL(list[i].url)) {
-                    item['path'] = `i-${list[i].menuId}`
-                    item['name'] = `i-${list[i].menuId}`
-                    item['meta']['iframeUrl'] = list[i].url
+                if (isURL(value.url)) {
+                    item['path'] = `i-${ value.menuId }`
+                    item['name'] = `i-${ value.menuId }`
+                    item['meta']['iframeUrl'] = value.url
                     item['component'] = () => import('@/views/common/iframe')
                 } else {
                     // const routeUrl = '@/views/'+ goods[i].url;
                     // item['component'] = () => import(routeUrl)
-
-                    const routeUrl = list[i].url;
+                    const routeUrl = value.url;
                     item['component'] = () => import('@/views/'+ routeUrl)
                 }
                 routes.push(item)
             }
-        }
+        })
     }
 }
 export default router

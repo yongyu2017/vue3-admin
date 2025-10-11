@@ -1,7 +1,7 @@
 <template>
     <el-dialog @close="closeFun" title="数据字典" :close-on-click-modal="false" v-model="visible" >
 
-        <el-form :inline="true" :model="formData" @submit.prevent>
+        <el-form :inline="true" :model="formData" label-width="70px" @submit.prevent style="margin-bottom: 12px">
             <el-form-item label="数据标签">
                 <el-input v-model="formData.label" placeholder="请输入" clearable class="inp-dom" />
             </el-form-item>
@@ -11,8 +11,10 @@
             </el-form-item>
         </el-form>
 
-        <div style="margin-bottom: 12px">
-            <el-button type="primary" :icon="Plus" @click="addOrUpdateFun()">新增</el-button>
+        <div class="table-op-box" style="margin-bottom: 12px">
+            <div class="box-l">
+                <el-button type="primary" @click="addOrUpdateFun()"><el-icon><Plus /></el-icon><span>新增</span></el-button>
+            </div>
         </div>
 
         <el-table header-cell-class-name="table-cell-header" :data="dataList" border v-loading="dataListLoading" style="width: 100%;">
@@ -33,7 +35,7 @@
             <el-table-column label="操作">
                 <template #default="scope">
                     <el-button type="primary" link @click="addOrUpdateFun(scope.row.id)">编辑</el-button>
-                    <el-button type="primary" link @click="delFun(scope.row)">删除</el-button>
+                    <el-button type="danger" link @click="delFun(scope.row)">删除</el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -59,7 +61,6 @@
 import { ref, nextTick, defineEmits, defineExpose } from 'vue'
 import { dictDataPage, dictDataDelete, dictTypeListAll } from '@/api/system'
 import { dayjs, ElLoading, ElMessage, ElMessageBox } from 'element-plus'
-import { Plus } from '@element-plus/icons-vue';
 import indexDataAdd from './index-data-add.vue'
 import { deepCopy } from '@/utils/index'
 import { commonMixin } from "@/mixins/common.js";

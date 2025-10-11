@@ -1,0 +1,105 @@
+body {
+    .el-form {
+        .el-form-text {
+            line-height: 20px;
+            padding: 10px 0;
+        }
+
+        &.el-form--inline {
+            .el-form-item--large {
+                margin-bottom: 12px;
+            }
+
+            .el-form-item {
+                margin-right: 12px;
+            }
+        }
+
+        .el-form-item.multi-line-form-item .el-form-item__label {
+            display: inline-block;
+            line-height: 20px;
+            text-align: right;
+        }
+    }
+
+    .el-card {
+        color: var(--el-text-color-regular);
+    }
+
+    .el-tabs__header {
+        margin: 0 0 20px;
+    }
+
+    .el-link {
+        .el-link__inner {
+            word-break: break-all;
+        }
+    }
+
+    .el-scrollbar__bar.is-vertical {
+        width: 10px;
+    }
+
+    .el-scrollbar__bar.is-horizontal {
+        height: 10px;
+    }
+
+    .el-pagination{
+        margin-top: 15px;
+        justify-content: flex-start;
+        flex-wrap: wrap;
+
+        .el-pagination__editor{
+            margin-right: 8px;
+        }
+    }
+
+    .el-table {
+        &.el-table--large {
+            .cell {
+                padding: 0 10px;
+            }
+        }
+        .el-table__header {
+            thead tr, thead th {
+                background-color: #F2F2F2 !important;
+            }
+        }
+    }
+
+    .el-tabs__nav-wrap {
+        &.is-scrollable {
+            padding: 0 30px;
+        }
+    }
+
+    .el-button {
+        &.is-link {
+            padding: 2px 0;
+        }
+    }
+
+    .el-checkbox, .el-radio {
+        white-space: normal;
+        height: auto !important;
+
+        .el-checkbox__label, .el-radio__label {
+            line-height: 1.2;
+        }
+    }
+
+    .el-message {
+        margin-top: 30vh;
+
+        & > .el-icon {
+            margin-right: 6px;
+            font-size: 36px;
+        }
+
+        .el-message__content {
+            line-height: 1.2;
+            font-size: 16px;
+            white-space: break-spaces;
+        }
+    }
+}

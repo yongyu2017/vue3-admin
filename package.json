@@ -17,7 +17,7 @@
     "core-js": "^3.8.3",
     "dayjs": "^1.11.6",
     "decimal.js": "^10.4.3",
-    "element-plus": "^2.3.8",
+    "element-plus": "^2.11.4",
     "flv.js": "^1.6.2",
     "js-base64": "^3.7.3",
     "pinia": "^2.0.26",
@@ -25,7 +25,7 @@
     "video.js": "^7.20.3",
     "videojs-flash": "^2.2.1",
     "videojs-flvjs-es6": "^1.0.1",
-    "vue": "^3.2.13",
+    "vue": "^3.5.12",
     "vue-cropper": "^0.5.8",
     "vue-router": "^4.1.6",
     "xgplayer": "^2.31.2",
@@ -51,7 +51,8 @@
     "nodemon": "^2.0.20",
     "os": "^0.1.2",
     "sass-loader": "^13.2.0",
-    "svg-sprite-loader": "^6.0.11"
+    "svg-sprite-loader": "^6.0.11",
+    "webpack-obfuscator": "^3.5.1"
   },
   "eslintConfig": {
     "root": true,

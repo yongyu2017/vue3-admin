@@ -76,12 +76,11 @@
 import { onMounted, ref, nextTick } from 'vue'
 import indexAddOrUpdate from './index-add-or-update.vue'
 import { goodsGoodsPage, goodsGoodsDelete, goodsCategoryListAll } from '@/api/goods'
-import { ElLoading, ElMessage, ElMessageBox } from 'element-plus'
+import { ElLoading, ElMessage, ElMessageBox, dayjs } from 'element-plus'
 import { Plus } from '@element-plus/icons-vue'
 import { deepCopy } from '@/utils/index'
 import { commonMixin } from '@/mixins/common'
 import { useRouter } from 'vue-router'
-const dayjs = require('dayjs')
 
 const { codeToLabelComputed } = commonMixin()
 const router = useRouter()

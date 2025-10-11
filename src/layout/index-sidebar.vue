@@ -1,32 +1,34 @@
 <template>
     <div class="site-sidebar site-sidebar--dark">
         <div class="site-sidebar__inner">
-            <el-menu class="site-sidebar__menu" :default-active="menuActiveName || 'home'" :collapse="!isExpand">
-                <el-menu-item index="home" @click="router.push({ name: 'home' })">
-                    <el-icon><House /></el-icon>
+            <el-menu class="site-sidebar__menu" :default-active="menuActiveName || '1'" :collapse="!isExpand">
+                <el-menu-item index="Home" class="menu-item-box" title="后台首页" @click="goHomeFun">
+                    <div class="icon-box">
+                        <el-icon><House /></el-icon>
+                    </div>
                     <template #title>
-                        <span>首页</span>
+                        <span class="txt">后台首页</span>
                     </template>
                 </el-menu-item>
-                <indexSidebarSubMenu :menu="item" v-for="(item, index) in menuListFilter" :key="index"></indexSidebarSubMenu>
+                <indexSidebarSubMenu :menu="item" v-for="(item, index) in menuList" :key="index"></indexSidebarSubMenu>
             </el-menu>
         </div>
     </div>
 </template>
 
 <script setup>
-import { ref } from 'vue'
-import indexSidebarSubMenu from './index-sidebar-sub-menu'
-import { storeToRefs } from "pinia"
-import { useStorePinia } from '@/store'
-import { useRouter } from 'vue-router'
-import { treeNodeRecursive } from '@/utils/index'
-const lodash = require('lodash');
+    import indexSidebarSubMenu from './index-sidebar-sub-menu'
+    import { storeToRefs } from 'pinia'
+    import { useStorePinia } from '@/store'
+    import { useRouter } from 'vue-router'
 
-const store = useStorePinia()
-const { menuList, menuActiveName, isExpand } = storeToRefs(store)
-const router = useRouter()
-const menuListFilter = ref(treeNodeRecursive(lodash.cloneDeep(menuList.value)))
+    const store = useStorePinia()
+    let { menuList, menuActiveName, isExpand } = storeToRefs(store)
+    const router = useRouter()
+
+    function goHomeFun () {
+        router.push({ name: 'Home' })
+    }
 </script>
 
 <style lang="scss" scoped>

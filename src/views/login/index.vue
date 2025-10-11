@@ -2,7 +2,7 @@
     <div class="login-page">
         <h1 class="title">系统登录</h1>
 
-        <el-form ref="dataFormRef" :model="dataForm" :rules="dataRule" hide-required-asterisk
+        <el-form ref="dataFormRef" :model="dataForm" :rules="dataRule" hide-required-asterisk  label-position="left"
             @keyup.enter="loginFun()" @submit.prevent class="login-form">
             <el-form-item label="帐号" prop="name">
                 <el-input size="large" v-model="dataForm.name"></el-input>
@@ -33,7 +33,7 @@ import { parseQueryString } from '@/utils/index'
 const route = useRoute()
 const router = useRouter()
 const store = useStorePinia();
-const { setToken } = store;
+const { setToken, setUserInfo } = store;
 const dataForm = ref({
     name: '',
     pwd: '',
@@ -78,6 +78,7 @@ const loginFun = () => {
                     localStorage.removeItem('pwd')
                 }
                 setToken(data.token)
+                setUserInfo(data)
                 if (route.query.url) {
                     const query = parseQueryString(decodeURIComponent(route.query.url))
                     router.replace({

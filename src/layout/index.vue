@@ -1,15 +1,14 @@
 <template>
     <div
-        :class="['site-wrapper', isExpand ? '' : 'collapse']"
+        :class="['site-wrapper', isExpand ? '' : 'collapse', route.meta.isFullPage ? 'isFullPage' : '']"
         v-loading.fullscreen.lock="loading"
         element-loading-text="拼命加载中"
     >
         <template v-if="!loading">
             <indexNavbar />
+            <indexTabs ref="indexTabsRef" />
             <indexSidebar />
-            <div class="site-content__wrapper" :style="{ 'min-height': documentClientHeight- 50 + 'px' }">
-                <indexContent v-if="!isRefresh" />
-            </div>
+            <indexContent v-if="!isRefresh" />
         </template>
     </div>
 </template>
@@ -17,45 +16,33 @@
 <script setup>
 import { provide, ref, nextTick, onMounted } from 'vue'
 import { storeToRefs } from 'pinia'
-import { useStorePinia } from "@/store"
-import { dictDataListAll } from '@/api/system.js'
+import { useStorePinia } from '@/store'
+import { useRoute } from 'vue-router'
 import indexContent from './index-content'
 import indexNavbar from './index-navbar'
 import indexSidebar from './index-sidebar'
+import indexTabs from './index-tabs.vue'
 
 const store = useStorePinia()
-const { getUserInfo, setDictType } = store;
-const { documentClientHeight, isExpand } = storeToRefs(store)
-const loading = ref(true);
-const isRefresh = ref(false); //main-content是否刷新
+const { getUserInfo } = store
+let { isExpand } = storeToRefs(store)
+let loading = ref(true)
+let isRefresh = ref(false) //main-content是否刷新
+const route = useRoute()
+const indexTabsRef = ref(null)
 
 provide('refresh', () => {
-    console.log('refresh')
     isRefresh.value = true;
     nextTick(() => {
         isRefresh.value = false;
     })
 })
-
-const updateDocumentClientHeight = function () {
-    documentClientHeight.value = document.documentElement["clientHeight"];
-    window.addEventListener('resize', () => {
-        documentClientHeight.value = document.documentElement["clientHeight"];
-    }, false)
-}
+provide('closeCurrentPage', () => {
+    indexTabsRef.value.tabsCloseCurrentHandle()
+})
 
 onMounted(async () => {
     await getUserInfo()
-    dictDataListAllFun()
-    updateDocumentClientHeight()
-    loading.value = false;
+    loading.value = false
 })
-// 获取数据字典
-const dictDataListAllFun = () => {
-    dictDataListAll().then((res) => {
-        if (res.code == 200) {
-            setDictType(res.data)
-        }
-    })
-}
 </script>

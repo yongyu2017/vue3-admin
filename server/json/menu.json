@@ -383,6 +383,22 @@
       "keepAlive": null,
       "createTime": 1690532705719,
       "modifiedTime": 1690532778853
+    },
+    {
+      "id": 25,
+      "menuName": "内容复制",
+      "parentId": 20,
+      "jumpUrl": "tool/clipboard/index",
+      "roleUrl": "",
+      "type": 1,
+      "icon": "",
+      "orderNum": 0,
+      "status": "1",
+      "visible": "1",
+      "keepAlive": "1",
+      "state": 1,
+      "createTime": 1760163674652,
+      "modifiedTime": 1760163690089
     }
   ]
 }

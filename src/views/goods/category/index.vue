@@ -46,10 +46,9 @@
 import { onMounted, ref, nextTick } from 'vue'
 import indexAddOrUpdate from './index-add-or-update.vue'
 import { goodsCategoryPage, goodsCategoryDelete } from '@/api/goods'
-import { ElLoading, ElMessage, ElMessageBox } from 'element-plus'
+import { ElLoading, ElMessage, ElMessageBox, dayjs } from 'element-plus'
 import { Plus } from '@element-plus/icons-vue'
 import { deepCopy } from '@/utils/index'
-const dayjs = require('dayjs')
 
 const defaultDataForm = {
     name: '',
