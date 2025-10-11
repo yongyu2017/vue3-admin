@@ -76,7 +76,7 @@ import indexAddOrUpdateLabel from './index-add-or-update-label.vue'
 import { ref, defineEmits, nextTick, defineExpose } from 'vue'
 import { ElLoading, ElMessage } from 'element-plus'
 import { musicLabelListAll, musicLibraryGet, musicLibraryAddOrModify } from '@/api/music.js'
-import { getSuffix, deepCopy, secondToTime } from '@/utils/index'
+import { getSuffix, deepCopy, secondToTimeFun } from '@/utils/index'
 import { commonMixin } from '@/mixins/common'
 
 const { codeToLabelComputed } = commonMixin()
@@ -183,7 +183,7 @@ const getMp3Times = (file) => {
     var url = URL.createObjectURL(file)
     var audioElement = new Audio(url)
     audioElement.addEventListener('loadedmetadata', () => {
-        dataForm.value.duration = secondToTime(Math.floor(audioElement.duration)).date
+        dataForm.value.duration = secondToTimeFun(Math.floor(audioElement.duration)).date
     })
 }
 // 添加标签

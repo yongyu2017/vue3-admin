@@ -154,7 +154,8 @@ import { ffmpegTranscoding } from '@/api/tool'
 import { Download } from '@element-plus/icons-vue'
 import { ElMessage, dayjs } from 'element-plus'
 import { createFFmpeg, fetchFile } from '@ffmpeg/ffmpeg'
-import { loadJS, getSuffix, secondToTime, downloadForBlob } from '@/utils/index'
+import { loadJS, getSuffix, secondToTimeFun } from '@/utils/index'
+import { downloadForBlob } from '@/utils/download.js'
 
 let ffmpeg = null
 let st = null
@@ -266,7 +267,7 @@ const getVideoInfo = (file) => {
             dataForm.value.frameRate = Number(videoInfo.FrameRate)
             dataForm.value.width = Number(videoInfo.Width)
             dataForm.value.height = Number(videoInfo.Height)
-            dataForm.value.rangeEnd = secondToTime(Math.floor(Number(videoInfo.Duration))).date
+            dataForm.value.rangeEnd = secondToTimeFun(Math.floor(Number(videoInfo.Duration))).date
         })
         .catch((error) => {
             console.log(error)

@@ -1,7 +1,10 @@
+import { toRefs } from 'vue'
 import { useStorePinia } from '@/store'
 import router from '@/router'
-
-export const API_HOST = process.env.NODE_ENV == 'development'? process.env.VUE_APP_BASE_API: process.env.VUE_APP_BASE_URL
+import { ElMessage, ElNotification } from 'element-plus'
+import { API_HOST } from '@/utils/environment.js'
+import SparkMD5 from 'spark-md5'
+import CryptoJS from 'crypto-js'
 
 //深拷贝
 export function deepCopy(obj) {
@@ -27,7 +30,7 @@ export function isURL (s) {
 }
 
 // 校验邮箱地址
-export function checkEamil (str) {
+export function checkEamil(str) {
     return /^[a-zA-Z0-9]+([-_.][A-Za-zd]+)*@([a-zA-Z0-9]+[-.])+[A-Za-zd]{2,5}$/.test(str)
 }
 
@@ -71,12 +74,28 @@ export function menuToTreeMenu (source) {
 
     let result = []
     for (let i = 0; i < source.length; i++) {
-        if (source[i].parentId == 0) {
+        if (source[i].parentId == 0 || source[i].parentId == null) {
             result.push(source[i])
         }
     }
 
     return result
+}
+
+// 树状数据过滤
+export function treeNodeRecursive(list) {
+    return list.filter((value) => {
+        if (value.children && value.children.length > 0) {
+            if (value.visible) {
+                value.children = treeNodeRecursive(value.children)
+                return true
+            } else {
+                return false
+            }
+        } else {
+            return value.visible
+        }
+    })
 }
 
 // 全屏切换
@@ -106,7 +125,7 @@ export const Fullscreen = {
 }
 
 // code转label名称
-export function codeToLabel (val, list){
+export function codeToLabel (val, list, isShowValue = true){
     let str= ''
     if(list){
         const isArray = Array.isArray(val)
@@ -128,70 +147,149 @@ export function codeToLabel (val, list){
             })
         }
     }
-    return str || val
+    return str || (isShowValue ? val : '')
 }
 
 // 获取文件后缀数据
 export function getSuffix (str) {
-    // eslint-disable-next-line
     return str.match(/\.([0-9a-z]+)(?:[\?#]|$)/i)
 }
 
-// 动态加载js
-export function loadJS (url, callback) {
-    var script = document.createElement('script'),
-        fn = callback || function(){}
+// 判断是否为数字,checkInteger校验是否是整数
+export function isNumber(val, checkInteger) {
+    // const regPos = /^[0-9]+.?[0-9]*$/ //判断是否是数字
+    const pointIndex = (val + '').indexOf('.')  // 是否带小数点
+    const valIsNaN = !isNaN(val)
 
-    script.type = 'text/javascript'
-    //IE
-    if(script.readyState){
-        script.onreadystatechange = function(){
-            if( script.readyState == 'loaded' || script.readyState == 'complete' ){
-                script.onreadystatechange = null
-                fn()
+    return checkInteger ? (valIsNaN && pointIndex === -1) : valIsNaN
+}
+/**
+ * 判断是否是数字
+ * integer校验小数，0:不校验 1:整数 2:小数
+ * positiveNumber校验正负数，0:不校验 1:正数 2:负数
+ * decimal小数位，0：不校验小数位
+ * **/
+export function isNumberFun (val = '', integer = 0, positiveNumber = 0, decimal = 0) {
+    let result = true
+    const _val = isNullOrUndefined(val) ? '' : val + ''
+    const isNumberType = /^-?\d+(\.\d+)?$/.test(_val) //判断是否是数字
+    const isInteger = _val.indexOf('.') == -1 ? false : true  // 是否是小数
+    const isPositiveNumber = _val.indexOf('-') == 0 ? false : true  // 是否是正数
+    const decimalLen = isInteger ? _val.split('.')[1].length : 0 // 有多少位小数点
+
+    if (!isNumberType) {
+        result = false
+        return result
+    }
+    if (isNumberType && integer != 0) {
+        result = integer == 1 ? !isInteger : isInteger
+        if (!result) return result
+    }
+    if (isNumberType && positiveNumber != 0) {
+        result = positiveNumber == 1 ? isPositiveNumber : !isPositiveNumber
+        if (!result) return result
+    }
+    if (isNumberType && decimal != 0) {
+        result = decimalLen > decimal ? false : true
+        if (!result) return result
+    }
+
+    return result
+}
+// 返回身份证信息 如 性别 sex、生日 birthDay
+export function getCardInfo (id) {
+    if (!checkIDcard(id)) {
+        return
+    }
+    var obj = {};
+
+    // 身份证号 获取性别
+    var sexNum = id.substring(id.length - 2, id.length - 1);
+    var isEven = ( sexNum % 2 ) === 0;
+    obj["sex"] = isEven ? "2" : "1";       // 姓别 1 -> 男 | 2 -> 女
+
+    // 身份证号 获取生日
+    var birthDay = id.substring(6, 14);
+    var y = birthDay.substring(0, 4);
+    var m = birthDay.substring(4, 6);
+    var d = birthDay.substring(6, 8);
+    obj["birthDay"] = y + "-" + m + "-" + d;
+
+    // 身份证号 获取年龄
+    var nowDate = new Date();  //获取当前时间
+    var intYear = parseInt(y); //身份证的年份转为数字格式
+    var month = nowDate.getMonth() + 1; //获取当前月份，getMonth()方法获取到的月份是从0开始的，所以这里需要加1
+    var intMonth = parseInt(m); //身份证的月份转为数字格式
+    var day = nowDate.getDate();
+    var age = nowDate.getFullYear() - intYear - 1;
+    age = parseInt(age);
+    //判断身份证月份是否比当前月份小
+    if (intMonth < month || (intMonth === month && id.substring(12, 14) <= day)) {
+        age++;
+    }
+    obj["age"] = age;
+
+    return obj;
+}
+
+// url地址提取query参数
+export function urlChangeQuery(str) {
+    const query = {}
+    str.split('?')[1].split('&').forEach((value) => {
+        const arr = value.split('=')
+        query[arr[0]] = arr[1]
+    })
+
+    return query
+}
+
+// 倒计时
+export function countdownTime (time, arg) {
+    // time单位：秒
+    // const endTime = new Date().getTime() + time * 1000
+    var endTime = time
+    var timer = null
+
+    stopInterVal(timer)
+    timer = setInterval(function () {
+        outputStr()
+    }, 1000)
+    if (arg && arg.init) {
+        arg.init(endTime, timer)
+    }
+    // outputStr()
+    function outputStr() {
+        // const nowTime = new Date().getTime()
+        endTime--
+        if (arg && arg.callback) {
+            arg.callback(endTime, timer)
+        }
+
+        if (endTime == 0) {
+            stopInterVal(timer)
+            if (arg && arg.done) {
+                arg.done()
             }
         }
-    }else{
-        //其他浏览器
-        script.onload = function(){
-            fn()
+    }
+    function stopInterVal(st) {
+        if (st) {
+            clearInterval(st)
+            st = null
         }
     }
-    script.src = url
-    document.getElementsByTagName('head')[0].appendChild(script)
 }
 
-// 补零
-export function zeroFill (val) {
-    return val < 10 ? '0' + val : val
-}
-
-// 秒转时分秒
-export function secondToTime (time) {
-    const h = Math.floor(time / 60 / 60)
-    const m = Math.floor((time % 3600) / 60)
-    const s = time % 60
-
-    return {
-        h: zeroFill(h),
-        m: zeroFill(m),
-        s: zeroFill(s),
-        date: zeroFill(h) + ':'+ zeroFill(m) + ':' + zeroFill(s)
-    }
-}
-
-// blob文件流下载
-export function downloadForBlob (file, filename) {
-    const blob = new Blob([file])
-
-    let downloadElement = document.createElement('a');
-    let href = window.URL.createObjectURL(blob);           //创建下载的链接
-    downloadElement.href = href;
-    downloadElement.download = filename; //下载后文件名
-    document.body.appendChild(downloadElement);
-    downloadElement.click();                               //点击下载
-    document.body.removeChild(downloadElement);            //下载完成移除元素
-    window.URL.revokeObjectURL(href);                      //释放掉blob对象
+// 字符串转数组
+export function stringToArray (str) {
+    let list = str ? str.split('；') : []
+    return list.map((value) => {
+        const arr = value.split('：')
+        return {
+            value: arr[0],
+            label: arr[1]
+        }
+    })
 }
 
 // URL的参数解析成一个对象
@@ -210,105 +308,292 @@ export function parseQueryString (url) {
     }
     return obj
 }
+// 生成多位随机数
+export function getRandom (num) {
+    return Math.floor((Math.random()+Math.floor(Math.random()*9+1))*Math.pow(10,num-1))
+}
+// 非空校验
+export function checkEmptyFun (val, msg) {
+    const isString= typeof(val)== 'string' ? true : false
+    const isNumber = typeof(val) == 'number' ? true : false
+    let result = true
 
-// 查找 省份/地区 名称
-export function findAreaName(projectArea, projectAreaList) {
-    let areaObject = {
-        province: '',
-        city: '',
-        county: '',
-        provinceLabel: '',
-        cityLabel: '',
-        countyLabel: '',
-        name: '',
-    }
-    if (!projectArea) {
-        return areaObject
-    }
-    const areaCodeList = projectArea.split(',')
-    let areaList = []
-
-    areaCodeList.forEach((value) => {
-        reserveFun(projectAreaList, value)
-    })
-    function reserveFun(list, val) {
-        list.forEach((value) => {
-            if (value.code == val) {
-                areaList.push({
-                    code: value.code,
-                    value: value.value,
-                })
-            } else {
-                if (value.children && value.children.length > 0) {
-                    reserveFun(value.children, val)
-                }
-            }
+    if((isString && val === '') || (isNumber && val === '') || val === undefined || val === null){
+        ElMessageOutput({
+            message: msg || '不能为空',
+            type: 'warning',
         })
+        result = false
     }
 
-    const province = areaList[0] ? areaList[0] : ''
-    const city = areaList[1] ? areaList[1] : ''
-    const county = areaList[2] ? areaList[2] : ''
-    areaObject.province = province ? province.code : ''
-    areaObject.provinceLabel = province ? province.value : ''
-    areaObject.city = city ? city.code : ''
-    areaObject.cityLabel = city ? city.value : ''
-    areaObject.county = county ? county.code : ''
-    areaObject.countyLabel = county ? county.value : ''
-    areaObject.name = areaObject.provinceLabel + '' + areaObject.cityLabel + '' + areaObject.countyLabel
-    return areaObject
+    return result
 }
-
-// null或者undefined转空字符串
-export function nullToEmptyString (val) {
-    return (val === null || val === undefined) ? '' : val
-}
-
-// 树状数据过滤
-export function treeNodeRecursive(list) {
-    return list.filter((value) => {
-        if (value.children && value.children.length > 0) {
-            if (value.visible == 1) {
-                value.children = treeNodeRecursive(value.children)
-                return true
-            } else {
-                return false
-            }
-        } else {
-            return value.visible == 1
+// AES加密
+export function encrypt (data, SECRET_KEY) {
+    if (typeof data === "object") {
+        try {
+            // eslint-disable-next-line no-param-reassign
+            data = JSON.stringify(data)
+        } catch (error) {
+            console.log("encrypt error:", error)
         }
+    }
+    const dataHex = CryptoJS.enc.Utf8.parse(data)
+    const encrypted = CryptoJS.AES.encrypt(dataHex, SECRET_KEY, {
+        // iv: SECRET_IV,
+        mode: CryptoJS.mode.ECB,
+        padding: CryptoJS.pad.Pkcs7
+    })
+    return encrypted.ciphertext.toString()
+}
+// AES解密
+export function decrypt (data, SECRET_KEY) {
+    const encryptedHexStr = CryptoJS.enc.Hex.parse(data)
+    const str = CryptoJS.enc.Base64.stringify(encryptedHexStr)
+    const decrypt = CryptoJS.AES.decrypt(str, SECRET_KEY, {
+        // iv: SECRET_IV,
+        mode: CryptoJS.mode.ECB,
+        padding: CryptoJS.pad.Pkcs7
+    })
+    const decryptedStr = decrypt.toString(CryptoJS.enc.Utf8)
+    return decryptedStr.toString()
+}
+// 延迟执行
+export function delayRun (delayTime) {
+    return new Promise((resolve) => {
+        setTimeout(() => {
+            resolve()
+        }, delayTime)
+    })
+}
+// 文件md5
+export function FILE_SPARK_MD5 (file, cb) {
+    var sliceLength = 10;
+    var chunkSize = Math.ceil(file.size / sliceLength);
+    var fileReader = new FileReader();
+    var md5 = new SparkMD5();
+    var index = 0;
+
+    var loadFile = () => {
+        var slice = file.slice(index, index + chunkSize);
+
+        fileReader.readAsBinaryString(slice);
+        fileReader.onload = e => {
+            md5.appendBinary(e.target.result);
+
+            if (index < file.size) {
+                index += chunkSize;
+
+                loadFile()
+            } else {
+                cb && cb(md5.end())
+            }
+        }
+    }
+    loadFile()
+}
+// 秒转时分秒
+export function secondToTimeFun (time) {
+    const h = Math.floor(time / 60 / 60)
+    const m = Math.floor((time % 3600) / 60)
+    const s = time % 60
+
+    return {
+        h: zeroFill(h),
+        m: zeroFill(m),
+        s: zeroFill(s),
+        date: zeroFill(h) + ':'+ zeroFill(m) + ':' + zeroFill(s)
+    }
+}
+// 补零
+export function zeroFill (val) {
+    return val < 10 ? '0' + val : val
+}
+// 数字取整
+export function numberRounding (val) {
+    if (val === undefined || val === null) return 0
+    var str = String(val)
+    var Index = str.indexOf('.')
+    return Number(str.substring(0, Index))
+}
+// 空值校验
+export function checkEmpty (val) {
+    return val === '' || val === undefined || val === null
+}
+// 校验是否为数字并且是一位小数
+export function isOneDecimal (value) {
+    return /^\d+(\.\d)?$/.test(value);
+}
+// 把对象下的字段值为null或者undefined的值转换位空字符串
+export function objectNullValueChange (val) {
+    for (var i in val) {
+        if (isObject(val[i])) {
+            objectNullValueChange(val[i])
+        } else {
+            val[i] = nullToEmptyStringFun(val[i])
+        }
+    }
+}
+// 判断是否为对象,而非数组
+function isObject (value) {
+    return typeof value === 'object' && value !== null && !Array.isArray(value)
+}
+// null或者undefined转空字符串
+export function nullToEmptyStringFun (val) {
+    return (val === undefined || val === null) ? '' : val
+}
+// 全角转换为半角
+export function ToCDB (str) {
+    var tmp = ''
+    for (var i = 0; i < str.length; i++) {
+        if (str.charCodeAt(i) == 12288) {
+            tmp += String.fromCharCode(str.charCodeAt(i) - 12256)
+            continue
+        }
+        if (str.charCodeAt(i) > 65280 && str.charCodeAt(i) < 65375) {
+            tmp += String.fromCharCode(str.charCodeAt(i) - 65248)
+        } else {
+            tmp += String.fromCharCode(str.charCodeAt(i))
+        }
+    }
+    return tmp
+}
+// form表单方式导出数据
+export function formExportData (url, data) {
+    var token = sessionStorage.getItem('token')
+    var dlform = document.createElement('form')
+    dlform.action = API_HOST + url
+    dlform.target = '_blank'
+    dlform.method = 'post'
+    dlform.style = 'display:none;'
+
+    data['token'] = token
+    for (var i in data) {
+        var value = data[i]
+        var label = i
+        var normal_form = normalDataToFormNode(value, label)
+        dlform.appendChild(normal_form)
+    }
+
+    document.body.appendChild(dlform)
+    dlform.submit()
+    document.body.removeChild(dlform)
+}
+// 标准值转form表单节点
+export function normalDataToFormNode (val, name) {
+    var valueNode_ = document.createElement('input')
+    valueNode_.type = 'hidden'
+    valueNode_.name = name
+    valueNode_.value = val
+
+    return valueNode_
+}
+// 根据逗号分隔数组
+export function strToArray (str) {
+    var list = []
+    if (typeof str === 'string') {
+        var strArr = str.replace(/^\s+|\s+$/g, '').split(/,|，/)
+        for (var i = 0; i < strArr.length; i++) {
+            var item = strArr[i]
+            if (item !== '') {
+                list.push(item)
+            }
+        }
+    }
+    return list
+}
+// url转query参数
+export function urlToQueryFun (url) {
+    const Index = url.indexOf('?')
+    const path = Index != -1 ? url.substring(0, Index) : url
+    const queryStr = Index != -1 ? url.substr(Index + 1) : ''
+    const queryList = queryStr.split('&').filter((value) => value)
+    let query = {}
+    queryList.forEach((value) => {
+        const list = value.split('=')
+        query[list[0]] = list[1]
+    })
+
+    return {
+        path,
+        query,
+    }
+}
+// query参数转url
+export function queryToUrlFun (item) {
+    let str = item.path
+    let queryList = []
+    let queryStr = ''
+
+    for (var i in item.query) {
+        queryList.push(i + '=' + item.query[i])
+    }
+    queryList.forEach((value, index) => {
+        queryStr += (index == 0 ? '' : '&') + value
+    })
+    if (queryStr) {
+        str += '?' + queryStr
+    }
+
+    return str
+}
+// 是否是null或undefined
+export function isNullOrUndefined (value) {
+    return (value === undefined || value === null || value === '')
+}
+// 获取字典
+export function useDict (list = []) {
+    let dictType = localStorage.getItem('dictType')
+    let dictType_data = {}
+    if (!dictType) return
+    dictType = JSON.parse(dictType)
+    list.forEach((value) => {
+        dictType_data[value] = dictType[value]
+    })
+
+    return toRefs(dictType_data)
+}
+// 消息提示管理
+export function ElMessageOutput (arg) {
+    const _arg = {
+        showType: 0, // 提示显示类型，[0：ElMessage 1：ElNotification]
+        duration: 3500, // 显示时间，单位为毫秒。 设为 0 则不会自动关闭
+        ...arg,
+    }
+    let fn = null
+
+    switch (_arg.showType) {
+        case 0:
+            fn = ElMessage
+            break
+        case 1:
+            fn = ElNotification
+            break
+    }
+
+    fn({
+        ..._arg,
     })
 }
 
-/**
- * 校验数字
- * ecimalDigits允许最多多少位小数点，0则校验为整数，-1则不校验
- * positiveNumber是否为正数（Boolean）
- * **/
-export function isNumber (val, ecimalDigits, positiveNumber) {
-    const regPos = /^[-]?[0-9]+.?[0-9]*$/ //判断是否是数字
-    const str = nullToEmptyString(val) + ''
-    const pointIndex = str.indexOf('.')  // 小数点位置
-    const ecimalDigitsLen = pointIndex != -1 ? str.substr(pointIndex + 1) : '' // 小数点后面的字符串
-    const isPositiveNumber = str.indexOf('-') == -1 ? true : false
-    let valid = true
-
-    if (!regPos.test(str)) return false
-    if (ecimalDigits != -1) {
-        if (ecimalDigits) {
-            valid = pointIndex == -1 ? true : (ecimalDigitsLen.length <= ecimalDigits)
-        } else {
-            valid = pointIndex == -1
+// 动态加载js
+export function loadJS (url, callback) {
+    var script = document.createElement('script'),
+        fn = callback || function () {
+        }
+    script.type = 'text/javascript'
+    //IE
+    if (script.readyState) {
+        script.onreadystatechange = function () {
+            if (script.readyState == 'loaded' || script.readyState == 'complete') {
+                script.onreadystatechange = null
+                fn()
+            }
+        }
+    } else {
+        //其他浏览器
+        script.onload = function () {
+            fn()
         }
     }
-    if (positiveNumber) {
-        valid = isPositiveNumber
-    }
-
-    return valid
-}
-
-// 去除字符串前后空格
-export function stringTrim (str) {
-    return str.replace(/^\s+|\s+$/g, '')
 }

@@ -82,7 +82,7 @@
 import { ref, defineEmits, nextTick, defineExpose, computed } from 'vue'
 import { ElLoading, ElMessage } from 'element-plus'
 import { userNav, userGetNav, userAddOrModifyNav } from '@/api/user'
-import { menuToTreeMenu, nullToEmptyString } from '@/utils'
+import { menuToTreeMenu, nullToEmptyStringFun } from '@/utils/index'
 import * as ElementPlusIconsVue from '@element-plus/icons-vue'
 
 const dataFormRef = ref();
@@ -144,9 +144,9 @@ var init = (item) => {
             userGetNav({
                 id: item.id,
             }).then(({ data }) => {
-                data.status = nullToEmptyString(data.status) + ''
-                data.visible = nullToEmptyString(data.visible) + ''
-                data.keepAlive = nullToEmptyString(data.keepAlive) + ''
+                data.status = nullToEmptyStringFun(data.status) + ''
+                data.visible = nullToEmptyStringFun(data.visible) + ''
+                data.keepAlive = nullToEmptyStringFun(data.keepAlive) + ''
                 dataForm.value = data;
                 console.log(dataForm.value)
             })

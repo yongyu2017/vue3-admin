@@ -23,14 +23,12 @@
 
 <script setup>
 import { ref, onMounted } from 'vue'
-import { useRoute, useRouter } from "vue-router"
+import { useRouter } from "vue-router"
 import { ElLoading } from 'element-plus'
 import { userLogin } from '@/api/user'
 import { useStorePinia } from '@/store'
 import { Base64 } from 'js-base64'
-import { parseQueryString } from '@/utils/index'
 
-const route = useRoute()
 const router = useRouter()
 const store = useStorePinia();
 const { setToken, setUserInfo } = store;
@@ -79,17 +77,9 @@ const loginFun = () => {
                 }
                 setToken(data.token)
                 setUserInfo(data)
-                if (route.query.url) {
-                    const query = parseQueryString(decodeURIComponent(route.query.url))
-                    router.replace({
-                        path: decodeURIComponent(route.query.url),
-                        query,
-                    })
-                } else {
-                    router.replace({
-                        path: '/home',
-                    })
-                }
+                router.replace({
+                    path: '/home',
+                })
             }).catch(() => {
                 loading.close()
             })

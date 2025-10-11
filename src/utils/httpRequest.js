@@ -4,7 +4,7 @@ import router from '@/router'
 import { clearLoginInfo } from '@/utils'
 import { storeToRefs } from 'pinia'
 import { useStorePinia } from "@/store"
-import { API_HOST } from '@/utils/index.js'
+import { API_HOST } from '@/utils/environment.js'
 
 const http = axios.create({
     baseURL: API_HOST,

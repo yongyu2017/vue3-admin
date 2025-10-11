@@ -52,7 +52,7 @@
 import { ref, defineEmits, nextTick, defineExpose, computed } from 'vue'
 import { ElMessage } from 'element-plus'
 import { musicLibraryAddOrModify } from '@/api/music.js'
-import { getSuffix, deepCopy, secondToTime } from '@/utils/index'
+import { getSuffix, deepCopy, secondToTimeFun } from '@/utils/index'
 
 const emit = defineEmits(['refreshDataList', 'close'])
 const visible = ref(false);
@@ -115,7 +115,7 @@ const getMp3Times = (file) => {
         var url = URL.createObjectURL(file)
         var audioElement = new Audio(url)
         audioElement.addEventListener('loadedmetadata', () => {
-            resolve(secondToTime(Math.floor(audioElement.duration)).date)
+            resolve(secondToTimeFun(Math.floor(audioElement.duration)).date)
         })
     })
 }
