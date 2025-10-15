@@ -1,6 +1,6 @@
 <template>
     <div class="login-page">
-        <h1 class="title">系统登录</h1>
+        <h1 class="title">后台管理系统</h1>
 
         <el-form ref="dataFormRef" :model="dataForm" :rules="dataRule" hide-required-asterisk  label-position="left"
             @keyup.enter="loginFun()" @submit.prevent class="login-form">

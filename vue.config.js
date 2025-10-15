@@ -12,7 +12,7 @@ module.exports = defineConfig({
             entry: 'src/main.js',
             template: 'public/index.html',
             filename: 'index.html',
-            title: '南京市城建管理系统后台管理',
+            title: '后台管理系统',
         },
     }, // 多页面应用配置
     lintOnSave: true,
@@ -73,10 +73,17 @@ module.exports = defineConfig({
             .options({
                 symbolId: 'icon-[name]'
             })
-        // config.plugin('html')
-        //     .tap(args => {
-        //         args[0].title = "南京市城建管理系统后台管理";
-        //         return args;
-        //     })
+        if (process.env.NODE_ENV === 'production') {
+            config.optimization.minimizer('terser').tap((args) => {
+                args[0].terserOptions = {
+                    ...args[0].terserOptions,
+                    format: {
+                        comments: false, // 移除所有注释
+                    },
+                }
+                args[0].extractComments = false // 禁止提取注释
+                return args
+            })
+        }
     },
 })

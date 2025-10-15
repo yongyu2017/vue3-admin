@@ -65,7 +65,7 @@ http.interceptors.response.use(response => {
             clearLoginInfo()
             setTimeout(() => {
                 router.push({
-                    name: 'login',
+                    name: 'Login',
                     query: {
                         url: encodeURIComponent(router.currentRoute.value.fullPath),
                     },

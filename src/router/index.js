@@ -9,14 +9,14 @@ import { interRoute } from './interRoute.js'
 
 // 全局路由(无需嵌套上左右整体布局)
 let globalRoutes = [
-    { path: '/login', name: 'login', meta: { title: '登录' }, component: () => import("@/views/login/index") },
+    { path: '/login', name: 'Login', meta: { title: '登录' }, component: () => import("@/views/login/index") },
     { path: '/404', name: '404', meta: { title: '404' }, component: () => import("@/views/common/404/index") },
 ];
 let mainRoutes = {
     path: '/',
     component: () => import('@/layout/index'),
     name: 'main',
-    redirect: { name: 'home' },
+    redirect: { name: 'Home' },
     meta: { title: '主入口整体布局' },
     children: [
         // 通过meta对象设置路由展示方式
@@ -40,7 +40,7 @@ router.beforeEach((to, from, next) => {
     if(!token.value && (fnCurrentRouteType(to, globalRoutes) != 'global')){
         clearLoginInfo()
         next({
-            name: 'login',
+            name: 'Login',
             // query: {
             //     url: encodeURIComponent(to.fullPath),
             // },
@@ -157,4 +157,5 @@ function fnAddDynamicMenuRoutes (menuList = []) {
         })
     }
 }
+
 export default router

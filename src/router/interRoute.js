@@ -1,6 +1,6 @@
 export const interRoute = [
-    { path: '/home', component: () => import('@/views/home'), name: 'home', meta: { title: '首页' } },
-    { path: '/userInfor', component: () => import('@/views/userInfor'), name: 'userInfor', meta: { title: '用户信息', isTab: true, closable: true } },
+    { path: '/home', component: () => import('@/views/home'), name: 'Home', meta: { title: '首页' } },
+    { path: '/userInfor', component: () => import('@/views/userInfor'), name: 'UserInfor', meta: { title: '用户信息', isTab: true, closable: true } },
 ].map((value) => {
     return {
         path: value.path,
