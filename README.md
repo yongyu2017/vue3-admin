@@ -35,7 +35,7 @@ npm run build（生产）
 ```
 ## Git 贡献提交规范
 
-- 参考 [vue](https://github.com/vuejs/vue/blob/dev/.github/COMMIT_CONVENTION.md) 规范 
+- 参考 [vue](https://github.com/vuejs/vue/blob/dev/.github/COMMIT_CONVENTION.md) 规范
 
   - `feat` 增加新功能
   - `fix` 修复问题/BUG
@@ -50,14 +50,14 @@ npm run build（生产）
   - `ci` 持续集成
   - `types` 类型定义文件更改
   - `wip` 开发中
-  
+
 ## 备注
 
-#### 1.注意项目安装node-sass（v6.0.1）、sass-loader（v13.2.0）依赖包时，node.js运行环境为v16.8.1，可以使用nvm工具进行node多版本管理；
+#### 1.注意项目安装node-sass（v6.0.1）、sass-loader（v13.2.0）依赖包时，node.js运行环境为v16.18.1，可以使用nvm工具进行node多版本管理；
 #### 2.node-sass安装失败时，可以使用taobao镜像；
 ```
 2.1 采用taobao的镜像地址，进入cmd之后输入：
-npm config set registry https://registry.npm.taobao.org 
+npm config set registry https://registry.npm.taobao.org
 2.2 查看是否安装成功：
-npm config get registry 
+npm config get registry
 ```

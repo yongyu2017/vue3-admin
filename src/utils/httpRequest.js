@@ -53,28 +53,67 @@ http.interceptors.request.use(config => {
  */
 http.interceptors.response.use(response => {
     const { data } = response;
-    const { code } = data;
-    console.log('requestjs=', response.config.url, data)
+    const throwError = response.config['throwError'] === undefined ? true : response.config['throwError'] // 是否默认抛出异常信息
 
     // removePending(response.config)  //在一个ajax响应后再执行一下取消操作，把已经完成的请求从pending中移除
+    process.env.NODE_ENV == 'development' && console.log('requestjs=', response.config.url, data)
 
-    if(code === 200){
-        return data
-    }else{
-        if(code == 401){
-            clearLoginInfo()
-            setTimeout(() => {
-                router.push({
-                    name: 'Login',
-                    query: {
-                        url: encodeURIComponent(router.currentRoute.value.fullPath),
-                    },
-                })
-            }, 0)
+    if (response.request.responseType === 'blob') {
+        if (data.type == 'application/json') {
+            return new Promise((resolve) => {
+                const reader = new FileReader();
+                reader.readAsText(response.data, 'utf-8');
+                reader.onload = function () {
+                    let result = ''
+                    try {
+                        result = JSON.parse(reader.result)
+                    } catch (e) {
+                        result = {
+                            msg: reader.result
+                        }
+                    }
+                    throwError && ElMessage.error(data.msg || '程序异常')
+                    resolve(result)
+                }
+            })
+        } else {
+            let filename = response.request.getResponseHeader('Content-Disposition') || '';
+            filename = filename.replace(/(attachment|inline);(filename=| filename=|fileName=| fileName=)/g, '');
+            filename = filename.replace(/[\s"]/g, '');
+            filename = decodeURIComponent(filename);
+
+            if (filename == '' && data.size == 0) {
+                throwError && ElMessage.error(data.msg || '程序异常')
+                return Promise.reject(data)
+            }
+            return {
+                code: 200,
+                data: {
+                    file: data,
+                    filename,
+                },
+            }
         }
-        ElMessage.error(data.msg || '程序异常')
+    } else {
+        const { code } = data;
+        if(code === 200){
+            return data
+        }else{
+            if(code == 401){
+                clearLoginInfo()
+                setTimeout(() => {
+                    router.push({
+                        name: 'Login',
+                        query: {
+                            url: encodeURIComponent(router.currentRoute.value.fullPath),
+                        },
+                    })
+                }, 0)
+            }
+            ElMessage.error(data.msg || '程序异常')
 
-        return Promise.reject(data)
+            return Promise.reject(data)
+        }
     }
 }, error => {
     ElMessage.error(error.message || '程序异常')

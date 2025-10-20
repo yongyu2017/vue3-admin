@@ -447,6 +447,22 @@
       "state": 0,
       "createTime": 1760171994452,
       "modifiedTime": 1760171994452
+    },
+    {
+      "id": 29,
+      "menuName": "代码生成",
+      "parentId": 20,
+      "jumpUrl": "tool/codeGeneration/index",
+      "roleUrl": "",
+      "type": 1,
+      "icon": "",
+      "orderNum": 0,
+      "status": "1",
+      "visible": "1",
+      "keepAlive": "1",
+      "state": 1,
+      "createTime": 1760928902279,
+      "modifiedTime": 1760928930757
     }
   ]
 }
