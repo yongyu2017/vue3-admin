@@ -2,7 +2,7 @@ const { defineConfig } = require('@vue/cli-service')
 const NodePolyfillPlugin = require('node-polyfill-webpack-plugin')
 const WebpackObfuscator = require('webpack-obfuscator')
 const TerserPlugin = require('terser-webpack-plugin')
-const path = require("path");
+const path = require('path');
 const resolve = (dir) => path.join(__dirname, dir);
 
 module.exports = defineConfig({
