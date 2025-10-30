@@ -6,8 +6,7 @@
     "serve": "vue-cli-service serve",
     "build:prod": "vue-cli-service build --mode production",
     "build:testing": "vue-cli-service build --mode testing",
-    "lint": "vue-cli-service lint",
-    "mock": "nodemon ./server/app.js"
+    "lint": "vue-cli-service lint"
   },
   "dependencies": {
     "@ffmpeg/core": "^0.11.0",

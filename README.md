@@ -26,9 +26,11 @@ npm install
 
 npm run serve（当前项目使用了express搭建的接口服务，vue.config.js开启了代理服务，使用时请修改代理地址）
 
-npm run mock（本地接口服务，需安装express、nodemon）
+npm run mock（本地接口服务。需进入到server目录，安装依赖，然后运行命令）
 
-npm run build（生产）
+npm run build:testing（测试环境）
+
+npm run build:prod（生产环境）
 
 访问: http://localhost:8002
 
