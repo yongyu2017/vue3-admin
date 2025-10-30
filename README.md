@@ -12,17 +12,17 @@ Vue3 + Pinia + Vue-router + Axios + Element-plus
 ## 功能
 
 ```
-系统管理：基本功能
+系统管理
 ---菜单管理：配置项目目录、菜单、按钮
 ---角色管理：角色菜单权限分配，角色支持配置数据权限
 ---用户管理：分配用户角色，根据角色拥有的权限展示不同的页面
----字段管理：存储数据字典
+---字典管理：数据字典新增、修改、删除
 ```
 
 ## 项目运行
 
 ```
-npm install
+npm install（安装依赖）
 
 npm run serve（当前项目使用了express搭建的接口服务，vue.config.js开启了代理服务，使用时请修改代理地址）
 
@@ -31,8 +31,6 @@ npm run mock（本地接口服务。需进入到server目录，安装依赖，�
 npm run build:testing（测试环境）
 
 npm run build:prod（生产环境）
-
-访问: http://localhost:8002
 
 ```
 ## Git 贡献提交规范
