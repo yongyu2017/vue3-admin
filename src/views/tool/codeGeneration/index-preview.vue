@@ -3,7 +3,7 @@
         <el-form :inline="true" :model="formData" @submit.prevent v-if="config.header.length > 0">
             <el-form-item :label="item.label" v-for="(item, index) in config.header" :key="index">
                 <el-input
-                        v-if="item.type == 'input'"
+                        v-if="item.type == 'text'"
                         v-model="formData[item.keyName]"
                         type="text"
                         :placeholder="item.placeholder"
@@ -52,7 +52,7 @@
 </template>
 
 <script setup>
-    import { onMounted, ref, computed } from 'vue'
+    import { onMounted, ref, computed, defineExpose } from 'vue'
     import { personnelPeopleList } from '@/api/personnel'
     const lodash = require('lodash')
 
@@ -66,28 +66,7 @@
     const dataList = ref([])
     const dataListLoading = ref(false)
     const config = ref({
-        header: [
-            {
-                type: 'textarea',
-                dataType: '',
-                label: '商品名称',
-                value: '',
-                keyName: 'name',
-                placeholder: '请输入',
-                size: '',
-                width: '',
-                height: '200px',
-                className: 'inp-dom',
-                maxlength: '10',
-                showWordLimit: true,
-                clearable: true,
-                disabled: false,
-                readonly: false,
-                showPassword: true,
-                rows: 4,
-                resize: 'none',
-            }
-        ]
+        header: [],
     })
 
     const classNameComputed = computed(() => {
@@ -151,6 +130,15 @@
         formData.value.pageIndex = val
         queryList()
     }
+    function update (e) {
+        config.value.header = e.options.slice()
+        console.log(config.value.header)
+    }
+
+    //暴露给父组件使用的方法和数据
+    defineExpose({
+        update,
+    })
 </script>
 
 <style lang="scss" scoped>

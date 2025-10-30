@@ -6,12 +6,16 @@
 </template>
 
 <script setup>
-    import { ref } from 'vue'
+    import { ref, provide } from 'vue'
     import indexPreview from './index-preview.vue'
     import indexSetting from './index-setting.vue'
 
     const indexPreviewRef = ref(null)
     const indexSettingRef = ref(null)
+
+    provide('operationPanel_form_update', (e) => {
+        indexPreviewRef.value.update(e)
+    })
 </script>
 
 <style lang="scss" scoped>

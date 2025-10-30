@@ -5,6 +5,7 @@ export const formTypeList = [
         defaultSetting: [
             { value: 'inp-dom', label: 'className' },
             { value: true, label: 'clearable' },
+            { value: 'default', label: 'size' },
         ],
         keyList: ['type', 'label', 'value', 'keyName', 'placeholder', 'size', 'width', 'height', 'className', 'maxlength', 'showWordLimit', 'clearable', 'disabled', 'readonly'],
     },
@@ -14,6 +15,7 @@ export const formTypeList = [
         defaultSetting: [
             { value: 'inp-dom', label: 'className' },
             { value: true, label: 'clearable' },
+            { value: 'default', label: 'size' },
         ],
         keyList: ['type', 'label', 'value', 'keyName', 'placeholder', 'size', 'width', 'height', 'className', 'maxlength', 'clearable', 'disabled', 'readonly', 'showPassword'],
     },
@@ -24,6 +26,7 @@ export const formTypeList = [
             { value: 'inp-dom', label: 'className' },
             { value: '500', label: 'maxlength' },
             { value: true, label: 'showWordLimit' },
+            { value: 'default', label: 'size' },
         ],
         keyList: ['type', 'label', 'value', 'keyName', 'placeholder', 'size', 'width', 'height', 'className', 'maxlength', 'showWordLimit', 'clearable', 'disabled', 'readonly', 'rows', 'resize'],
     },

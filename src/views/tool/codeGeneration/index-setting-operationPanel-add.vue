@@ -27,6 +27,7 @@
     import { ref, defineEmits, nextTick, defineExpose, computed } from 'vue'
     import { ElMessage } from 'element-plus'
     import { formTypeList } from './formTypeList.js'
+    const lodash = require('lodash')
 
     const emit = defineEmits(['refreshDataList', 'close'])
     const visible = ref(false);
@@ -53,17 +54,22 @@
         resize: 'none',
     })
     const dataRule = ref({
+        label: [
+            { required: true, message: '请输入', trigger: 'blur' },
+        ],
     })
-    const typeList = ref([
-        { value: 'text', label: '文本框' },
-        { value: 'password', label: '密码框' },
-        { value: 'textarea', label: '文本域' },
-    ])
-    const sizeList = ref([
-        { value: 'small', label: '小' },
-        { value: 'default', label: '标准' },
-        { value: 'large', label: '大' },
-    ])
+    const selectList = ref({
+        typeList: [
+            {value: 'text', label: '文本框'},
+            {value: 'password', label: '密码框'},
+            {value: 'textarea', label: '文本域'},
+        ],
+        sizeList: ref([
+            { value: 'small', label: '小' },
+            { value: 'default', label: '标准' },
+            { value: 'large', label: '大' },
+        ])
+    })
     const formItemList = [
         { value: 'type', label: '类型', type: 'select' },
         { value: 'label', label: '标签名', type: 'text' },
@@ -97,8 +103,7 @@
     })
     const selectListComputed = computed(() => {
         return (value) => {
-            console.log([value + 'List'].value)
-            return [value + 'List'].value
+            return selectList.value[value + 'List']
         }
     })
 
@@ -120,7 +125,8 @@
         }
 
         visible.value = false
-        emit('refreshDataList')
+        dataForm.value.id = lodash.uniqueId()
+        emit('refreshDataList', dataForm.value)
         ElMessage.success('操作成功')
     }
     //关闭
