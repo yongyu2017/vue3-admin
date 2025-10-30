@@ -109,7 +109,14 @@ $position: top, right, bottom, left;
         height: 100%;
         padding-bottom: 15px;
         overflow-y: scroll;
+
+        .el-menu.el-menu--vertical {
+            .el-menu-item, .el-sub-menu__title {
+                padding: 0 10px;
+            }
+        }
     }
+
     .site-sidebar__menu {
         background-color: #20222A;
     }
@@ -118,6 +125,7 @@ $position: top, right, bottom, left;
         flex: 1;
         display: flex;
         align-items: center;
+        justify-content: center;
         min-width: 0;
 
         .icon-box {
@@ -137,10 +145,6 @@ $position: top, right, bottom, left;
             flex: 1;
             @include textoverflow();
         }
-    }
-
-    .el-menu-item, .el-sub-menu__title {
-        padding-left: 10px !important;
     }
 
     &.site-sidebar--dark {
@@ -197,6 +201,7 @@ $position: top, right, bottom, left;
         z-index: 0;
         display: flex;
         align-items: center;
+        justify-content: center;
         width: 220px;
         height: 90px;
         padding: 0 15px;
@@ -222,8 +227,9 @@ $position: top, right, bottom, left;
             flex: 1;
             display: inline-block;
             line-height: 24px;
+            text-align: center;
             color: #fff;
-            font-size: 14px;
+            font-size: 24px;
             font-weight: 300;
             white-space: nowrap;
         }

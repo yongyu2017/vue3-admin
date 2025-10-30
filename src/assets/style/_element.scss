@@ -104,4 +104,10 @@ body {
             white-space: break-spaces;
         }
     }
+
+    .el-textarea {
+        .el-textarea__inner {
+            height: 100%;
+        }
+    }
 }

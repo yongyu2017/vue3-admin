@@ -1,5 +1,8 @@
 <template>
     <el-tabs v-model="activeName" class="setting-box">
+        <el-tab-pane label="操作盘" name="operationPanel">
+            <indexSettingOperationPanel ref="indexSettingOperationPanelRef"></indexSettingOperationPanel>
+        </el-tab-pane>
         <el-tab-pane label="配置文件" name="config">
 
             <el-form ref="dataFormRef" :model="dataForm" :rules="dataRule" label-width="80px">
@@ -23,6 +26,7 @@
 
 <script setup>
     import { ref } from 'vue'
+    import indexSettingOperationPanel from './index-setting-operationPanel.vue'
     import { ElLoading, ElMessage } from 'element-plus'
     import { toolCodeGenerationGeneration, toolCodeGenerationPreview } from '@/api/tool.js'
     import { downloadForBlob } from '@/utils/download.js'
@@ -55,8 +59,9 @@
         ],
     })
     const dataFormRef = ref(null)
-    const activeName = ref('config')
+    const activeName = ref('operationPanel')
     const codePreview = ref('')
+    const indexSettingOperationPanelRef = ref(null)
 
     // 表单提交
     const dataFormSubmit = (type = 1) => {
