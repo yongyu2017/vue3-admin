@@ -5,11 +5,17 @@
             :close-on-click-modal="false"
             v-model="visible">
         <el-form ref="dataFormRef" :model="dataForm" :rules="dataRule" label-width="100px" class="indexSettingOperationPanelAdd-form">
+            <el-form-item label="类型" prop="type">
+                <el-select v-model="dataForm.type" placeholder="请选择" class="inp-dom">
+                    <el-option :label="item.label" :value="item.value" v-for="(item, index) in selectListComputed('type')" :key="index" />
+                </el-select>
+            </el-form-item>
             <el-form-item :label="item.label" :prop="item.value" v-for="(item, index) in formItemListComputed" :key="index">
-                <el-select v-model="dataForm[item.value]" placeholder="请选择" class="inp-dom" v-if="item.type == 'select'">
+                <el-select v-model="dataForm[item.value]" placeholder="请选择" clearable class="inp-dom" v-if="item.type == 'select'">
                     <el-option :label="item.label" :value="item.value" v-for="(item, index) in selectListComputed(item.value)" :key="index" />
                 </el-select>
-                <el-input v-model="dataForm[item.value]" placeholder="请输入" class="inp-dom" v-if="item.type == 'text'"></el-input>
+                <el-input v-model="dataForm[item.value]" placeholder="请输入" clearable class="inp-dom" v-if="item.type == 'text'"></el-input>
+                <el-input v-model="dataForm[item.value]" placeholder="例：0:张三,1:李四" type="textarea" :rows="5" class="inp-dom" v-if="item.type == 'textarea'"></el-input>
                 <el-switch v-model="dataForm[item.value]" v-if="item.type == 'switch'" />
             </el-form-item>
         </el-form>
@@ -37,12 +43,8 @@
         type: 'text',
         dataType: '',
         label: '',
-        value: '',
         keyName: '',
         placeholder: '',
-        size: '',
-        width: '',
-        height: '',
         className: '',
         maxlength: '',
         showWordLimit: false,
@@ -52,6 +54,10 @@
         showPassword: false,
         rows: 2,
         resize: 'none',
+        multiple: false,
+        multipleLimit: 0,
+        filterable: false,
+        dataList: '',
     })
     const dataRule = ref({
         label: [
@@ -60,9 +66,18 @@
     })
     const selectList = ref({
         typeList: [
-            {value: 'text', label: '文本框'},
-            {value: 'password', label: '密码框'},
-            {value: 'textarea', label: '文本域'},
+            { value: 'text', label: 'Input 文本框' },
+            { value: 'password', label: 'Input 密码框' },
+            { value: 'textarea', label: 'Input 文本域' },
+            { value: 'select', label: 'Select 选择器' },
+            { value: 'radio', label: 'Radio 单选框' },
+            { value: 'checkboxGroup', label: 'CheckboxGroup 复选框组' },
+            { value: 'checkbox', label: 'Checkbox 复选框' },
+            { value: 'switch', label: 'Switch 开关' },
+            { value: 'slider', label: 'Slider 滑块' },
+            { value: 'rate', label: 'Rate 评分' },
+            { value: 'inputNumber', label: 'Input Number 数字输入框' },
+            { value: 'datePicker', label: 'DatePicker 日期选择器' },
         ],
         sizeList: ref([
             { value: 'small', label: '小' },
@@ -71,14 +86,10 @@
         ])
     })
     const formItemList = [
-        { value: 'type', label: '类型', type: 'select' },
+        // { value: 'type', label: '类型', type: 'select' },
         { value: 'label', label: '标签名', type: 'text' },
-        { value: 'value', label: '默认值', type: 'text' },
         { value: 'keyName', label: '字段名', type: 'text' },
         { value: 'placeholder', label: '占位文本', type: 'text' },
-        { value: 'size', label: '尺寸', type: 'select' },
-        { value: 'width', label: '宽度', type: 'text' },
-        { value: 'height', label: '高度', type: 'text' },
         { value: 'className', label: '样式名', type: 'text' },
         { value: 'maxlength', label: '最大长度', type: 'text' },
         { value: 'showWordLimit', label: '是否显示统计字数', type: 'switch' },
@@ -86,8 +97,12 @@
         { value: 'disabled', label: '是否禁用', type: 'switch' },
         { value: 'readonly', label: '是否只读', type: 'switch' },
         { value: 'showPassword', label: '是否显示切换密码图标', type: 'switch' },
-        { value: 'rows', label: '文本域行数', type: 'switch' },
+        { value: 'rows', label: '文本域行数', type: 'text' },
         { value: 'resize', label: '控制是否能被用户缩放', type: 'switch' },
+        { value: 'multiple', label: '是否多选', type: 'switch' },
+        { value: 'multipleLimit', label: '多选个数限制', type: 'text' },
+        { value: 'filterable', label: '是否可筛选', type: 'switch' },
+        { value: 'dataList', label: '数据列表', type: 'textarea' },
     ]
 
     const formItemListComputed = computed(() => {
@@ -127,7 +142,6 @@
         visible.value = false
         dataForm.value.id = lodash.uniqueId()
         emit('refreshDataList', dataForm.value)
-        ElMessage.success('操作成功')
     }
     //关闭
     const closeFun = () => {
@@ -152,14 +166,20 @@
 
         &::v-deep.el-form {
             .el-form-item__label {
-                align-items: center;
+                align-items: flex-start;
+                height: auto;
                 line-height: 20px;
                 text-align: right;
+                padding: 10px 12px 0 0;
             }
 
             .el-form-item.is-required:not(.is-no-asterisk).asterisk-left>.el-form-item__label:before {
                 margin-right: 3px;
                 min-width: 0;
+            }
+
+            .el-form-item__content {
+                align-items: baseline;
             }
         }
     }

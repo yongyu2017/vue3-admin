@@ -5,7 +5,7 @@ const statusCodeMap = require('../utils/statusCodeMap.js')
 async function userPeopleList (req, res) {
     const { token } = req.headers
     const fileData = await getFileData('/json/people.json');
-    const { pageIndex, pageSize, name } = req['body'];
+    const { pageIndex, pageSize, name = '' } = req['body'];
     const userInfo = await verifyToken(token)
 
     if(userInfo){

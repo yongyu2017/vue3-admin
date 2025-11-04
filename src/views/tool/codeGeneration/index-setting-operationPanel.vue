@@ -28,7 +28,7 @@
             </div>
         </el-form-item>
         <el-form-item>
-            <el-button type="primary" @click="dataFormSubmit()">确定</el-button>
+            <el-button type="primary" @click="dataFormSubmit()">预览</el-button>
         </el-form-item>
     </el-form>
 

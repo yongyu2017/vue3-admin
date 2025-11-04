@@ -17,7 +17,7 @@ async function userLogin (req, res) {
         userFileData.list.forEach((value) => {
             if (value.account == name && value.pwd == pwd) {
                 const { account, email, id, role } = value;
-                token = generateToken({ account, pwd, id }, 60 * 60 * 1)
+                token = generateToken({ account, pwd, id }, 60 * 60 * 12)
                 data = { account, email, id, token, permission: [] }
                 userRole = role;
                 isLogin = true;

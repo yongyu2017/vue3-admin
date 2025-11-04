@@ -42,6 +42,61 @@
                         :class="[classNameComputed(item)]"
                         :style="[styleComputed(item)]"
                 />
+                <el-select
+                        v-if="item.type == 'select'"
+                        v-model="formData[item.keyName]"
+                        :placeholder="item.placeholder"
+                        :clearable="item.clearable"
+                        :disabled="item.disabled"
+                        :multiple="item.multiple"
+                        :multipleLimit="Number(item.multipleLimit)"
+                        :filterable="item.filterable"
+                        :class="[classNameComputed(item)]"
+                        :style="[styleComputed(item)]"
+                >
+                    <el-option v-for="(item, index) in selectListComputed(item.dataList)" :key="index" :label="item.label" :value="item.value" />
+                </el-select>
+                <el-radio-group
+                        v-if="item.type == 'radio'"
+                        v-model="formData[item.keyName]"
+                        :disabled="item.disabled"
+                >
+                    <el-radio v-for="(item, index) in selectListComputed(item.dataList)" :key="index" :value="item.value">{{ item.label }}</el-radio>
+                </el-radio-group>
+                <el-checkbox-group
+                        v-if="item.type == 'checkboxGroup'"
+                        v-model="formData[item.keyName]"
+                        :disabled="item.disabled"
+                >
+                    <el-checkbox v-for="(item, index) in selectListComputed(item.dataList)" :key="index" :value="item.value">{{ item.label }}</el-checkbox>
+                </el-checkbox-group>
+                <el-checkbox
+                        v-if="item.type == 'checkbox'"
+                        v-model="formData[item.keyName]"
+                        :disabled="item.disabled"
+                >{{ item.label }}</el-checkbox>
+                <el-switch
+                        v-if="item.type == 'switch'"
+                        v-model="formData[item.keyName]"
+                        :disabled="item.disabled"
+                />
+                <el-slider
+                        v-if="item.type == 'slider'"
+                        v-model="formData[item.keyName]"
+                        :disabled="item.disabled"
+                        :class="[classNameComputed(item)]"
+                />
+                <el-rate
+                        v-if="item.type == 'rate'"
+                        v-model="formData[item.keyName]"
+                        :disabled="item.disabled"
+                        :clearable="item.clearable"
+                />
+                <el-input-number
+                        v-if="item.type == 'inputNumber'"
+                        v-model="formData[item.keyName]"
+                        :disabled="item.disabled"
+                />
             </el-form-item>
             <el-form-item>
                 <el-button type="primary" @click="searchFun">查询</el-button>
@@ -57,7 +112,6 @@
     const lodash = require('lodash')
 
     const defaultFormData = {
-        name: '',
         pageIndex: 1,
         pageSize: 10,
         totalPage: 0,
@@ -88,6 +142,23 @@
             return style
         }
     })
+    const selectListComputed = computed(() => {
+        return (val) => {
+            let list = []
+
+            if (val) {
+                list = val.split(',').map((value) => {
+                    return {
+                        value: value.split(':')[0],
+                        label: value.split(':')[1],
+                    }
+                })
+            }
+
+            return list
+        }
+    })
+
     onMounted(() => {
         queryList()
     })
@@ -131,8 +202,26 @@
         queryList()
     }
     function update (e) {
+        let header_keyName = {}
         config.value.header = e.options.slice()
-        console.log(config.value.header)
+        config.value.header.forEach((value) => {
+            let val = ''
+            if (!value.keyName) return
+            if (['checkbox', 'switch'].includes(value.type)) {
+                val = false
+            }
+            if (['inputNumber'].includes(value.type)) {
+                val = undefined
+            }
+
+            header_keyName[value.keyName] = val
+        })
+
+        formData.value = lodash.cloneDeep({
+            ...header_keyName,
+            ...defaultFormData,
+        })
+        console.log(config.value.header, formData.value)
     }
 
     //暴露给父组件使用的方法和数据
