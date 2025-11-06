@@ -6,11 +6,11 @@
             v-model="visible">
         <el-form ref="dataFormRef" :model="dataForm" :rules="dataRule" label-width="100px" class="indexSettingOperationPanelAdd-form">
             <el-form-item label="类型" prop="type">
-                <el-select v-model="dataForm.type" placeholder="请选择" class="inp-dom">
+                <el-select v-model="dataForm.type" placeholder="请选择" class="inp-dom" @change="formItemListComputed">
                     <el-option :label="item.label" :value="item.value" v-for="(item, index) in selectListComputed('type')" :key="index" />
                 </el-select>
             </el-form-item>
-            <el-form-item :label="item.label" :prop="item.value" v-for="(item, index) in formItemListComputed" :key="index">
+            <el-form-item :label="item.label" :prop="item.value" v-for="(item, index) in formItemListList" :key="index">
                 <el-select v-model="dataForm[item.value]" placeholder="请选择" clearable class="inp-dom" v-if="item.type == 'select'">
                     <el-option :label="item.label" :value="item.value" v-for="(item, index) in selectListComputed(item.value)" :key="index" />
                 </el-select>
@@ -38,10 +38,10 @@
     const emit = defineEmits(['refreshDataList', 'close'])
     const visible = ref(false);
     const dataFormRef = ref();
-    const dataForm = ref({
+    const dataForm_default = {
         id: '',  //修改时填写
         type: 'text',
-        dataType: '',
+        componentType: '',
         label: '',
         keyName: '',
         placeholder: '',
@@ -58,7 +58,8 @@
         multipleLimit: 0,
         filterable: false,
         dataList: '',
-    })
+    }
+    const dataForm = ref(lodash.cloneDeep(dataForm_default))
     const dataRule = ref({
         label: [
             { required: true, message: '请输入', trigger: 'blur' },
@@ -77,13 +78,36 @@
             { value: 'slider', label: 'Slider 滑块' },
             { value: 'rate', label: 'Rate 评分' },
             { value: 'inputNumber', label: 'Input Number 数字输入框' },
-            { value: 'datePicker', label: 'DatePicker 日期选择器' },
+            { value: 'date', label: 'DatePicker 日期选择器 date' },
+            { value: 'daterange', label: 'DatePicker 日期选择器 daterange' },
+            { value: 'datetime', label: 'DatePicker 日期选择器 datetime' },
+            { value: 'datetimerange', label: 'DatePicker 日期选择器 datetimerange' },
+            { value: 'month', label: 'DatePicker 日期选择器 month' },
+            { value: 'monthrange', label: 'DatePicker 日期选择器 monthrange' },
+            { value: 'year', label: 'DatePicker 日期选择器 year' },
+            { value: 'yearrange', label: 'DatePicker 日期选择器 yearrange' },
+            { value: 'dates', label: 'DatePicker 日期选择器 dates' },
+            { value: 'months', label: 'DatePicker 日期选择器 months' },
+            { value: 'years', label: 'DatePicker 日期选择器 years' },
         ],
-        sizeList: ref([
+        sizeList: [
             { value: 'small', label: '小' },
             { value: 'default', label: '标准' },
             { value: 'large', label: '大' },
-        ])
+        ],
+        datePickerList: [
+            { value: 'year', label: 'year' },
+            { value: 'years', label: 'years' },
+            { value: 'month', label: 'month' },
+            { value: 'months', label: 'months' },
+            { value: 'date', label: 'date' },
+            { value: 'dates', label: 'dates' },
+            { value: 'datetime', label: 'datetime' },
+            { value: 'datetimerange', label: 'datetimerange' },
+            { value: 'daterange', label: 'daterange' },
+            { value: 'monthrange', label: 'monthrange' },
+            { value: 'yearrange', label: 'yearrange' },
+        ],
     })
     const formItemList = [
         // { value: 'type', label: '类型', type: 'select' },
@@ -103,19 +127,16 @@
         { value: 'multipleLimit', label: '多选个数限制', type: 'text' },
         { value: 'filterable', label: '是否可筛选', type: 'switch' },
         { value: 'dataList', label: '数据列表', type: 'textarea' },
+        { value: 'editable', label: '文本框可输入', type: 'switch' },
+        { value: 'format', label: '显示在输入框中的格式', type: 'text' },
+        { value: 'valueFormat', label: '绑定值的格式', type: 'text' },
+        { value: 'valueFormat', label: '绑定值的格式', type: 'text' },
+        { value: 'startPlaceholder', label: '范围选择时开始日期的占位内容', type: 'text' },
+        { value: 'endPlaceholder', label: '范围选择时结束日期的占位内容', type: 'text' },
+        { value: 'rangeSeparator', label: '选择范围时的分隔符', type: 'text' },
     ]
+    const formItemListList = ref([])
 
-    const formItemListComputed = computed(() => {
-        const formTypeItem = formTypeList.find((value) => value.value == dataForm.value.type)
-        if (dataForm.value.id == '') {
-            formTypeItem.defaultSetting.forEach((value) => {
-                dataForm.value[value.label] = value.value
-            })
-        }
-        return formItemList.filter((value) => {
-            return formTypeItem.keyList.includes(value.value)
-        })
-    })
     const selectListComputed = computed(() => {
         return (value) => {
             return selectList.value[value + 'List']
@@ -128,9 +149,29 @@
         item && (dataForm.value = item)
 
         nextTick(() => {
+            formItemListComputed()
         })
     }
+    function formItemListComputed () {
+        const formTypeItem = formTypeList.find((value) => value.value.split('|').includes(dataForm.value.type))
+        let list = []
+        let dataForm_default_copy = lodash.cloneDeep(dataForm_default)
 
+        formTypeItem.defaultSetting.forEach((value) => {
+            dataForm_default_copy[value.label] = value.value
+        })
+        for (var i in dataForm_default_copy) {
+            if (!['id', 'type', 'label', 'keyName'].includes(i)) {
+                dataForm.value[i] = dataForm_default_copy[i]
+            }
+        }
+        formTypeItem.keyList.forEach((value) => {
+            const item = formItemList.find((value2) => value2.value == value)
+            item && list.push(item)
+        })
+
+        formItemListList.value = list
+    }
     // 表单提交
     async function dataFormSubmit () {
         const valid = await dataFormRef.value.validate((valid) => valid)

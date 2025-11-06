@@ -97,6 +97,34 @@
                         v-model="formData[item.keyName]"
                         :disabled="item.disabled"
                 />
+                <el-date-picker
+                        v-if="['daterange', 'datetimerange', 'monthrange', 'yearrange'].includes(item.type)"
+                        v-model="formData[item.keyName]"
+                        :type="item.type"
+                        :range-separator="item.rangeSeparator"
+                        :start-placeholder="item.startPlaceholder"
+                        :end-placeholder="item.endPlaceholder"
+                        :format="item.format"
+                        :value-format="item.valueFormat"
+                        :disabled="item.disabled"
+                        :clearable="item.clearable"
+                        :editable="item.editable"
+                        :readonly="item.readonly"
+                        :class="[classNameComputed(item)]"
+                />
+                <el-date-picker
+                        v-if="['date', 'datetime', 'month', 'year', 'dates', 'months', 'years'].includes(item.type)"
+                        v-model="formData[item.keyName]"
+                        :type="item.type"
+                        :placeholder="item.placeholder"
+                        :format="item.format"
+                        :value-format="item.valueFormat"
+                        :disabled="item.disabled"
+                        :clearable="item.clearable"
+                        :editable="item.editable"
+                        :readonly="item.readonly"
+                        :class="[classNameComputed(item)]"
+                />
             </el-form-item>
             <el-form-item>
                 <el-button type="primary" @click="searchFun">查询</el-button>
