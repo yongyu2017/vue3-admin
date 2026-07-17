@@ -218,17 +218,6 @@
         formData.value.pageIndex = 1;
         queryList()
     }
-    // 每页数
-    const sizeChangeHandle = (val) => {
-        formData.value.pageSize = val
-        formData.value.pageIndex = 1;
-        queryList()
-    }
-    // 当前页
-    const currentChangeHandle = (val) => {
-        formData.value.pageIndex = val
-        queryList()
-    }
     function update (e) {
         let header_keyName = {}
         config.value.header = e.options.slice()

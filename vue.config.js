@@ -2,8 +2,25 @@ const { defineConfig } = require('@vue/cli-service')
 const NodePolyfillPlugin = require('node-polyfill-webpack-plugin')
 const WebpackObfuscator = require('webpack-obfuscator')
 const TerserPlugin = require('terser-webpack-plugin')
+const webpack = require('webpack')
+const fs = require('fs')
 const path = require('path');
 const resolve = (dir) => path.join(__dirname, dir);
+
+// 读取 src/utils/setting.js 中的 Version 值，并拼接当前日期时间
+function getBuildVersion() {
+    const settingContent = fs.readFileSync(resolve('src/utils/setting.js'), 'utf-8')
+    const match = settingContent.match(/Version\s*=\s*['"]([^'"]+)['"]/)
+    const baseVersion = match ? match[1] : 'v0.0.0'
+    const now = new Date()
+    const pad = (n) => String(n).padStart(2, '0')
+    const dateStr =
+        `${now.getFullYear()}${pad(now.getMonth() + 1)}${pad(now.getDate())}` +
+        `${pad(now.getHours())}${pad(now.getMinutes())}`
+    return `${baseVersion}.${dateStr}`
+}
+
+const APP_VERSION = getBuildVersion()
 
 module.exports = defineConfig({
     publicPath: process.env.VUE_APP_PUBLIC_PATH,
@@ -43,6 +60,12 @@ module.exports = defineConfig({
         config.resolve.alias['asset'] = resolve('src/assets')
         config.resolve.alias['@public'] = path.resolve(__dirname, 'public')
         config.plugins.push(new NodePolyfillPlugin())
+        // 注入全局变量 APP_VERSION，可在业务代码中直接使用
+        config.plugins.push(
+            new webpack.DefinePlugin({
+                APP_VERSION: JSON.stringify(APP_VERSION),
+            })
+        )
         if (process.env.NODE_ENV === 'production') {
             // 启用Webpack Obfuscator插件进行代码加密
             config.plugins.push(

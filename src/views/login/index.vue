@@ -17,6 +17,7 @@
                 <el-button type="primary" size="large" @click="loginFun" class="login-btn">登录</el-button>
             </el-form-item>
         </el-form>
+        <div style="display: none">{{ AppVersion }}</div>
     </div>
 
 </template>
@@ -28,6 +29,7 @@ import { ElLoading } from 'element-plus'
 import { userLogin } from '@/api/user'
 import { useStorePinia } from '@/store'
 import { Base64 } from 'js-base64'
+import { AppVersion } from '@/utils/setting.js'
 
 const router = useRouter()
 const store = useStorePinia();

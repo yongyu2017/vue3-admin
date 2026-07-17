@@ -4,6 +4,7 @@ const { templateGenerate } = require('./generate.js')
 const { ffmpegTranscoding } = require('./ffmpeg.js')
 const { dictTypePage, dictTypeGet, dictTypeDelete, dictTypeUpdate, dictDataPage, dictDataGet, dictDataDelete, dictDataUpdate, dictDataListAll } = require('./dict.js')
 const { toolCodeGenerationGeneration, toolCodeGenerationPreview } = require('./tool.js')
+const { createSms } = require('./sms.js')
 
 module.exports = {
     userLogin: { path: '/user/login', fn: userLogin },
@@ -40,4 +41,5 @@ module.exports = {
     dictDataListAll: { path: '/system/dict-data/listAll', fn: dictDataListAll },
     toolCodeGenerationGeneration: { path: '/tool/codeGeneration/generation', fn: toolCodeGenerationGeneration },
     toolCodeGenerationPreview: { path: '/tool/codeGeneration/preview', fn: toolCodeGenerationPreview },
+    createSms: { path: '/sms/createSms', fn: createSms },
 }
